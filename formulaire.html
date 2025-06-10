@@ -5,8 +5,7 @@
   <title>Formulaire & Résumé commande</title>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-<style>
-/* Style général blanc et noir */
+<style>/* Style général inversé mais centrage conservé */
 * {
   margin: 0;
   padding: 0;
@@ -15,146 +14,84 @@
 }
 
 body {
-  background-color: #fff; /* Changé de #000 à #fff */
-  color: #000; /* Changé de #fff à #000 */
+  background-color: #fff; /* Fond blanc au lieu de noir */
+  color: #000; /* Texte noir au lieu de blanc */
   line-height: 1.6;
   padding: 0;
   margin: 0;
 }
 
 .header {
-  background-color: #fff; /* Changé de #000 à #fff */
-  color: #000; /* Changé de #fff à #000 */
+  background-color: #fff; /* Fond blanc */
+  color: #000; /* Texte noir */
   padding: 2rem;
   text-align: center;
-  border-bottom: 1px solid #000; /* Changé de #fff à #000 */
+  border-bottom: 1px solid #000; /* Bordure noire */
+}
+
+.header h1 {
+  font-weight: 400;
+  letter-spacing: 0.5rem;
+  text-transform: uppercase;
+  font-size: 1.8rem;
+}
+
+.container {
+  display: flex;
+  justify-content: center; /* Centrage maintenu */
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  gap: 3rem;
 }
 
 /* Formulaire */
 #form {
   flex: 1;
   max-width: 500px;
-  background-color: #fff; /* Changé de #000 à #fff */
+  background-color: #fff; /* Fond blanc */
   padding: 2rem;
-  border: 1px solid #000; /* Changé de #fff à #000 */
-}
-
-input {
-  width: 100%;
-  padding: 1rem;
-  margin-bottom: 1.5rem;
-  background-color: transparent;
-  border: 1px solid #000; /* Changé de #fff à #000 */
-  color: #000; /* Changé de #fff à #000 */
-  font-size: 1rem;
+  border: 1px solid #000; /* Bordure noire */
 }
 
 /* Résumé commande */
 .summary {
   flex: 1;
   max-width: 500px;
-  background-color: #fff; /* Changé de #000 à #fff */
+  background-color: #fff; /* Fond blanc */
   padding: 2rem;
-  border: 1px solid #000; /* Changé de #fff à #000 */
+  border: 1px solid #000; /* Bordure noire */
+}
+
+/* Tous les autres éléments avec inversion de couleur */
+input {
+  border: 1px solid #000; /* Bordure noire */
+  color: #000; /* Texte noir */
 }
 
 .article-panier {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 0;
-  border-bottom: 1px solid #000; /* Changé de #fff à #000 */
-  position: relative;
+  border-bottom: 1px solid #000; /* Bordure noire */
 }
 
 .details-panier img {
-  width: 80px;
-  height: 80px;
-  object-fit: cover;
-  border: 1px solid #000; /* Changé de #fff à #000 */
+  border: 1px solid #000; /* Bordure noire */
 }
 
 .supprimer {
-  background: none;
-  border: none;
-  color: #000; /* Changé de #fff à #000 */
-  font-size: 1.5rem;
-  cursor: pointer;
-  padding: 0 0.5rem;
+  color: #000; /* Texte noir */
 }
 
-#payer-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.8rem 1.5rem;
-  margin: 2rem;
-  text-decoration: none;
-  color: #000; /* Changé de #fff à #000 */
-  border: 1.5px solid #000; /* Changé de #fff à #000 */
-  background: transparent;
-  font-size: 0.8rem;
-  letter-spacing: 0.1rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  gap: 0.5rem;
-  position: relative;
-  overflow: hidden;
-  transition: color 0.2s 0.2s;
+#payer-btn, #btn-retour {
+  color: #000; /* Texte noir */
+  border: 1.5px solid #000; /* Bordure noire */
 }
 
-#payer-btn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 0;
-  height: 100%;
-  background: #000; /* Changé de #fff à #000 */
-  transition: width 0.3s ease-out;
-  z-index: -1;
+#payer-btn::before, #btn-retour::before {
+  background: #000; /* Fond noir pour l'effet hover */
 }
 
-#payer-btn:hover {
-   color: #fff !important; /* Changé de #000 à #fff */
-  transition-delay: 0.1s;
-}
-
-#btn-retour {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.8rem 1.5rem;
-  margin: 2rem;
-  text-decoration: none;
-  color: #000; /* Changé de #fff à #000 */
-  border: 1.5px solid #000; /* Changé de #fff à #000 */
-  background: transparent;
-  font-size: 0.8rem;
-  letter-spacing: 0.1rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  gap: 0.5rem;
-  position: relative;
-  overflow: hidden;
-  transition: color 0.2s 0.2s;
-}
-
-#btn-retour::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 0;
-  height: 100%;
-  background: #000; /* Changé de #fff à #000 */
-  transition: width 0.3s ease-out;
-  z-index: -1;
-}
-
-#btn-retour:hover {
-   color: #fff !important; /* Changé de #000 à #fff */
-  transition-delay: 0.1s;
+#payer-btn:hover, #btn-retour:hover {
+  color: #fff !important; /* Texte blanc au survol */
 }
 
 </style>
