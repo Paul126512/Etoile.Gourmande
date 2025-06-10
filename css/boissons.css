@@ -1,0 +1,347 @@
+#confirmation-btn {
+  background-color: white;
+  color: #000000;
+  border: 2px solid #000000;
+  padding: 14px 28px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  font-family: 'Montserrat', sans-serif;
+  text-transform: uppercase;
+  text-decoration: none;
+  display: inline-block;
+  right: -4%; /* ok */
+ margin-top: 30px; /* ajuste cette valeur selon le besoin */
+}
+
+
+#confirmation-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: -100%;
+  width: 100%;
+  height: 100%;
+  background: #000000;
+  z-index: -1;
+  transition: all 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+#confirmation-btn:hover {
+  color: white;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+#confirmation-btn:hover::before {
+  right: 0;
+}
+
+#confirmation-btn span {
+  position: relative;
+  z-index: 2;
+  text-decoration: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  /* Police */
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+  
+  /* Reset */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Inter', sans-serif;
+    background: white;
+    color: black;
+    line-height: 1.6;
+  }
+  
+  /* Header */
+  .header {
+    background: black;
+    padding: 25px 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+  
+  .header h1 {
+    color: white;
+    text-align: center;
+    font-weight: 400;
+    font-size: 1.8rem;
+    letter-spacing: 1px;
+  }
+  
+  /* Container principal */
+  .main-container {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 20px;
+  }
+  
+  /* Sections */
+  .section {
+    margin-bottom: 40px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 30px;
+  }
+  
+  /* Titres sections */
+  .section-title {
+    font-weight: 500;
+    font-size: 1.4rem;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  /* Grille des produits */
+  .products-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  /* Carte pizza - avec bordure distinctive */
+  .pizza-card {
+    border: 1px solid #ddd;
+    border-left: 4px solid #e74c3c;
+    padding: 15px;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+  }
+  
+  .pizza-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+  
+  .pizza-details {
+    flex: 1;
+  }
+  
+  .pizza-name {
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+    font-weight: 500;
+  }
+  
+  .pizza-supplements {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 8px;
+  }
+  
+  .pizza-price {
+    font-weight: 600;
+    color: #e74c3c;
+  }
+  
+  /* Carte boisson - style différent */
+  .boisson-card {
+    border: 1px solid #ddd;
+    padding: 15px;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+  }
+  
+  .boisson-image {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+  }
+  
+  .boisson-details {
+    flex: 1;
+  }
+  
+  .boisson-name {
+    font-size: 1rem;
+    margin-bottom: 5px;
+    font-weight: 500;
+  }
+  
+  .boisson-quantity {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 8px 0;
+  }
+  
+  .quantity-input {
+    width: 50px;
+    padding: 5px;
+    border: 1px solid #ddd;
+    text-align: center;
+  }
+  
+  /* Boutons */
+  .btn {
+    background: black;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background 0.2s;
+  }
+  
+  .btn:hover {
+    background: #333;
+  }
+  
+  .btn-remove {
+    background: white;
+    color: #e74c3c;
+    border: 1px solid #ff1b02;
+    margin-left: auto;
+  }
+  
+  .btn-remove:hover {
+    background: #ff1b02;
+    color: white;
+  }
+  
+  /* Total et paiement */
+  .cart-total {
+    font-size: 1.3rem;
+    text-align: right;
+    margin: 30px 0;
+    padding-top: 20px;
+    border-top: 2px solid #eee;
+    font-weight: 500;
+  }
+  
+  .checkout-btn {
+    width: 100%;
+    padding: 15px;
+    font-size: 1.1rem;
+    margin-top: 10px;
+    background: black;
+    font-weight: 500;
+    border-radius: 20px;
+     color: white;
+    cursor: pointer;
+  }
+  
+.checkout-btn:hover {
+  color: black;
+  background-color: white;
+  transition: all 0.5s ease; 
+
+}
+
+/* Effet de retour en douceur */
+.checkout-btn:not(:hover) {
+  transition: all 0.5s ease; /* Même durée pour le retour */
+}
+  
+  .checkout-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+  
+  /* Message panier vide */
+  .empty-cart {
+    text-align: center;
+    color: #777;
+    padding: 20px;
+    border: 1px dashed #ddd;
+    border-radius: 4px;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .header h1 {
+      font-size: 1.5rem;
+    }
+    
+    .section-title {
+      font-size: 1.2rem;
+    }
+    
+    .pizza-card, .boisson-card {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    
+
+    
+#payer-btn {
+  background-color: white;
+  color: #000000;
+  border: 2px solid #000000;
+  padding: 14px 28px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  font-family: 'Montserrat', sans-serif;
+  text-transform: uppercase;
+  text-decoration: none;
+  display: inline-block;
+    right: -4%;    /* au lieu de -100%, pour ne pas coller au bord */
+  
+}
+
+
+
+
+
+  }
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+

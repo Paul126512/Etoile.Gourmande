@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mon Panier 🛒</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/panier.css">
+</head>
+<body>
+
+<h1> Votre commande</h1>
+
+<!-- Bouton de retour stylisé -->
+<a href="index.html">
+  <button class="btn-retour">⬅ Retour </button>
+</a>
+
+<div class="panier-container">
+  <div id="liste-panier"></div>
+
+  <div class="total-panier">
+    Total : <span id="total">0.00</span> 
+  </div>
+
+
+ <a href="boissons.html" id="payer-btn" class="btn-disabled" aria-disabled="true">
+  Vers les boissons -> <span id="prix-stripe"></span>
+</a>
+
+
+
+<style>
+#payer-btn {
+  background-color: white;
+  color: #000000;
+  border: 2px solid #000000;
+  padding: 14px 28px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  font-family: 'Montserrat', sans-serif;
+  text-transform: uppercase;
+  text-decoration: none; /* Supprime le soulignement */
+  display: inline-block; /* Pour une meilleure gestion du padding */
+}
+
+#payer-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: #000000;
+  z-index: -1;
+  transition: all 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+#payer-btn:hover {
+  color: white;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+#payer-btn:hover::before {
+  left: 0;
+}
+
+/* Solution améliorée pour le texte */
+#payer-btn span {
+  position: relative;
+  z-index: 2;
+  text-decoration: none; /* Double assurance contre le soulignement */
+}
+
+
+</style>
+
+
+
+
+
+<style>
+#form-paiement {
+  max-width: 280px;
+  margin: -870px 120px 30px auto; /* marge positive pour descendre proprement */
+  padding: 15px;
+  background: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 14px;
+  box-sizing: border-box; /* s'assure que padding et border ne débordent pas */
+}
+
+#form-paiement label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #333;
+  font-size: 13px;
+}
+
+#form-paiement input[type="text"],
+#form-paiement input[type="email"] {
+  width: 100%;
+  padding: 8px 10px;
+  font-size: 14px;
+  margin-bottom: 18px;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  transition: border-color 0.3s ease;
+  box-sizing: border-box; /* important pour éviter débordements */
+}
+
+#form-paiement input[type="text"]:focus,
+#form-paiement input[type="email"]:focus {
+  border-color: #ffffff;
+
+}
+
+#form-paiement button {
+  width: 100%;
+  margin-top: 12px;
+  padding: 12px;
+  font-size: 16px;
+  background-color: #ffffff;
+  color: white;
+  font-weight: 700;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-sizing: border-box;
+}
+
+#form-paiement button:hover {
+  background-color: #ffffff;
+}
+.btn-retour {
+  background-color: #000000;
+  color: white;
+  border: 2px solid #000000;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1); /* Animation ultra-lisse */
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0); /* Préparation pour l'effet glow */
+}
+
+/* Effet de lumière au survol */
+.btn-retour:hover {
+  background-color: transparent;
+  color: #000000;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); /* Glow subtil */
+  transform: translateY(-2px); /* Légère élévation */
+}
+
+/* Animation de remplissage élégante */
+.btn-retour::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: white;
+  z-index: -1;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.6s cubic-bezier(0.83, 0, 0.17, 1); /* Ease-in-out custom */
+}
+
+.btn-retour:hover::before {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* Effet "pression" au clic */
+.btn-retour:active {
+  transform: translateY(1px) scale(0.98); /* Enfoncement réaliste */
+  transition: transform 0.1s ease;
+}
+
+/* Bonus : Effet de bordure animée (optionnel) */
+.btn-retour::after {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border: 2px solid #000000;
+  border-radius: 10px;
+  z-index: -2;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.btn-retour:hover::after {
+  opacity: 1;
+  transform: scale(1.02); /* Légère expansion de la bordure */
+}
+
+
+
+  #payerBtn {
+  /* Base style */
+  background-color: white;
+  color: #000000;
+  border: 2px solid #000000;
+  padding: 14px 28px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  
+  /* Texte du prix */
+  font-family: 'Montserrat', sans-serif;
+  text-transform: uppercase;
+}
+
+/* Animation de fond noir qui vient de la gauche */
+#payer-Btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: #000000;
+  z-index: -1;
+  transition: all 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+/* Effets au survol */
+#payer-Btn:hover {
+  color: white;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+#payer-Btn:hover::before {
+  left: 0;
+}
+
+/* Effet de bordure qui s'étend */
+.payer-Btn::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  background: rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  border-radius: 100%;
+  transform: scale(1, 1) translate(-50%, -50%);
+  transform-origin: 50% 50%;
+  transition: all 0.6s ease;
+}
+
+#payer-Btn:hover::after {
+  opacity: 1;
+  transform: scale(50, 50) translate(-50%, -50%);
+}
+
+/* Effet click */
+#payer-Btn:active {
+  transform: translateY(-1px) scale(0.98);
+  transition: transform 0.1s ease;
+}
+
+/* Style désactivé */
+#payer-Btn:disabled {
+  background-color: #e0e0e0;
+  color: #a0a0a0;
+  border-color: #e0e0e0;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+#payer-Btn:disabled::before {
+  display: none;
+}
+
+  /* Style minimal pour la lisibilité */
+    .produit-card {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    .produit-details {
+      flex-grow: 1;
+    }
+    .prix {
+      font-weight: bold;
+    }
+    .remove-btn {
+      background-color: transparent;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: red;
+    }
+
+
+
+</style>
+
+
+
+
+
+<script src="https://js.stripe.com/v3/"></script>
+
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const supplementsDisponibles = [
+    { id: 'aucun', nom: 'Aucun', prix: 0 },
+    { id: 'fromage', nom: 'Fromage', prix: 1.5 },
+    { id: 'pepperoni', nom: 'Pepperoni', prix: 2 },
+    { id: 'champignons', nom: 'Champignons', prix: 1.2 },
+    { id: 'bacon', nom: 'Bacon', prix: 2 },
+    { id: 'oeuf', nom: 'Œuf', prix: 1 },
+  ];
+
+  let panierProduits = JSON.parse(localStorage.getItem('panier')) || [];
+
+  // Normalisation des produits
+  panierProduits = panierProduits.map(produit => ({
+    id: produit.id || (Date.now() + Math.random()).toString(),
+    nom: produit.nom || 'Produit',
+    type: produit.type || 'inconnu',
+    taille: produit.taille || 'Standard',
+    prix: typeof produit.prix === 'number' ? produit.prix : 0,
+    image: produit.image || 'https://via.placeholder.com/90',
+    supplements: produit.supplements && produit.supplements.length > 0
+      ? produit.supplements
+      : (produit.type === 'pizza' ? [supplementsDisponibles[0]] : []),
+  }));
+
+  const listeEl = document.getElementById('liste-panier');
+  const totalEl = document.getElementById('total');
+  const compteurPanier = document.getElementById('compteur-panier');
+
+  function calculerPrixProduit(produit) {
+    const prixSupp = produit.supplements && produit.supplements[0]?.id !== 'aucun'
+      ? produit.supplements.reduce((acc, s) => acc + s.prix, 0)
+      : 0;
+    return produit.prix + prixSupp;
+  }
+
+  function afficherPanier() {
+    listeEl.innerHTML = '';
+
+    if (panierProduits.length === 0) {
+      listeEl.textContent = 'Votre panier est vide.';
+      return;
+    }
+
+    // Groupe les produits identiques (nom, type, taille, suppléments)
+    const groupes = [];
+    panierProduits.forEach(produit => {
+      const key = `${produit.nom}-${produit.type}-${produit.taille}-${produit.supplements.map(s => s.id).sort().join(',')}`;
+      const existant = groupes.find(g => g.key === key);
+      if (existant) {
+        existant.quantité++;
+        existant.produits.push(produit);
+      } else {
+        groupes.push({ key, produit, quantité: 1, produits: [produit] });
+      }
+    });
+
+    groupes.forEach(groupe => {
+      const item = groupe.produit;
+      const card = document.createElement('div');
+      card.className = 'produit-card';
+
+      const img = document.createElement('img');
+      img.src = item.image;
+      img.alt = item.nom;
+      img.style.width = '90px';
+
+      const details = document.createElement('div');
+      details.className = 'produit-details';
+
+      const nomAffiché = groupe.quantité > 1 ? `${item.nom} x${groupe.quantité}` : item.nom;
+
+      details.innerHTML = `
+        <h3>${nomAffiché}</h3>
+        <p>Type : ${item.type}</p>
+        <p>Taille : ${item.taille}</p>
+        <p>Base : ${item.prix.toFixed(2)} €</p>
+      `;
+
+      if (item.type === 'pizza') {
+        const checkboxContainer = document.createElement('div');
+        checkboxContainer.className = 'supplements-checkboxes';
+
+        supplementsDisponibles.forEach(sup => {
+          const label = document.createElement('label');
+          label.style.display = 'block';
+
+          const checkbox = document.createElement('input');
+          checkbox.type = 'checkbox';
+          checkbox.value = sup.id;
+          checkbox.checked = item.supplements.some(s => s.id === sup.id);
+
+          label.appendChild(checkbox);
+          label.appendChild(document.createTextNode(` ${sup.nom} (+${sup.prix.toFixed(2)} €)`));
+          checkboxContainer.appendChild(label);
+
+          checkbox.addEventListener('change', () => {
+            const produitsDuGroupe = groupe.produits;
+            produitsDuGroupe.forEach(produit => {
+              if (checkbox.value === 'aucun') {
+                if (checkbox.checked) {
+                  produit.supplements = [supplementsDisponibles.find(s => s.id === 'aucun')];
+                } else {
+                  produit.supplements = [supplementsDisponibles.find(s => s.id === 'aucun')];
+                  checkbox.checked = true;
+                }
+              } else {
+                if (checkbox.checked) {
+                  produit.supplements = produit.supplements.filter(s => s.id !== 'aucun');
+                  if (!produit.supplements.find(s => s.id === sup.id)) {
+                    produit.supplements.push(sup);
+                  }
+                } else {
+                  produit.supplements = produit.supplements.filter(s => s.id !== sup.id);
+                  if (produit.supplements.length === 0) {
+                    produit.supplements = [supplementsDisponibles.find(s => s.id === 'aucun')];
+                  }
+                }
+              }
+            });
+
+            localStorage.setItem('panier', JSON.stringify(panierProduits));
+            afficherPanier();
+            updateTotal();
+          });
+        });
+
+        details.appendChild(checkboxContainer);
+      }
+
+      const totalProduit = groupe.produits.reduce((acc, p) => acc + calculerPrixProduit(p), 0);
+      const prixProduit = document.createElement('div');
+      prixProduit.className = 'prix';
+      prixProduit.textContent = `Total : ${totalProduit.toFixed(2)} €`;
+
+      const btnSuppr = document.createElement('button');
+      btnSuppr.className = 'remove-btn';
+      btnSuppr.textContent = '🗑️';
+      btnSuppr.addEventListener('click', () => {
+        groupe.produits.forEach(p => {
+          panierProduits = panierProduits.filter(pp => pp.id !== p.id);
+        });
+        localStorage.setItem('panier', JSON.stringify(panierProduits));
+        afficherPanier();
+        updateTotal();
+      });
+
+      details.appendChild(prixProduit);
+      card.appendChild(img);
+      card.appendChild(details);
+      card.appendChild(btnSuppr);
+      listeEl.appendChild(card);
+    });
+  }
+
+  function updateTotal() {
+    const total = panierProduits.reduce((acc, p) => acc + calculerPrixProduit(p), 0);
+    totalEl.textContent = total.toFixed(2) + ' €';
+    compteurPanier.textContent = panierProduits.length;
+  }
+
+  afficherPanier();
+  updateTotal();
+});
+</script>
+
+   </div>
+  </body>
+</html>

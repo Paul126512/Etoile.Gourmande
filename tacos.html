@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" href="images/favicon.png" type="image/png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Découvrez notre sélection de délicieuses pizzas. Commandez en ligne et faites-vous livrer rapidement !">
+  <meta name="keywords" content="pizzas, livraison, commande en ligne, restaurant, nourriture italienne">
+  <meta name="author" content="L’Étoile Gourmande">
+  <title>L’Étoile Gourmande</title>
+</head>
+
+
+<body>
+
+
+  <!-- ANIMATION DE TRANSITION -->
+<div id="page-transition"></div>
+
+<style>
+  #page-transition {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    z-index: 9999;
+    opacity: 1;
+    pointer-events: auto;
+    transition: opacity 0.6s ease;
+  }
+
+  #page-transition.fade-out {
+    opacity: 0;
+    pointer-events: none;
+  }
+</style>
+
+<script>
+  window.addEventListener("load", () => {
+    // À l'ouverture, on fait disparaître le div de transition
+    const transition = document.getElementById("page-transition");
+    transition.classList.add("fade-out");
+  });
+
+  // Fonction générique de transition vers une autre page
+  function transitionToPage(targetUrl) {
+    const transition = document.getElementById("page-transition");
+    transition.classList.remove("fade-out");
+    transition.classList.add("active");
+
+    setTimeout(() => {
+      window.location.href = targetUrl;
+    }, 600); // Doit correspondre à la durée du CSS
+  }
+
+  // Ajout de l'événement de clic sur chaque catégorie
+  document.querySelectorAll(".image-category").forEach((category) => {
+    category.addEventListener("click", () => {
+      const target = category.dataset.target;
+      if (target) {
+        transitionToPage(target);
+      }
+    });
+  });
+</script>
+
+
+<button class="btn-accueil" onclick="transitionToPage('index.html')">Accueil</button>
+<button class="btn-ajouter">Ajouter au panier</button>
+
+
+<style>
+
+.btn-accueil {
+  display: inline-block;
+  padding: 15px 30px;
+  font-size: 1.2rem;
+  background-color: #000000;
+  color: white;
+  text-decoration: none;
+  border-radius: 10px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+}
+
+.btn-accueil:hover {
+  background-color: #5d5d5d;
+  transform: translateY(-3px);
+}
+
+
+   .btn-accueil {
+  display: inline-block;
+  padding: 8px 15px;
+  background-color: #c0392b;
+  color: white;
+  text-decoration: none;
+  border-radius: 10px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.btn-accueil:hover {
+  background-color: #e65500;
+  cursor: pointer;
+}
+
+#menuViande {
+  display: none;
+  margin-top: 10px;
+  max-width: 220px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fafafa;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.btn-choisir, .btn-ajouter-panier {
+  margin-top: 10px;
+  padding: 8px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.btn-choisir:hover, .btn-ajouter-panier:hover {
+  background-color: #0056b3;
+}
+
+
+
+</style>
+
+
+
+
+  
+
+<h1>Tacos</h1>
+
+<p>Bienvenue sur notre page de produits ! Cliquez sur les boutons pour ajouter des articles à votre panier.</p>
+
+<div class="liste-produits">
+
+<div class="produit" id="margarita">
+  <img src="images/Tacos.png" alt="Pizza Margarita" class="image-produit" />
+  <h3>Tacos </h3>
+       
+  <p class="prix-display">Prix : 5,00 €</p>
+  <label for="taille-margarita">Taille :</label>
+
+ <button id="btnViande">Choisir la viande ▼</button>
+
+<select id="menuViande" style="display:none; margin-top:10px;">
+  <option value="">-- Sélectionnez une viande --</option>
+  <option value="kebab">Kebab</option>
+  <option value="cordon">Cordon Bleu</option>
+  <option value="viande">Viande</option>
+  <option value="curry">Poulet Curry</option>
+  <option value="tenders">Tenders</option>
+  <option value="tandoori">Poulet Tandoori</option>
+</select>
+
+<script>
+  const btn = document.getElementById('btnViande');
+  const menu = document.getElementById('menuViande');
+
+  btn.addEventListener('click', () => {
+    if (menu.style.display === 'none') {
+      menu.style.display = 'block';
+    } else {
+      menu.style.display = 'none';
+    }
+  });
+</script>
+
+  <!-- Description simple -->
+  <div class="description-hover">
+    <p>Kebab , Cordon Bleu , Viande , Poulet Curry , Tenders , Poulet Tandori</p>
+  </div>
+
+  <!-- Ingrédients supplémentaires -->
+  <div class="supplementaires">
+    <p><strong>Ingrédients supplémentaires</strong> <br><small>Choisissez-en 3 max.</small></p>
+    <div class="options-supp">
+      <!-- les ingrédients seront générés dynamiquement en JS -->
+    </div>
+  </div>
+</div>
+
+
+  <div id="panier-flottant">
+  <button class="toggle" onclick="togglePanier()">Panier (<span id="compteur-panier">0</span>)</button>
+  <div id="contenu-panier" class="contenu-panier">
+    <h3>
+      Votre panier
+      <button id="fermer-panier" aria-label="Fermer le panier" onclick="togglePanier()">❌</button>
+    </h3>
+    <ul id="liste-panier"></ul>
+    <p>Total : <span id="total">0</span> €</p>
+    <button id="vider-panier" class="vider-panier">Valider le panier</button>
+
+  </div>
+</div>
+
+
+<script>
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  let panier = JSON.parse(localStorage.getItem('panier')) || [];
+
+  function updatePanier() {
+    const listePanier = document.getElementById('liste-panier');
+    const totalEl = document.getElementById('total');
+    const compteurPanier = document.getElementById('compteur-panier');
+
+    listePanier.innerHTML = '';
+    let total = 0;
+
+    panier.forEach((item, index) => {
+      const li = document.createElement('li');
+      li.textContent = `${item.nom} (${item.taille}) - ${item.prix.toFixed(2)} €`;
+
+      const btnSuppr = document.createElement('button');
+      btnSuppr.textContent = '❌';
+      btnSuppr.onclick = () => {
+        panier.splice(index, 1);
+        updatePanier();
+      };
+
+      li.appendChild(btnSuppr);
+      listePanier.appendChild(li);
+      total += item.prix;
+    });
+
+    totalEl.textContent = total.toFixed(2);
+    compteurPanier.textContent = panier.length;
+
+    localStorage.setItem('panier', JSON.stringify(panier));
+  }
+
+  // Pour chaque produit sur la page
+  document.querySelectorAll('.produit').forEach(produitEl => {
+    const nom = produitEl.querySelector('h3').textContent.trim();
+    const selectTaille = produitEl.querySelector('.taille-select');
+    const prixDisplay = produitEl.querySelector('.prix-display');
+    const btnAjouter = produitEl.querySelector('button');
+    const image = produitEl.querySelector('img')?.src || '';
+
+    if (selectTaille && prixDisplay) {
+      selectTaille.addEventListener('change', (event) => {
+        const selectedOption = event.target.selectedOptions[0];
+        const newPrice = selectedOption.dataset.price;
+        prixDisplay.textContent = `Prix : ${parseFloat(newPrice).toFixed(2)} €`;
+      });
+    }
+
+    if (btnAjouter && selectTaille) {
+      btnAjouter.addEventListener('click', () => {
+        const option = selectTaille.selectedOptions[0];
+        const taille = option.value;
+        const prix = parseFloat(option.dataset.price);
+
+        panier.push({ nom, taille, prix, image });
+        updatePanier();
+      });
+    }
+  });
+
+  // Valider le panier
+  document.getElementById('vider-panier').addEventListener('click', () => {
+    if (confirm('Voulez-vous valider le panier ?')) {
+      // Rediriger vers la page de confirmation (le panier est déjà stocké)
+      window.location.href = 'confirmation.html';
+    }
+  });
+
+  window.togglePanier = () => {
+    document.getElementById('contenu-panier').classList.toggle('ouvert');
+  };
+
+  updatePanier();
+});
+</script>

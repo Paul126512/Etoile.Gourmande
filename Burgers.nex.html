@@ -1,0 +1,170 @@
+// Mise à jour du prix affiché selon taille sélectionnée + suppléments
+document.querySelectorAll('.produit').forEach(produit => {
+  const selectTaille = produit.querySelector('select.taille-select');
+  const prixElement = produit.querySelector('.prix-produit');
+  const checkboxesSupplements = produit.querySelectorAll('.supplements input[type="checkbox"]');
+  
+  function calculerPrix() {
+    let prixBase = 0;
+    if (selectTaille) {
+      const optionChoisie = selectTaille.options[selectTaille.selectedIndex];
+      prixBase = parseFloat(optionChoisie.getAttribute('data-price')) || 0;
+    } else {
+      prixBase = parseFloat(prixElement.getAttribute('data-price')) || 0;
+    }
+    // Ajouter prix des suppléments cochés
+    let prixSupplements = 0;
+    checkboxesSupplements.forEach(chk => {
+      if (chk.checked) {
+        prixSupplements += parseFloat(chk.getAttribute('data-price')) || 0;
+      }
+    });
+    
+    const prixTotal = prixBase + prixSupplements;
+    prixElement.setAttribute('data-price', prixTotal);
+    prixElement.textContent = prixTotal.toFixed(2) + ' €';
+  }
+  
+  // Au changement de taille ou de suppléments, recalculer le prix
+  if (selectTaille) {
+    selectTaille.addEventListener('change', calculerPrix);
+  }
+  checkboxesSupplements.forEach(chk => {
+    chk.addEventListener('change', calculerPrix);
+  });
+  
+  // Initialiser au chargement
+  calculerPrix();
+});
+
+// Gestion du panier
+const boutonsAjouter = document.querySelectorAll('.produit button');
+const compteurPanier = document.getElementById('compteur-panier');
+const listePanier = document.getElementById('liste-panier');
+const totalElement = document.getElementById('total');
+
+let panier = JSON.parse(localStorage.getItem('panier')) || [];
+panier = panier.map(item => ({ ...item, quantite: item.quantite || 1 }));
+
+function trouverProduitIdentique(nom, prix, type, supplements, taille) {
+  return panier.find(item =>
+    item.nom === nom &&
+    item.prix === prix &&
+    item.type === type &&
+    item.taille === taille &&
+    JSON.stringify(item.supplements) === JSON.stringify(supplements)
+  );
+}
+
+boutonsAjouter.forEach(bouton => {
+  bouton.addEventListener('click', () => {
+    const produitElement = bouton.closest('.produit');
+    const nom = produitElement.querySelector('h3').textContent.trim();
+
+    const selectTaille = produitElement.querySelector('select.taille-select');
+    let prix;
+    let type = 'burger';
+    let taille = null;
+    let supplements = [];
+
+    if (selectTaille) {
+      const optionChoisie = selectTaille.options[selectTaille.selectedIndex];
+      prix = parseFloat(produitElement.querySelector('.prix-produit').getAttribute('data-price'));
+      taille = optionChoisie.value;
+      type = 'pizza';
+
+      // Récupérer suppléments cochés
+      const checkboxesSupplements = produitElement.querySelectorAll('.supplements input[type="checkbox"]');
+      supplements = Array.from(checkboxesSupplements)
+        .filter(chk => chk.checked)
+        .map(chk => ({
+          nom: chk.getAttribute('data-nom'),
+          prix: parseFloat(chk.getAttribute('data-price'))
+        }));
+    } else {
+      prix = parseFloat(produitElement.querySelector('.prix-produit').getAttribute('data-price'));
+    }
+
+    const image = produitElement.querySelector('img').src;
+
+    const produitExistant = trouverProduitIdentique(nom, prix, type, supplements, taille);
+
+    if (produitExistant) {
+      produitExistant.quantite += 1;
+    } else {
+      const produit = {
+        id: Date.now(),
+        nom,
+        prix,
+        image,
+        type,
+        taille,
+        supplements,
+        quantite: 1
+      };
+      panier.push(produit);
+    }
+
+    localStorage.setItem('panier', JSON.stringify(panier));
+    afficherPanier();
+  });
+});
+
+function afficherPanier() {
+  listePanier.innerHTML = '';
+  let total = 0;
+
+  panier.forEach(item => {
+    if (typeof item.prix !== 'number' || isNaN(item.prix)) {
+      console.error(`Prix non valide pour ${item.nom} :`, item.prix);
+      item.prix = 0;
+    }
+
+    const li = document.createElement('li');
+    li.classList.add('article-panier');
+
+    // Suppléments affichage
+    let supplementsHTML = '';
+    if (item.supplements && item.supplements.length > 0) {
+      supplementsHTML = '<p>Suppléments :</p><ul>';
+      item.supplements.forEach(supp => {
+        supplementsHTML += `<li>${supp.nom} (+${supp.prix.toFixed(2)} €)</li>`;
+      });
+      supplementsHTML += '</ul>';
+    }
+
+    const details = document.createElement('div');
+    details.classList.add('details-panier');
+    details.innerHTML = `
+      <img src="${item.image}" alt="${item.nom}" />
+      <div>
+        <h4>${item.nom} ${item.taille ? `(${item.taille})` : ''} × ${item.quantite}</h4>
+        <p>Type : ${item.type === 'pizza' ? 'Pizza' : item.type === 'burger' ? 'Burger' : 'Autre'}</p>
+        ${supplementsHTML}
+        <p>Prix unitaire : ${item.prix.toFixed(2)} €</p>
+        <p>Prix total : ${(item.prix * item.quantite).toFixed(2)} €</p>
+      </div>
+    `;
+
+    const boutonSupprimer = document.createElement('button');
+    boutonSupprimer.textContent = '×';
+    boutonSupprimer.classList.add('supprimer');
+    boutonSupprimer.addEventListener('click', () => {
+      panier = panier.filter(p => p.id !== item.id);
+      localStorage.setItem('panier', JSON.stringify(panier));
+      afficherPanier();
+    });
+
+    li.appendChild(details);
+    li.appendChild(boutonSupprimer);
+    listePanier.appendChild(li);
+
+    total += item.prix * item.quantite;
+  });
+
+  compteurPanier.textContent = panier.reduce((acc, item) => acc + item.quantite, 0);
+  totalElement.textContent = total.toFixed(2);
+}
+
+// Initialiser l'affichage au chargement
+afficherPanier();

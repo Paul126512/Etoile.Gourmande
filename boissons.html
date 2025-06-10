@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Panier Pizza & Boissons</title>
+  <link rel="stylesheet" href="css/boissons.css" />
+</head>
+
+<body>
+
+  <header class="header">
+    <h1>Votre Panier</h1>
+  </header>
+
+  <a href="Card.html" id="confirmation-btn" class="btn-disabled" aria-disabled="true">
+    &lt;  Retour <span id="prix-stripe"></span>
+  </a>
+
+  <br><br><br><br><br><br><br>
+
+  <div class="main-container">
+
+    <!-- Section Panier Pizzas -->
+    <section class="section">
+      <h2 class="section-title">Vos Pizza(s), Burger(s) et Bagel(s) </h2>
+      <div id="liste-pizzas-panier" class="products-grid">
+        <!-- Les pizzas du panier apparaîtront ici -->
+      </div>
+    </section>
+
+    <!-- Section Panier Boissons -->
+    <section class="section">
+      <h2 class="section-title">Vos Boissons</h2>
+      <div id="liste-panier" class="products-grid">
+        <!-- Les boissons du panier apparaîtront ici -->
+      </div>
+    </section>
+
+    <!-- Section Boissons Disponibles -->
+    <section class="section">
+      <h2 class="section-title">Boissons Disponibles</h2>
+      <div id="liste-boissons-dispo" class="products-grid">
+        <!-- Les boissons disponibles apparaîtront ici -->
+      </div>
+    </section>
+
+    <!-- Total et Paiement -->
+    <div class="cart-total">
+      Total : <span id="total">0.00</span> €
+    </div>
+    <button id="payer-btn" class="checkout-btn" disabled>Passer commande (0.00 €)</button>
+
+  </div>
+
+
+
+
+
+
+
+
+
+  <script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Données boissons disponibles — corrigé les doublons d'id
+  const boissonsDisponibles = [
+    { id: 'coca', nom: 'Coca-Cola', prix: 2, image: 'images/Boissons/Coca-Cola.png' },
+    { id: 'fanta-o', nom: 'Fanta', prix: 2.2, image: 'images/Boissons/Fanta-Orange.png' },
+    { id: 'fanta-f', nom: 'Fanta Fruit du Dragon', prix: 1.5, image: 'images/Boissons/Fanta-F-Dragon.png' },
+    { id: 'nouvelle-1', nom: 'Nouvelle boisson 1', prix: 1.5, image: 'images/nouvelle1.png' },
+    { id: 'nouvelle-2', nom: 'Nouvelle boisson 2', prix: 1.5, image: 'images/nouvelle2.png' },
+    { id: 'nouvelle-3', nom: 'Nouvelle boisson 3', prix: 1.5, image: 'images/nouvelle3.png' },
+    { id: 'nouvelle-4', nom: 'Nouvelle boisson 4', prix: 1.5, image: 'images/nouvelle4.png' },
+  ];
+
+  // Récupération des paniers depuis localStorage
+  const panierPizzas = JSON.parse(localStorage.getItem('panier')) || [];
+  let panierBoissons = JSON.parse(localStorage.getItem('boissons')) || [];
+
+  // Références DOM
+  const listePizzasEl = document.getElementById('liste-pizzas-panier');
+  const listeBoissonsEl = document.getElementById('liste-panier');
+  const listeBoissonsDispoEl = document.getElementById('liste-boissons-dispo');
+  const totalEl = document.getElementById('total');
+  const payerBtn = document.getElementById('payer-btn');
+
+  // Calcul du prix total d'une pizza avec suppléments
+  function calculerPrixPizza(pizza) {
+    if (!pizza.supplements || pizza.supplements.length === 0 ||
+      (pizza.supplements.length === 1 && pizza.supplements[0].id === 'aucun')) {
+      return pizza.prix;
+    }
+    const prixSupp = pizza.supplements.reduce((acc, sup) => acc + sup.prix, 0);
+    return pizza.prix + prixSupp;
+  }
+
+  // Affichage des pizzas dans le panier
+ function afficherPanierPizzas() {
+  listePizzasEl.innerHTML = '';
+
+  if (panierPizzas.length === 0) {
+    listePizzasEl.innerHTML = '<div class="empty-cart">Votre panier pizzas est vide</div>';
+    return;
+  }
+
+  // Regrouper pizzas identiques (nom, taille, suppléments)
+  const pizzasRegroupees = {};
+
+  panierPizzas.forEach(pizza => {
+    // On crée une clé unique pour comparer : nom + taille + suppléments triés
+    const suppIds = (pizza.supplements || []).map(s => s.id).sort().join(',');
+    const key = `${pizza.nom}__${pizza.taille || 'Standard'}__${suppIds}`;
+
+    if (pizzasRegroupees[key]) {
+      pizzasRegroupees[key].quantite++;
+    } else {
+      pizzasRegroupees[key] = { ...pizza, quantite: 1 };
+    }
+  });
+
+  // Afficher chaque groupe avec la quantité
+  Object.values(pizzasRegroupees).forEach(pizza => {
+    const card = document.createElement('div');
+    card.className = 'pizza-card';
+
+    const img = document.createElement('img');
+    img.src = pizza.image || 'https://via.placeholder.com/80';
+    img.alt = pizza.nom;
+    img.className = 'pizza-image';
+
+    const details = document.createElement('div');
+    details.className = 'pizza-details';
+
+    let supplText = '';
+    if (pizza.supplements && pizza.supplements.length > 0 &&
+        !(pizza.supplements.length === 1 && pizza.supplements[0].id === 'aucun')) {
+      supplText = `<div class="pizza-supplements">+ ${pizza.supplements.map(s => s.nom).join(', ')}</div>`;
+    }
+
+    details.innerHTML = `
+      <div class="pizza-name">${pizza.nom} (${pizza.taille || 'Standard'}) × ${pizza.quantite}</div>
+      ${supplText}
+      <div class="pizza-price">${(calculerPrixPizza(pizza) * pizza.quantite).toFixed(2)} €</div>
+    `;
+
+    card.appendChild(img);
+    card.appendChild(details);
+    listePizzasEl.appendChild(card);
+  });
+}
+
+
+  // Affichage des boissons dans le panier (avec gestion quantité & suppression)
+  function afficherPanierBoissons() {
+    listeBoissonsEl.innerHTML = '';
+
+    if (panierBoissons.length === 0) {
+      listeBoissonsEl.innerHTML = '<div class="empty-cart">Votre panier boissons est vide</div>';
+      return;
+    }
+
+    // Regrouper les boissons par ID avec quantité cumulée
+    const boissonsRegroupees = {};
+    panierBoissons.forEach(boisson => {
+      if (boissonsRegroupees[boisson.id]) {
+        boissonsRegroupees[boisson.id].quantite += boisson.quantite;
+      } else {
+        boissonsRegroupees[boisson.id] = { ...boisson };
+      }
+    });
+
+    Object.values(boissonsRegroupees).forEach(boisson => {
+      const card = document.createElement('div');
+      card.className = 'boisson-card';
+
+      const img = document.createElement('img');
+      img.src = boisson.image || 'https://via.placeholder.com/60';
+      img.alt = boisson.nom;
+      img.className = 'boisson-image';
+
+      const details = document.createElement('div');
+      details.className = 'boisson-details';
+
+      details.innerHTML = `
+        <div class="boisson-name">${boisson.nom} × ${boisson.quantite}</div>
+        <div>Prix unitaire : ${boisson.prix.toFixed(2)} €</div>
+        <div style="font-weight:500; margin-top:5px;">Total : ${(boisson.prix * boisson.quantite).toFixed(2)} €</div>
+      `;
+
+      const inputQte = document.createElement('input');
+      inputQte.type = 'number';
+      inputQte.min = '1';
+      inputQte.value = boisson.quantite;
+      inputQte.className = 'quantity-input';
+
+      inputQte.addEventListener('change', (e) => {
+        const nouvelleQuantite = parseInt(e.target.value);
+        if (nouvelleQuantite > 0) {
+          // Mettre à jour la quantité dans le panier pour la boisson concernée
+          panierBoissons = panierBoissons.filter(item => item.id !== boisson.id);
+          panierBoissons.push({ ...boisson, quantite: nouvelleQuantite });
+          localStorage.setItem('boissons', JSON.stringify(panierBoissons));
+          afficherPanierBoissons();
+          updateTotal();
+        } else {
+          // Si quantité invalide, remettre la valeur précédente
+          e.target.value = boisson.quantite;
+        }
+      });
+
+      const btnSuppr = document.createElement('button');
+      btnSuppr.className = 'btn btn-remove';
+      btnSuppr.textContent = 'Supprimer';
+      btnSuppr.addEventListener('click', () => {
+        panierBoissons = panierBoissons.filter(item => item.id !== boisson.id);
+        localStorage.setItem('boissons', JSON.stringify(panierBoissons));
+        afficherPanierBoissons();
+        updateTotal();
+      });
+
+      details.appendChild(document.createElement('br'));
+      details.appendChild(inputQte);
+
+      card.appendChild(img);
+      card.appendChild(details);
+      card.appendChild(btnSuppr);
+      listeBoissonsEl.appendChild(card);
+    });
+  }
+
+  // Affichage des boissons disponibles à l'ajout
+  function afficherBoissonsDisponibles() {
+    listeBoissonsDispoEl.innerHTML = '';
+
+    boissonsDisponibles.forEach(boisson => {
+      const card = document.createElement('div');
+      card.className = 'boisson-card';
+
+      const img = document.createElement('img');
+      img.src = boisson.image || 'https://via.placeholder.com/60';
+      img.alt = boisson.nom;
+      img.className = 'boisson-image';
+
+      const details = document.createElement('div');
+      details.className = 'boisson-details';
+      details.innerHTML = `
+        <div class="boisson-name">${boisson.nom}</div>
+        <div>${boisson.prix.toFixed(2)} €</div>
+      `;
+
+      const btnAjout = document.createElement('button');
+      btnAjout.className = 'btn';
+      btnAjout.textContent = 'Ajouter';
+      btnAjout.addEventListener('click', () => {
+        const existe = panierBoissons.find(item => item.id === boisson.id);
+        if (existe) {
+          existe.quantite++;
+          // Mise à jour panierBoissons : remplacer l'ancien objet avec la nouvelle quantité
+          panierBoissons = panierBoissons.filter(item => item.id !== boisson.id);
+          panierBoissons.push(existe);
+        } else {
+          panierBoissons.push({ ...boisson, quantite: 1 });
+        }
+        localStorage.setItem('boissons', JSON.stringify(panierBoissons));
+        afficherPanierBoissons();
+        updateTotal();
+      });
+
+      card.appendChild(img);
+      card.appendChild(details);
+      card.appendChild(btnAjout);
+      listeBoissonsDispoEl.appendChild(card);
+    });
+  }
+
+  // Mise à jour du total et activation/désactivation du bouton commander
+  function updateTotal() {
+    const totalPizzas = panierPizzas.reduce((acc, p) => acc + calculerPrixPizza(p), 0);
+    const totalBoissons = panierBoissons.reduce((acc, b) => acc + (b.prix * b.quantite), 0);
+    const total = totalPizzas + totalBoissons;
+
+    totalEl.textContent = total.toFixed(2);
+    payerBtn.textContent = `Passer commande (${total.toFixed(2)} €)`;
+    payerBtn.disabled = total === 0;
+  }
+
+  // Initialisation affichages et total
+  afficherBoissonsDisponibles();
+  afficherPanierBoissons();
+  afficherPanierPizzas();
+  updateTotal();
+
+  // Gestion clic sur bouton commander
+  payerBtn.addEventListener('click', () => {
+    window.location.href = 'formulaire.html';
+  });
+});
+</script>
+
+
+  </body>
+</html>

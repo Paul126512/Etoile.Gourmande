@@ -1,0 +1,143 @@
+body {
+  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+  background-color: #f8f9fa;
+  padding: 20px;
+  color: #212529;
+}
+
+h1 {
+  text-align: center;
+  color: #212529;
+  margin-bottom: 30px;
+  font-weight: 600;
+  position: relative;
+}
+
+.panier-container {
+  max-width: 900px;
+  margin: auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+}
+
+#liste-panier .pizza-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  border-bottom: 1px solid #e9ecef;
+  transition: transform 0.2s ease;
+}
+
+#liste-panier .pizza-card:hover {
+  transform: translateY(-2px);
+}
+
+.pizza-card img {
+  width: 100px;
+  height: 100px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid #e9ecef;
+}
+
+.pizza-details {
+  flex: 1;
+  margin-left: 20px;
+}
+
+.pizza-details h3 {
+  margin: 0;
+  color: #212529;
+  font-weight: 600;
+}
+
+.pizza-details p {
+  margin: 6px 0;
+  color: #6c757d;
+  font-size: 14px;
+}
+
+select {
+  margin-top: 8px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #ced4da;
+  width: 100%;
+  max-width: 300px;
+  background: #fff;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.prix {
+  margin-top: 8px;
+  font-weight: 700;
+  color: #212529;
+}
+
+.remove-btn {
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  color: #dc3545;
+  padding: 8px;
+  transition: color 0.2s ease;
+}
+
+.remove-btn:hover {
+  color: #c82333;
+}
+
+.total-panier {
+  text-align: right;
+  margin-top: 30px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #212529;
+}
+
+#commander-btn {  /* Changé de #payer-btn à #commander-btn */
+  display: block;
+  margin-top: 30px;
+  padding: 12px 24px;
+  font-size: 1rem;
+  background-color: #212529;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  float: right;
+  font-weight: 500;
+}
+
+#commander-btn:disabled {
+  background-color: #adb5bd;
+  cursor: not-allowed;
+}
+
+#commander-btn:hover:not(:disabled) {
+  background-color: #000;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 600px) {
+  .pizza-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .pizza-details {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .panier-container {
+    padding: 20px;
+  }
+}

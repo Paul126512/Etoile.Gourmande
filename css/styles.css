@@ -1,0 +1,705 @@
+    :root {
+      --noir: #1a1a1a;
+      --blanc: #ffffff;
+      --gris-clair: #f5f5f5;
+      --gris-moyen: #e0e0e0;
+      --gold: #c5a876;
+    }
+
+    body {
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.8s ease, visibility 0.8s ease;
+      font-family: 'Montserrat', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: var(--blanc);
+      color: var(--noir);
+      line-height: 1.6;
+    }
+
+    body.loaded {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    header {
+      background: var(--blanc);
+      color: var(--noir);
+      text-align: center;
+      padding: 80px 20px 60px;
+      position: relative;
+      border-bottom: 1px solid var(--gris-moyen);
+    }
+
+.stars-top {
+  display: flex;
+  justify-content: center;
+  gap: 15px; /* espace entre les étoiles */
+  align-items: flex-end; /* aligne les étoiles en bas pour voir la différence */
+}
+
+.stars-top div:nth-child(2) {
+  transform: translateY(-5px); /* remonte l’étoile du milieu de 10px */
+}
+
+
+    .title {
+      font-family: 'Playfair Display', serif;
+      font-size: 48px;
+      margin: 0;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .subtitle {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 300;
+      letter-spacing: 8px;
+      margin: 15px 0 30px;
+      font-size: 14px;
+      text-transform: uppercase;
+    }
+
+    .decor {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      margin: 30px 0;
+    }
+
+    .decor-line {
+      height: 1px;
+      width: 80px;
+      background: var(--noir);
+    }
+
+.phone-number {
+  font-family: 'Playfair Display', serif;
+  font-weight: 400;
+  font-size: 17px;   /* augmenter la taille ici */
+  letter-spacing: 2px;
+  line-height: 28px; /* un peu plus grand que font-size */
+  height: 34px;      /* hauteur conteneur adaptée */
+  overflow: hidden;
+  font-feature-settings: "tnum", "lnum"; /* pour les chiffres */
+}
+
+
+
+
+
+    .intro-text {
+      max-width: 600px;
+      margin: 40px auto 0;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 300;
+      font-size: 16px;
+      line-height: 1.8;
+    }
+
+    .halal-logo {
+      margin: 40px auto 0;
+      width: 70px;
+      filter: contrast(0) brightness(0.5);
+      display: block;
+    }
+    
+
+/* Transition de page */
+#page-transition {
+  position: fixed;
+  z-index: 9999;
+  background: #111;
+  width: 0%;
+  height: 100vh;
+  top: 0;
+}
+
+.image-categories {
+  padding: 2rem 5%;
+  background: #f8f8f8;
+}
+
+.category-title {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 3rem;
+  color: #222;
+  font-weight: 300;
+  letter-spacing: 1px;
+  position: relative;
+}
+
+.category-title:after {
+  content: "";
+  display: block;
+  width: 80px;
+  height: 3px;
+  background: #222;
+  margin: 15px auto 0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.image-category {
+  position: relative;
+  aspect-ratio: 1/1;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  background: #fff;
+}
+
+.image-category img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.image-category span {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 1.5rem;
+  background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 500;
+  text-align: center;
+  transition: all 0.4s ease;
+}
+
+.image-category .description {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 2rem;
+  background: rgba(0,0,0,0.9);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  text-align: center;
+  font-weight: 300;
+  line-height: 1.6;
+}
+
+/* Au survol */
+.image-category:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+}
+
+.image-category:hover img {
+  transform: scale(1.05);
+}
+
+.image-category:hover span {
+  transform: translateY(-20px);
+  padding-bottom: 2rem;
+}
+
+.image-category:hover .description {
+  top: 0;
+  opacity: 1;
+}
+
+
+
+
+
+    #page-transition {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--blanc);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.8s ease;
+      z-index: 9999;
+    }
+
+    #page-transition.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .orders-section {
+      max-width: 600px;
+      margin: 80px auto;
+      padding: 0 20px;
+      text-align: center;
+    }
+
+    .orders-section h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      font-weight: 400;
+      margin-bottom: 30px;
+      letter-spacing: 1px;
+    }
+
+    .orders-section input {
+      width: 100%;
+      padding: 12px 15px;
+      font-size: 14px;
+      margin-bottom: 20px;
+      border: 1px solid var(--gris-moyen);
+      background: var(--blanc);
+      font-family: 'Montserrat', sans-serif;
+      letter-spacing: 1px;
+      transition: border 0.3s ease;
+    }
+
+    .orders-section input:focus {
+      outline: none;
+      border-color: var(--noir);
+    }
+
+    .orders-section button {
+      width: 100%;
+      padding: 12px;
+      font-size: 14px;
+      background: var(--noir);
+      color: var(--blanc);
+      border: none;
+      cursor: pointer;
+      font-family: 'Montserrat', sans-serif;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: background 0.3s ease;
+    }
+
+    .orders-section button:hover {
+      background: var(--gold);
+    }
+
+    #ordersContainer {
+      margin-top: 30px;
+      white-space: pre-wrap;
+      min-height: 100px;
+      background: var(--gris-clair);
+      padding: 20px;
+      border-radius: 0;
+      border: 1px solid var(--gris-moyen);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 14px;
+      text-align: left;
+    }
+
+    footer {
+      text-align: center;
+      padding: 40px 20px;
+      border-top: 1px solid var(--gris-moyen);
+      margin-top: 80px;
+    }
+
+    .footer-text {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      letter-spacing: 1px;
+      color: var(--noir);
+      opacity: 0.6;
+    }
+
+
+.ble-icon {
+  width: 40px;
+  height: 60px; /* un peu plus haut pour étirer verticalement */
+  transform: rotate(270deg) scaleY(1.2); /* étire verticalement de 20% */
+}
+
+.ble-icon.inverted {
+  width: -40px;
+  height: 60px;
+  transform: rotate(90deg) scaleX(-1) scaleY(1.2);
+}
+
+
+/* Suivi de commande button */
+
+
+
+/* BOUTON SUIVI DE COMMANDE ULTRA PREMIUM */
+.order-tracking-logo {
+  position: absolute;
+  top: 620px;
+  right: 200px;
+  z-index: 100;
+}
+
+.logo-container {
+  /* Base style */
+  background-color: white;
+  color: #000000;
+  border: 2px solid #000000;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none !important; /* Suppression du soulignement */
+  
+  /* Typographie */
+  font-family: 'Montserrat', sans-serif;
+  text-transform: uppercase;
+}
+
+/* Animation de fond noir */
+.logo-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: #000000;
+  z-index: -1;
+  transition: all 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+/* Icône */
+.logo-container i {
+  font-size: 16px;
+  transition: all 0.4s ease;
+}
+
+/* Effets au survol */
+.logo-container:hover {
+  color: white;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  text-decoration: none !important; /* Double assurance */
+}
+
+.logo-container:hover i {
+  color: white;
+}
+
+.logo-container:hover::before {
+  left: 0;
+}
+
+/* Effet de bordure qui s'étend */
+.logo-container::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  background: rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  border-radius: 100%;
+  transform: scale(1, 1) translate(-50%, -50%);
+  transform-origin: 50% 50%;
+  transition: all 0.6s ease;
+}
+
+.logo-container:hover::after {
+  opacity: 1;
+  transform: scale(50, 50) translate(-50%, -50%);
+}
+
+/* Effet click */
+.logo-container:active {
+  transform: translateY(-1px) scale(0.98);
+  transition: transform 0.1s ease;
+}
+
+/* Version mobile */
+@media (max-width: 768px) {
+  .order-tracking-logo {
+    top: 15px;
+    right: 15px;
+  }
+  
+  .logo-container {
+    padding: 10px 16px;
+    font-size: 14px;
+    border-width: 1.5px;
+  }
+  
+  .logo-container i {
+    font-size: 14px;
+  }
+
+
+.order-tracking-logo {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.orders-right {
+  display: inline-block;
+  margin-left: 10px;
+}
+ }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ .header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: #f8f8f8;
+}
+
+.store-info {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.store-image {
+  width: 100%; /* prend toute la largeur disponible */
+  max-width: 400px; /* ajuste cette valeur selon le rendu souhaité */
+  height: auto;
+  border-radius: 12px; /* optionnel, pour des coins arrondis */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* effet esthétique */
+}
+
+
+.store-text h2 {
+  margin: 0;
+  color: #333;
+  font-size: 1.5rem;
+}
+
+.store-text p {
+  margin: 5px 0 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.order-link span {
+  position: relative;
+  display: inline-block;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transform-origin: left center;
+  padding-bottom: 2px; /* Préparation pour le soulignement */
+}
+
+/* Effet principal au survol */
+.order-link:hover span {
+  transform: scale(1.07);
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+/* Soulignement discret */
+.order-link span::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 1px; /* Plus subtil que 2px */
+  background: #000; /* Noir au lieu de doré */
+  transition: width 0.3s ease;
+}
+
+.order-link:hover span::after {
+  width: 100%;
+}
+
+
+@media (max-width: 768px) {
+  .header-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  
+  .order-tracking {
+    align-self: flex-end;
+  }
+
+    }
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+.commande-button {
+  /* Style de base */
+  background-color: white;
+  color: #030303;
+  border: 2px solid #030303;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  
+  /* Typographie */
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  font-family: 'Montserrat', sans-serif;
+  text-transform: uppercase;
+  text-decoration: none;
+  
+  /* Effets et positionnement */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  box-shadow: 0 2px 4px rgba(9, 160, 194, 0.2);
+  transition: all 0.4s ease;
+  
+  /* Animation au survol */
+  &:hover {
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(9, 160, 194, 0.3);
+  }
+  
+  /* Effet de fond qui glisse */
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: black;
+    z-index: -1;
+    transition: all 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+  }
+  
+  &:hover::before {
+    left: 0;
+  }
+  
+  /* Icône (optionnelle) */
+  &::after {
+    content: '→';
+    margin-left: 8px;
+    transition: all 0.3s ease;
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  
+  &:hover::after {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  
+  /* Texte du bouton */
+  span {
+    position: relative;
+    z-index: 2;
+    transition: all 0.3s ease;
+  }
+  
+  &:hover span {
+    transform: translateX(-5px);
+  }
+
+      /* Ajoutez ceci à votre CSS existant */
+    :root {
+      --transition-duration: 0.6s;
+      --transition-easing: cubic-bezier(0.77, 0, 0.175, 1);
+    }
+    
+    /* Animation de préchargement */
+    .page-loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--blanc);
+      z-index: 9999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 1;
+      visibility: visible;
+      transition: opacity var(--transition-duration) var(--transition-easing), 
+                  visibility var(--transition-duration) var(--transition-easing);
+    }
+    
+    .page-loader.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+    
+    .loader-logo {
+      width: 80px;
+      height: 80px;
+      animation: fadeInOut 1.5s infinite alternate;
+    }
+    
+    @keyframes fadeInOut {
+      0% { opacity: 0.3; transform: scale(0.95); }
+      100% { opacity: 1; transform: scale(1.05); }
+    }
+    
+    /* Transition pour le contenu */
+    .page-content {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    
+    .page-content.loaded {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+
+    
+}
+
+

@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Nos Desserts - Édition Gourmande</title>
+  <style>
+    /* === Reset et base === */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
+      background-color: #f9f9f9;
+      color: #222;
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+  }
+
+    /* === Structure globale === */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      background-color: white;
+      box-shadow: 0 0 30px rgba(0,0,0,0.05);
+    }
+
+    /* === Typographie élégante === */
+    h1, h2, h3 {
+      font-weight: 300;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      text-align: center;
+      margin-bottom: 20px;
+      color: #111;
+      position: relative;
+      padding-bottom: 20px;
+    }
+
+    h1:after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #000, transparent);
+    }
+
+    .sous-titre {
+      text-align: center;
+      font-size: 1rem;
+      color: #666;
+      margin-bottom: 40px;
+      font-weight: 300;
+      letter-spacing: 2px;
+    }
+
+    /* === Section produits === */
+    .section-title {
+      font-size: 1.2rem;
+      text-align: center;
+      margin: 60px 0 40px;
+      position: relative;
+    }
+
+    .section-title:before,
+    .section-title:after {
+      content: "•";
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #999;
+      font-size: 1.5rem;
+    }
+
+    .section-title:before {
+      left: calc(50% - 100px);
+    }
+
+    .section-title:after {
+      right: calc(50% - 100px);
+    }
+
+    /* === Grille de produits uniformisée === */
+    .liste-produits {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+      padding: 0 20px;
+      align-items: stretch;
+    }
+
+    /* === Carte produit uniforme === */
+    .produit {
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      border: 1px solid #eee;
+    }
+
+    .produit:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.12);
+    }
+
+    /* === Image produit === */
+    .image-produit {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .produit:hover .image-produit {
+      transform: scale(1.05);
+    }
+
+    /* === Contenu texte uniforme === */
+    .produit-contenu {
+      padding: 20px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .produit h3 {
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+      text-align: center;
+      color: #111;
+      font-weight: 400;
+    }
+
+    .description-produit {
+      font-size: 0.9rem;
+      color: #666;
+      text-align: center;
+      margin-bottom: 15px;
+      flex: 1;
+      font-weight: 300;
+      line-height: 1.6;
+    }
+
+    .prix-produit {
+      font-size: 1.4rem;
+      color: #e67e22;
+      text-align: center;
+      margin-bottom: 15px;
+      font-weight: 500;
+      letter-spacing: 1px;
+    }
+
+    .supplement {
+      font-size: 0.8rem;
+      color: #888;
+      text-align: center;
+      margin-bottom: 15px;
+      font-style: italic;
+    }
+
+    /* === Bouton ajout panier === */
+    .produit button {
+      background-color: #e67e22;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      margin-top: auto;
+    }
+
+    .produit button:hover {
+      background-color: #d35400;
+      transform: translateY(-2px);
+    }
+
+    /* === Panier flottant === */
+    #panier-flottant {
+      position: fixed;
+      top: 30px;
+      right: 30px;
+      z-index: 1000;
+    }
+
+    #panier-flottant button.toggle {
+      background: white;
+      color: #111;
+      border: 1px solid #111;
+      padding: 12px 20px;
+      border-radius: 0;
+      cursor: pointer;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    #panier-flottant button.toggle:hover {
+      background: #111;
+      color: white;
+    }
+
+    /* === Contenu panier === */
+    #contenu-panier {
+      position: absolute;
+      top: 60px;
+      right: 0;
+      background: white;
+      width: 350px;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+      padding: 25px;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-20px);
+      transition: all 0.3s ease;
+    }
+
+    #contenu-panier.ouvert {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    #contenu-panier h3 {
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    #fermer-panier {
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      color: #999;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    #fermer-panier:hover {
+      color: #111;
+    }
+
+    #liste-panier {
+      list-style: none;
+      padding: 0;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .article-panier {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .article-panier .details {
+      flex: 1;
+    }
+
+    .article-panier .nom {
+      font-weight: 500;
+    }
+
+    .article-panier .prix {
+      color: #e67e22;
+      font-weight: 500;
+    }
+
+    .supprimer {
+      background: none;
+      border: none;
+      color: #e74c3c;
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: color 0.3s ease;
+    }
+
+    .supprimer:hover {
+      color: #c0392b;
+    }
+
+    /* === Total panier === */
+    #total {
+      font-size: 1.2rem;
+      text-align: right;
+      font-weight: 500;
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px solid #eee;
+    }
+
+    /* === Bouton valider === */
+    #valider-commande {
+      width: 100%;
+      background-color: #e67e22;
+      color: white;
+      border: none;
+      padding: 15px;
+      margin-top: 20px;
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    #valider-commande:hover {
+      background-color: #d35400;
+    }
+
+    /* === Bouton retour === */
+    .bouton-retour {
+      display: inline-block;
+      margin-bottom: 30px;
+      padding: 10px 20px;
+      background-color: transparent;
+      color: #333;
+      text-decoration: none;
+      border: 1px solid #333;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      border-radius: 4px;
+    }
+
+    .bouton-retour:hover {
+      background-color: #333;
+      color: white;
+    }
+
+    /* === Responsive === */
+    @media (max-width: 768px) {
+      .container {
+        padding: 30px 15px;
+      }
+      
+      .liste-produits {
+        grid-template-columns: 1fr;
+        gap: 25px;
+      }
+      
+      #panier-flottant {
+        top: auto;
+        bottom: 20px;
+        right: 20px;
+      }
+      
+      #contenu-panier {
+        width: calc(100vw - 40px);
+        right: 20px;
+      }
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <a href="index.html" class="bouton-retour">
+      ← Retour à l'accueil
+    </a>
+
+    <h1>NOS DESSERTS</h1>
+    <p class="sous-titre">Découvrez nos douceurs maison pour terminer votre repas en beauté</p>
+
+    <div class="liste-produits">
+      <!-- Milkshake -->
+      <div class="produit" id="Milkshake">
+        <img src="images/Desserts/milkshake.jpg" alt="Milkshake" class="image-produit" />
+        <div class="produit-contenu">
+          <h3>MILKSHAKE</h3>
+          <p class="description-produit">Onctueux et crémeux, disponible en plusieurs parfums</p>
+          <p class="prix-produit" data-price="4.00">4,00 €</p>
+          <p class="supplement">Parfums au choix</p>
+          <button aria-label="Ajouter Milkshake au panier">Ajouter au panier</button>
+        </div>
+      </div>
+
+      <!-- Smoothie -->
+      <div class="produit" id="Smoothie">
+        <img src="images/Desserts/smoothie.jpg" alt="Smoothie" class="image-produit" />
+        <div class="produit-contenu">
+          <h3>SMOOTHIE</h3>
+          <p class="description-produit">Mélange de fruits frais, léger et rafraîchissant</p>
+          <p class="prix-produit" data-price="4.00">4,00 €</p>
+          <p class="supplement">Parfums au choix</p>
+          <button aria-label="Ajouter Smoothie au panier">Ajouter au panier</button>
+        </div>
+      </div>
+
+      <!-- Sundae -->
+      <div class="produit" id="Sundae">
+        <img src="images/Desserts/sundae.jpg" alt="Sundae" class="image-produit" />
+        <div class="produit-contenu">
+          <h3>SUNDAE</h3>
+          <p class="description-produit">Glace vanille, coulis de chocolat, chantilly et noisettes</p>
+          <p class="prix-produit" data-price="2.50">2,50 €</p>
+          <button aria-label="Ajouter Sundae au panier">Ajouter au panier</button>
+        </div>
+      </div>
+
+      <!-- Cornet S -->
+      <div class="produit" id="CornetS">
+        <img src="images/Desserts/cornet.jpg" alt="Cornet taille S" class="image-produit" />
+        <div class="produit-contenu">
+          <h3>CORNET</h3>
+          <p class="description-produit">Glace artisanale dans un cornet croustillant</p>
+          <p class="prix-produit" data-price="2.50">2,50 €</p>
+          <p class="supplement">Taille S - Parfums au choix</p>
+          <button aria-label="Ajouter Cornet taille S au panier">Ajouter au panier</button>
+        </div>
+      </div>
+
+      <!-- Cornet L -->
+      <div class="produit" id="CornetL">
+        <img src="images/Desserts/cornet-large.jpg" alt="Cornet taille L" class="image-produit" />
+        <div class="produit-contenu">
+          <h3>CORNET</h3>
+          <p class="description-produit">Double dose de glace artisanale dans un grand cornet</p>
+          <p class="prix-produit" data-price="3.50">3,50 €</p>
+          <p class="supplement">Taille L - Parfums au choix</p>
+          <button aria-label="Ajouter Cornet taille L au panier">Ajouter au panier</button>
+        </div>
+      </div>
+
+      <!-- Panini Nutella -->
+      <div class="produit" id="PaniniNutella">
+        <img src="images/Desserts/panini-nutella.jpg" alt="Panini Nutella" class="image-produit" />
+        <div class="produit-contenu">
+          <h3>PANINI NUTELLA</h3>
+          <p class="description-produit">Pain grillé garni de Nutella fondant</p>
+          <p class="prix-produit" data-price="1.50">1,50 €</p>
+          <button aria-label="Ajouter Panini Nutella au panier">Ajouter au panier</button>
+        </div>
+      </div>
+
+      <!-- Crêpe Sucrée -->
+      <div class="produit" id="CrepeSucree">
+        <img src="images/Desserts/crepe.jpg" alt="Crêpe Sucrée" class="image-produit" />
+        <div class="produit-contenu">
+          <h3>CRÊPE SUCRÉE</h3>
+          <p class="description-produit">Crêpe légère saupoudrée de sucre</p>
+          <p class="prix-produit" data-price="1.00">1,00 €</p>
+          <p class="supplement">Supplément +0.50€ pour garniture</p>
+          <button aria-label="Ajouter Crêpe Sucrée au panier">Ajouter au panier</button>
+        </div>
+      </div>
+
+      <!-- Crêpe Nutella Banane -->
+      <div class="produit" id="CrepeNutellaBanane">
+        <img src="images/Desserts/crepe-nutella.jpg" alt="Crêpe Nutella Banane" class="image-produit" />
+        <div class="produit-contenu">
+          <h3>CRÊPE NUTELLA BANANE</h3>
+          <p class="description-produit">Crêpe garnie de Nutella et de bananes fraîches</p>
+          <p class="prix-produit" data-price="2.00">2,00 €</p>
+          <button aria-label="Ajouter Crêpe Nutella Banane au panier">Ajouter au panier</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panier Flottant -->
+    <div id="panier-flottant">
+      <button class="toggle">
+        <span>Panier</span>
+        <span id="compteur-panier">0</span>
+      </button>
+      <div id="contenu-panier">
+        <h3>
+          Votre sélection
+          <button id="fermer-panier" aria-label="Fermer le panier">×</button>
+        </h3>
+        <ul id="liste-panier"></ul>
+        <p>Total : <span id="total">0</span> €</p>
+        <a href="confirmation.html">
+          <

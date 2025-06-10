@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Nos pizzas base créme fraiche</title>
+
+
+
+
+
+
+<style>
+ 
+/* === Reset et base === */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
+  background-color: #f9f9f9;
+  color: #222;
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+}
+
+/* === Structure globale === */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  background-color: white;
+  box-shadow: 0 0 30px rgba(0,0,0,0.05);
+}
+
+/* === Typographie élégante === */
+h1, h2, h3 {
+  font-weight: 300;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+h1 {
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 20px;
+  color: #111;
+  position: relative;
+  padding-bottom: 20px;
+}
+
+h1:after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #000, transparent);
+}
+
+.sous-titre {
+  text-align: center;
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 40px;
+  font-weight: 300;
+  letter-spacing: 2px;
+}
+
+/* === Section produits === */
+.section-title {
+  font-size: 1.2rem;
+  text-align: center;
+  margin: 60px 0 40px;
+  position: relative;
+}
+
+.section-title:before,
+.section-title:after {
+  content: "•";
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #999;
+  font-size: 1.5rem;
+}
+
+.section-title:before {
+  left: calc(50% - 100px);
+}
+
+.section-title:after {
+  right: calc(50% - 100px);
+}
+
+/* === Grille de produits uniformisée === */
+.liste-produits {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 40px;
+  padding: 0 20px;
+  align-items: stretch;
+}
+
+/* === Carte produit uniforme === */
+.produit {
+  background: white;
+  border-radius: 2px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.produit:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.12);
+}
+
+/* === Image produit === */
+.image-produit {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  filter: grayscale(0%);
+  transition: filter 0.5s ease;
+}
+
+.produit:hover .image-produit {
+  filter: grayscale(30%);
+}
+
+/* === Contenu texte uniforme === */
+.produit-contenu {
+  padding: 25px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.produit h3 {
+  font-size: 1.3rem;
+  margin-bottom: 15px;
+  text-align: center;
+  color: #111;
+  font-weight: 400;
+}
+
+.description-produit {
+  font-size: 0.9rem;
+  color: #666;
+  text-align: center;
+  margin-bottom: 20px;
+  flex: 1;
+  font-weight: 300;
+  line-height: 1.7;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  
+  /* Version standard moderne */
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  
+  /* Limite de lignes avec préfixes et version standard */
+  -webkit-line-clamp: 4;
+  -moz-line-clamp: 4;
+  line-clamp: 4;
+  
+  /* Orientation du box layout */
+  -webkit-box-orient: vertical;
+  -moz-box-orient: vertical;
+  box-orient: vertical;
+  
+  /* Alternative pour certains navigateurs */
+  max-height: calc(1.7em * 4); /* line-height × nombre de lignes */
+}
+
+.prix-produit {
+  font-size: 1.4rem;
+  color: #111;
+  text-align: center;
+  margin-bottom: 20px;
+  font-weight: 300;
+  letter-spacing: 1px;
+}
+
+/* === Bouton ajout panier === */
+.produit button {
+  background-color: white;
+  color: #000000;
+  border: 2px solid #000000;
+  padding: 14px 28px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  font-family: 'Montserrat', sans-serif;
+  text-transform: uppercase;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.produit button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: #000000;
+  z-index: -1;
+  transition: all 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+.produit button:hover {
+  color: white;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.produit button:hover::before {
+  left: 0;
+}
+
+.produit button span {
+  position: relative;
+  z-index: 2;
+  text-decoration: none;
+}
+
+/* === Panier flottant === */
+#panier-flottant {
+  position: fixed;
+  top: 30px;
+  right: 30px;
+  z-index: 1000;
+}
+
+
+
+#panier-flottant button.toggle {
+  background: white;
+  color: #111;
+  border: 1px solid #111;
+  padding: 12px 20px;
+  border-radius: 0;
+  cursor: pointer;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#panier-flottant button.toggle:hover {
+  background: #111;
+  color: white;
+}
+
+/* === Contenu panier === */
+
+#contenu-panier {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 350px;
+  background: white;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  padding: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-20px);
+  transition: all 0.3s ease;
+  max-height: 400px;
+  display: flex;
+  flex-direction: column;
+}
+
+#contenu-panier.ouvert {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+#contenu-panier h3 {
+  font-size: 1.1rem;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#fermer-panier {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: #999;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+#fermer-panier:hover {
+  color: #111;
+}
+
+#liste-panier {
+  flex: 1;
+  overflow-y: auto;
+  margin: 0;
+  padding: 10px;
+  list-style: none;
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+}
+
+
+
+
+#liste-panier img {
+  width: 60px;
+  height: 40px;
+  object-fit: cover;
+  margin-right: 12px;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  vertical-align: middle;
+  transition: transform 0.3s ease;
+}
+
+#liste-panier img:hover {
+  transform: scale(1.05);
+}
+
+.supprimer {
+  background: none;
+  border: none;
+  color: #e74c3c;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 2rem;
+  transition: color 0.3s ease;
+  margin-left: 200px;
+  position: relative;
+  top: -80px;
+}
+
+.supprimer:hover {
+  color: #c0392b;
+}
+
+.article-panier:not(:last-child) {
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+
+/* === Total panier === */
+#total {
+  font-size: 1.2rem;
+  text-align: right;
+  font-weight: 400;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #eee;
+}
+
+/* === Bouton valider === */
+#valider-commande {
+  width: 100%;
+  background-color: #000;
+  color: #fff;
+  border: none;
+  padding: 15px;
+  margin-top: 20px;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid #000;
+}
+
+#valider-commande:hover {
+  background-color: #fff;
+  color: #000;
+}
+
+#valider-commande:disabled {
+  background-color: #ccc;
+  border-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* === Bouton retour === */
+.bouton-retour {
+  display: inline-block;
+  margin-bottom: 30px;
+  padding: 8px 15px;
+  background-color: transparent;
+  color: #333;
+  text-decoration: none;
+  border: 1px solid #333;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.bouton-retour:hover {
+  background-color: #333;
+  color: white;
+}
+
+.bouton-retour:hover::before {
+  content: "→";
+  position: absolute;
+  left: -15px;
+  transition: all 0.3s ease;
+}
+
+.bouton-retour:hover {
+  padding-left: 25px;
+  padding-right: 10px;
+}
+
+/* === Animations === */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.produit:nth-child(1) { animation-delay: 0.1s; }
+.produit:nth-child(2) { animation-delay: 0.2s; }
+.produit:nth-child(3) { animation-delay: 0.3s; }
+.produit:nth-child(4) { animation-delay: 0.4s; }
+.produit:nth-child(5) { animation-delay: 0.5s; }
+
+@keyframes pop-panier {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.bouton-panier-pop {
+  animation: pop-panier 0.3s ease;
+}
+
+/* === Responsive === */
+@media (max-width: 768px) {
+  .container {
+    padding: 30px 15px;
+  }
+  
+  .liste-produits {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  
+  .produit {
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  
+  #panier-flottant {
+    top: auto;
+    bottom: 20px;
+    right: 20px;
+  }
+#contenu-panier {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-20px);
+  transition: all 0.3s ease;
+}
+
+#contenu-panier.ouvert {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+
+  
+}
+</style>
+
+
+
+<style>
+    
+
+
+
+#creme-btn {
+  background-color: white;
+  color: #c21f09;;
+  border: 2px solid #9c2d1f;
+  padding: 12px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  font-family: 'Montserrat', sans-serif;
+  text-transform: uppercase;
+  text-decoration: none;
+  display: inline-block;
+  right: -4%;    
+  margin-top: -150px;  /* encore plus haut */
+  margin-left: 10px;
+}
+
+
+
+
+#creme-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: -100%;
+  width: 100%;
+  height: 100%;
+  background: #c21f09;
+  z-index: -1;
+  transition: all 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+#creme-btn:hover {
+  color: white;
+  transform: translateY(-3px);
+  box-shadow: #c21f09;
+}
+
+#creme-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;      /* au lieu de right */
+  width: 100%;
+  height: 100%;
+  background: #c21f09;
+  z-index: -1;
+  transition: all 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+#creme-btn:hover::before {
+  left: 0;          /* au lieu de right */
+}
+
+#creme-btn span {
+  position: relative;
+  z-index: 2;
+  text-decoration: none;
+}
+
+
+.taille-select {
+  appearance: none; /* Supprime le style natif */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: white;
+  border: 2px solid #333;
+  padding: 8px 40px 8px 12px; /* espace à droite pour la flèche */
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  color: #333;
+  transition: border-color 0.3s ease;
+}
+
+.taille-select:hover,
+.taille-select:focus {
+  border-color: #333;
+  outline: none;
+}
+
+/* Flèche personnalisée en SVG, verte */
+.taille-select::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  top: 50%;
+  right: 12px;
+  width: 16px;
+  height: 16px;
+  background-image: url("data:image/svg+xml,%3Csvg fill='%234CAF50' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+/* Conteneur parent en position relative pour que ::after se place correctement */
+.taille-select-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.blue-cream {
+    color: #09a0c2; /* Bleu spécifié */
+    font-weight: normal; /* Conserve le gras du h1 si besoin */
+    font-style: italic; /* Optionnel pour différenciation */
+}
+.blue-cream::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 1px;
+    
+    opacity: 0.3; /* Soulignement très discret */
+}
+</style>
+
+<script>
+  document.querySelector('.toggle').addEventListener('click', function() {
+  document.getElementById('panier-flottant').classList.toggle('active');
+});
+
+document.getElementById('fermer-panier').addEventListener('click', function() {
+  document.getElementById('panier-flottant').classList.remove('active');
+});
+
+
+
+</script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <div class="container">
+  <a href="index.html" class="bouton-retour">
+    ← Retour à l'accueil
+  </a>
+ 
+</div>
+
+
+<h1>NOS PIZZAS : <span class="blue-cream">base crème fraîche</span></h1>
+<p class="sous-titre">Supléments : Taille M + 1,80€ I Taille L + 6.80€</p>
+<h2 class="section-title">Nos créations</h2>
+
+
+
+<button id="creme-btn">
+  <span>Base sauce tomate →</span>
+</button>
+<br><br>
+
+<style>
+  /* On prépare une animation de fondu en sortie */
+  body.fade-out {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+</style>
+
+<script>
+  const btn = document.getElementById("creme-btn");
+
+  btn.addEventListener("click", function () {
+    // Ajoute la classe fade-out pour lancer la transition CSS
+    document.body.classList.add("fade-out");
+
+    // Après la durée de la transition (ici 500ms), on change de page
+    setTimeout(() => {
+      window.location.href = "pizza.html"; // Redirige vers la page d'accueil
+    }, 500); 
+  });
+</script>
+
+
+
+
+    
+    <div class="liste-produits">
+      <div class="produit" id="kebab">
+        <img src="images/Pizzas/pizza-kebab.png" alt="kebab" class="image-produit" />
+        <div class="produit-contenu">
+          <h3>KEBAB</h3>
+          <p class="description-produit">Mozzarella, kebab, poivrons, chedar, oignons </p>
+    <select class="taille-select" data-id="kebab">
+    <option value="S" data-price="5.00">Petite - 5,00 €</option>
+    <option value="M" data-price="6.80">Moyenne - 6,80 €</option>
+    <option value="L" data-price="10.80">Large - 10,80 €</option>
+</select>
+         <p class="prix-produit" data-price="5.00">5,00 €</p>
+          <button aria-label="Ajouter la pizza kebab au panier">Ajouter au panier</button>
+        </div>
+      </div>
+
+
+
+
+<div class="produit" id="Boursinette">
+  <img src="images/Pizzas/Boursinette.png" alt="Boursinette" class="image-produit" />
+  <div class="produit-contenu">
+    <h3>Boursinette</h3>
+    <p class="description-produit">Mozzarella, emincé de poulet, pommes de terre, boursin</p>
+<select class="taille-select" data-id="Boursinette">
+    <option value="S" data-price="5.00">Petite - 5,00 €</option>
+    <option value="M" data-price="6.80">Moyenne - 6,80 €</option>
+    <option value="L" data-price="10.80">Large - 10,80 €</option>
+</select>
+    <p class="prix-produit" data-price="5.00">5,00 €</p>
+    <button aria-label="Ajouter pizza Boursinette au panier">Ajouter au panier</button>
+    
+  </div>
+</div>
+
+
+
+
+
+
+      <div class="produit" id="Chicken">
+        <img src="images/Pizzas/chicken-pizza.png" alt="Chicken" class="image-produit" />
+        <div class="produit-contenu">
+          <h3>Pizza Chicken</h3>
+          <p class="description-produit">Mozzarella, émincé de poulet, pomme de terre</p>
+<select class="taille-select" data-id="Chicken">
+    <option value="S" data-price="5.00">Petite - 5,00 €</option>
+    <option value="M" data-price="6.80">Moyenne - 6,80 €</option>
+    <option value="L" data-price="10.80">Large - 10,80 €</option>
+</select>
+          <p class="prix-produit" data-price="Chicken">5,00 €</p>
+          <button aria-label="Ajouter pizza Chicken  au panier">Ajouter au panier</button>
+        </div>
+      </div>
+
+
+      <div class="produit" id="Milano">
+        <img src="images/Pizzas/pizza-milano.png" alt="Milano" class="image-produit" />
+        <div class="produit-contenu">
+          <h3>Milano</h3>
+          <p class="description-produit">Mozzarella, jambon, champignons, origan</p>
+<select class="taille-select" data-id="Milano">
+    <option value="S" data-price="5.00">Petite - 5,00 €</option>
+    <option value="M" data-price="6.80">Moyenne - 6,80 €</option>
+    <option value="L" data-price="10.80">Large - 10,80 €</option>
+</select>
+      
+          <p class="prix-produit" data-price="5.00">5,00 €</p>
+          <button aria-label="Ajouter Pizza Milano au panier">Ajouter au panier</button>
+        </div>
+      </div>
+
+
+    <div class="produit" id="Paysan">
+        <img src="images/Pizzas/pizza-paysan.png" alt="Paysan" class="image-produit" />
+        <div class="produit-contenu">
+          <h3>Paysan</h3>
+          <p class="description-produit"> Mozzarella, viande hachée, oignons, champignons, origan</p>
+<select class="taille-select" data-id="Paysan">
+    <option value="S" data-price="5.00">Petite - 5,00 €</option>
+    <option value="M" data-price="6.80">Moyenne - 6,80 €</option>
+    <option value="L" data-price="10.80">Large - 10,80 €</option>
+</select>
+       
+          <p class="prix-produit" data-price="5.00">5,00 €</p>
+          <button aria-label="Ajouter Pizza Paysan au panier">Ajouter au panier</button>
+        </div>
+      </div>
+
+
+
+
+<div class="produit" id="Western">
+  <img src="images/Pizzas/pizza-Western.png" alt="Western" class="image-produit" />
+  <div class="produit-contenu">
+    <h3>Western</h3>
+    <p class="description-produit"> Mozzarella, poulet, champignons, poivrons   </p>
+ <select class="taille-select" data-id="Western">
+    <option value="S" data-price="5.00">Petite - 5,00 €</option>
+    <option value="M" data-price="6.80">Moyenne - 6,80 €</option>
+    <option value="L" data-price="10.80">Large - 10,80 €</option>
+</select>
+
+    <p class="prix-produit" data-price="5.00">5,00 €</p>
+    <button aria-label="Ajouter Pizza Paysan au panier">Ajouter au panier</button>
+
+  </div>
+</div>
+
+<div class="produit" id="Norvegienne">
+  <img src="images/Pizzas/pizza-Norvegienne.png" alt="Norvegienne" class="image-produit" />
+  <div class="produit-contenu">
+    <h3>Norvégienne</h3>
+    <p class="description-produit">  Mozzarella, saumon fumé, citron </p>
+<select class="taille-select" data-id="Norvegienne">
+    <option value="S" data-price="5.00">Petite - 5,00 €</option>
+    <option value="M" data-price="6.80">Moyenne - 6,80 €</option>
+    <option value="L" data-price="10.80">Large - 10,80 €</option>
+</select>
+
+    <p class="prix-produit" data-price="5.00">5,00 €</p>
+    <button aria-label="Ajouter Pizza Norvegienne au panier">Ajouter au panier</button>
+
+  </div>
+</div>
+
+<div class="produit" id="Raclette">
+  <img src="images/Pizzas/pizza-raclette.png" alt="Raclette" class="image-produit" />
+  <div class="produit-contenu">
+    <h3>Raclette</h3>
+    <p class="description-produit"> Mozzarella, chorizo, champignons, olives </p>
+<select class="taille-select" data-id="Raclette">
+    <option value="S" data-price="5.00">Petite - 5,00 €</option>
+    <option value="M" data-price="6.80">Moyenne - 6,80 €</option>
+    <option value="L" data-price="10.80">Large - 10,80 €</option>
+</select>
+
+    <p class="prix-produit" data-price="5.00">5,00 €</p>
+    <button aria-label="Ajouter Pizza Raclette au panier">Ajouter au panier</button>
+
+  </div>
+</div>
+
+<div class="produit" id="chevre-miel">
+  <img src="images/Pizzas/pizza-chevre-miel.png" alt="chevre-miel" class="image-produit" />
+  <div class="produit-contenu">
+    <h3>Chèvre Miel</h3>
+    <p class="description-produit">Mozzarella, chévre, miel</p>
+    <select class="taille-select" data-id="chevre-miel">
+    <option value="S" data-price="5.00">Petite - 5,00 €</option>
+    <option value="M" data-price="6.80">Moyenne - 6,80 €</option>
+    <option value="L" data-price="10.80">Large - 10,80 €</option>
+</select>
+  
+    <p class="prix-produit" data-price="5.00">5,00 €</p>
+    <button aria-label="Ajouter Pizza Chevre Miel au panier">Ajouter au panier</button>
+
+  </div>
+</div>
+
+<div class="produit" id="Crousty">
+  <img src="images/Pizzas/Roquette.png" alt="Crousty" class="image-produit" />
+  <div class="produit-contenu">
+    <h3>Crousty</h3>
+     <select class="taille-select" data-id="Crousty">
+    <option value="S" data-price="5.00">Petite - 5,00 €</option>
+    <option value="M" data-price="6.80">Moyenne - 6,80 €</option>
+    <option value="L" data-price="10.80">Large - 10,80 €</option>
+</select>
+    <p class="description-produit">
+
+      Mozzarella, viande hachée, Pomme de terre, oignons</p>
+    </p>
+    <p class="prix-produit" data-price="5.00">5,00 €</p>
+    <button aria-label="Ajouter Pizza Crousty Miel au panier">Ajouter au panier</button>
+
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+<!-- === Panier Flottant === -->
+<div id="panier-flottant">
+  <button class="toggle">
+    <span>Panier</span>
+    <span id="compteur-panier">0</span>
+  </button>
+
+  <div id="contenu-panier">
+    <h3>
+      Votre sélection
+      <button id="fermer-panier" aria-label="Fermer le panier">×</button>
+    </h3>
+
+    <ul id="liste-panier"></ul>
+
+    <div class="total-fixe">
+      <p>Total : <span id="total">0</span> €</p>
+      <a href="confirmation.html">
+        <button id="valider-commande">Voir le panier</button>
+      </a>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+<script>
+  document.querySelector('.toggle').addEventListener('click', function() {
+  document.getElementById('panier-flottant').classList.toggle('active');
+});
+
+document.getElementById('fermer-panier').addEventListener('click', function() {
+  document.getElementById('panier-flottant').classList.remove('active');
+});
+
+</script>
+
+<script>
+  // Mise à jour du prix affiché en fonction de la taille sélectionnée
+  document.querySelectorAll('.produit').forEach(produit => {
+    const selectTaille = produit.querySelector('select.taille-select');
+    const prixElement = produit.querySelector('.prix-produit');
+
+    if (selectTaille && prixElement) {
+      // Au chargement, mettre à jour le prix en fonction de la taille sélectionnée par défaut
+      const optionChoisie = selectTaille.options[selectTaille.selectedIndex];
+      const prixInitial = parseFloat(optionChoisie.getAttribute('data-price'));
+      prixElement.setAttribute('data-price', prixInitial);
+      prixElement.textContent = prixInitial.toFixed(2) + ' €';
+
+      // Quand on change la taille, on met à jour le prix affiché
+      selectTaille.addEventListener('change', () => {
+        const optionChoisie = selectTaille.options[selectTaille.selectedIndex];
+        const nouveauPrix = parseFloat(optionChoisie.getAttribute('data-price'));
+        prixElement.setAttribute('data-price', nouveauPrix);
+        prixElement.textContent = nouveauPrix.toFixed(2) + ' €';
+      });
+    }
+  });
+
+
+  // Gestion du panier
+  const boutonsAjouter = document.querySelectorAll('.produit button');
+  const compteurPanier = document.getElementById('compteur-panier');
+  const listePanier = document.getElementById('liste-panier');
+  const totalElement = document.getElementById('total');
+  const panierFlottant = document.getElementById('panier-flottant');
+  const togglePanier = document.querySelector('.toggle');
+  const fermerPanier = document.getElementById('fermer-panier');
+
+  let panier = JSON.parse(localStorage.getItem('panier')) || [];
+
+  panier = panier.map(item => ({
+    ...item,
+    quantite: item.quantite || 1
+  }));
+
+  // Trouver produit identique selon nom, prix, type et supplements (et taille)
+  function trouverProduitIdentique(nom, prix, type, supplements, taille) {
+    return panier.find(item => 
+      item.nom === nom && 
+      item.prix === prix && 
+      item.type === type && 
+      item.taille === taille &&
+      JSON.stringify(item.supplements) === JSON.stringify(supplements)
+    );
+  }
+
+  // Ajouter au panier
+  boutonsAjouter.forEach(bouton => {
+    bouton.addEventListener('click', () => {
+      const produitElement = bouton.closest('.produit');
+      const nom = produitElement.querySelector('h3').textContent.trim();
+
+      // On récupère le select taille et le prix affiché (qui doit correspondre à la taille choisie)
+      const selectTaille = produitElement.querySelector('select.taille-select');
+      let prix;
+      let type;
+      let taille = null;
+
+      if (selectTaille) {
+        // Taille sélectionnée et prix correspondant
+        const optionChoisie = selectTaille.options[selectTaille.selectedIndex];
+        prix = parseFloat(optionChoisie.getAttribute('data-price'));
+        taille = optionChoisie.value;
+        type = 'pizza';
+      } else {
+        const prixElement = produitElement.querySelector('.prix-produit');
+        prix = parseFloat(prixElement.getAttribute('data-price'));
+        type = 'burger';
+      }
+
+      const image = produitElement.querySelector('img').src;
+
+      const produitExistant = trouverProduitIdentique(nom, prix, type, [], taille);
+
+      if (produitExistant) {
+        produitExistant.quantite += 1;
+      } else {
+        const produit = {
+          id: Date.now(),
+          nom,
+          prix,
+          image,
+          type,
+          taille,
+          supplements: [],
+          quantite: 1
+        };
+        panier.push(produit);
+      }
+
+      localStorage.setItem('panier', JSON.stringify(panier));
+      afficherPanier();
+    });
+  });
+
+  // Afficher le panier
+  function afficherPanier() {
+    listePanier.innerHTML = '';
+    let total = 0;
+
+    panier.forEach(item => {
+      if (typeof item.prix !== 'number' || isNaN(item.prix)) {
+        console.error(`Prix non valide pour ${item.nom} :`, item.prix);
+        item.prix = 0;
+      }
+
+      const li = document.createElement('li');
+      li.classList.add('article-panier');
+
+      const details = document.createElement('div');
+      details.classList.add('details-panier');
+      details.innerHTML = `
+        <img src="${item.image}" alt="${item.nom}" />
+        <div>
+          <h4>
+  ${item.nom} 
+  ${item.taille ? `(${item.taille})` : ''} × ${item.quantite}
+</h4>
+
+          <p>Type : ${item.type === 'pizza' ? 'Pizza' : item.type === 'burger' ? 'Burger' : 'Autre'}</p>
+          <p>Prix unitaire : ${item.prix.toFixed(2)} €</p>
+          <p>Prix total : ${(item.prix * item.quantite).toFixed(2)} €</p>
+        </div>
+      `;
+
+      const boutonSupprimer = document.createElement('button');
+      boutonSupprimer.textContent = '×';
+      boutonSupprimer.classList.add('supprimer');
+      boutonSupprimer.addEventListener('click', () => {
+        panier = panier.filter(p => p.id !== item.id);
+        localStorage.setItem('panier', JSON.stringify(panier));
+        afficherPanier();
+      });
+
+      li.appendChild(details);
+      li.appendChild(boutonSupprimer);
+      listePanier.appendChild(li);
+
+      const sousTotal = item.prix * item.quantite;
+      if (!isNaN(sousTotal)) {
+        total += sousTotal;
+      } else {
+        console.error(`Sous-total invalide pour ${item.nom}:`, sousTotal);
+      }
+    });
+
+    compteurPanier.textContent = panier.reduce((acc, item) => acc + item.quantite, 0);
+    totalElement.textContent = isNaN(total) ? '0.00' : total.toFixed(2);
+  }
+
+  // Toggle panier flottant
+  togglePanier.addEventListener('click', () => {
+    document.getElementById('contenu-panier').classList.toggle('ouvert');
+  });
+
+  fermerPanier.addEventListener('click', () => {
+    panierFlottant.classList.remove('ouvert');
+  });
+
+  // Initialisation
+  afficherPanier();
+</script>
+
+
+

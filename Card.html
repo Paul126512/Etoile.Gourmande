@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Panier - Pâtisserie Élégante</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+
+</head>
+<body>
+
+
+  <div class="container">
+    <h1>Votre Sélection</h1>
+    <p>Articles dans le panier : <span id="compteur-panier">0</span></p>
+
+    <ul id="liste-panier">
+      <!-- Les articles seront insérés ici -->
+    </ul>
+
+    <div id="total-section">
+      <p>Total : <span id="total">0.00</span> €</p>
+    </div>
+
+    <div class="btn-container">
+      <a href="" class=""></a>
+          <a href="index.html" class="btn btn-blanc">Retour</a>
+           <a href="boissons.html" class="btn btn-blanc">Vers les Boissons</a>
+    </div>
+  </div>
+
+
+
+
+
+  <style>
+
+
+/* === Style amélioré du bouton suppléments === */
+.supplements-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background-color: #000000; /* Noir élégant */
+  border: none;
+  border-radius: 4px;
+  color: white;
+  font-weight: 500;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  text-decoration: none !important; /* Suppression définitive du soulignement */
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 10px 0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.supplements-toggle i {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 1rem;
+  line-height: 1;
+  transition: transform 0.3s ease-out;
+  display: inline-block;
+  transform-origin: 50% 45%; /* Point de rotation légèrement décalé pour meilleur effet */
+}
+
+.supplements-toggle.active i {
+  transform: rotate(180deg);
+}
+
+.supplements-toggle:hover {
+  background-color: #c7bebe; /* Noir plus clair au survol */
+  box-shadow: 0 4px 8px rgba(144, 141, 141, 0.15);
+}
+
+/* === Liste des suppléments === */
+.supplements-list {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease-out;
+  background-color: #fafafa;
+  border-radius: 4px;
+  margin-top: 0;
+}
+
+.supplements-list.active {
+  max-height: 500px;
+  margin-top: 12px;
+  padding: 12px;
+  border: 1px solid #eee;
+}
+
+.supplement-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.supplement-item:last-child {
+  border-bottom: none;
+}
+
+.supplement-item label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #8f8b8b;
+  flex-grow: 1;
+}
+
+.supplement-item input {
+  margin-right: 10px;
+  accent-color: #8a7373; /* Style moderne pour les checkboxes */
+}
+
+.supplement-prix {
+  font-size: 0.85rem;
+  color: #666;
+  min-width: 60px;
+  text-align: right;
+}
+
+
+
+
+
+
+
+/* === Reset et base === */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
+  background-color: #f9f9f9;
+  color: #222;
+  line-height: 1.6;
+}
+
+/* === Structure globale === */
+.container {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 40px;
+  background-color: white;
+  box-shadow: 0 0 30px rgba(0,0,0,0.05);
+}
+
+/* === Typographie élégante === */
+h1 {
+  font-weight: 300;
+  font-size: 2.2rem;
+  text-align: center;
+  margin-bottom: 30px;
+  color: #111;
+  position: relative;
+  padding-bottom: 20px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+h1:after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 1px;
+  background: #000;
+}
+
+/* === Panier === */
+#compteur-panier {
+  font-weight: 600;
+  color: #000;
+}
+
+#liste-panier {
+  list-style: none;
+  margin: 40px 0;
+  padding: 0;
+  border-top: 1px solid #eee;
+}
+
+.article-panier {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 25px 0;
+  border-bottom: 1px solid #eee;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.details-panier {
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+}
+
+.details-panier img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  margin-right: 30px;
+  border-radius: 2px;
+}
+
+.details-produit {
+  flex: 1;
+}
+
+.details-produit h4 {
+  font-weight: 400;
+  font-size: 1.1rem;
+  margin-bottom: 5px;
+  letter-spacing: 0.5px;
+}
+
+.details-produit p {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.quantite {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.quantite button {
+  background: none;
+  border: 1px solid #ddd;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s;
+}
+
+.quantite button:hover {
+  background: #f5f5f5;
+}
+
+.quantite span {
+  margin: 0 15px;
+  min-width: 20px;
+  text-align: center;
+}
+
+/* Suppléments */
+.supplements-container {
+  margin-top: 15px;
+}
+
+.supplements-toggle {
+  background: none;
+  border: none;
+  color: #000;
+  font-size: 0.8rem;
+  text-decoration: underline;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 5px 0;
+}
+
+.supplements-toggle i {
+  margin-left: 5px;
+  font-size: 0.7rem;
+  transition: transform 0.3s;
+}
+
+.supplements-toggle.active i {
+  transform: rotate(180deg);
+}
+
+.supplements-list {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease;
+  margin-top: 0;
+}
+
+.supplements-list.active {
+  max-height: 500px;
+  margin-top: 10px;
+}
+
+.supplement-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  font-size: 0.8rem;
+  border-bottom: 1px dashed #eee;
+}
+
+.supplement-item:last-child {
+  border-bottom: none;
+}
+
+.supplement-item label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.supplement-item input {
+  margin-right: 8px;
+}
+
+.supplement-prix {
+  color: #888;
+}
+
+/* Prix et suppression */
+.prix-unitaire {
+  font-weight: 300;
+  color: #000;
+  margin-right: 30px;
+  min-width: 80px;
+  text-align: right;
+}
+
+.supprimer {
+  background: none;
+  border: none;
+  color: #999;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: color 0.3s;
+  margin-left: 20px;
+}
+
+.supprimer:hover {
+  color: #000;
+}
+
+/* Section total */
+#total-section {
+  text-align: right;
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid #000;
+}
+
+#total-section p {
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+}
+
+#total {
+  font-size: 1.4rem;
+  font-weight: 300;
+}
+
+/* Boutons navigation */
+.btn-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 50px;
+}
+
+.btn {
+  padding: 12px 30px;
+  text-decoration: none;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s;
+  border: 1px solid #000;
+  color: #000;
+  background: white;
+}
+
+.btn:hover {
+  background: #000;
+  color: white;
+}
+
+/* Panier vide */
+.vide {
+  text-align: center;
+  padding: 60px 0;
+  color: #999;
+  font-style: italic;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.pulse {
+  animation: pulse 0.5s;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    padding: 30px 20px;
+    margin: 20px auto;
+  }
+  
+  .article-panier {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px 0;
+  }
+  
+  .details-panier {
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+  }
+  
+  .details-panier img {
+    width: 100%;
+    height: auto;
+    max-height: 200px;
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
+  
+  .prix-unitaire {
+    margin: 15px 0;
+    text-align: left;
+    width: 100%;
+  }
+  
+  .supprimer {
+    position: absolute;
+    top: 20px;
+    right: 0;
+  }
+  
+  .btn-container {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .btn {
+    width: 100%;
+    text-align: center;
+  }
+
+
+
+}
+</style>
+
+
+
+
+<script>
+    const listePanier = document.getElementById('liste-panier');
+    const totalElement = document.getElementById('total');
+    const compteurPanier = document.getElementById('compteur-panier');
+
+    // Liste des suppléments disponibles
+    const supplementsDisponibles = [
+        { id: 'sup1', nom: 'Frommages', prix: 1.50 },
+        { id: 'sup2', nom: 'Champignons', prix: 2.00 },
+        { id: 'sup3', nom: 'Glaçage spécial', prix: 1.00 },
+        { id: 'sup4', nom: 'Pépites de chocolat', prix: 1.20 },
+        { id: 'sup5', nom: 'Noix', prix: 1.80 }
+    ];
+
+    // On récupère le panier « brut » du localStorage
+    let panier = JSON.parse(localStorage.getItem('panier')) || [];
+
+    // Normaliser la quantité et les suppléments pour chaque produit
+    panier = panier.map(item => ({
+        ...item,
+        quantite: item.quantite || 1,
+        supplements: item.supplements || []
+    }));
+
+    // ------ Fonction principale : afficher le panier ------
+    function afficherPanier() {
+        listePanier.innerHTML = '';
+        let total = 0;
+
+        if (panier.length === 0) {
+            listePanier.innerHTML = '<li class="vide">Votre panier est vide.</li>';
+            totalElement.textContent = "0.00";
+            compteurPanier.textContent = "0";
+            return;
+        }
+
+        // 1) On crée une version « affichage » du panier, en éclatant chaque pizza dont quantite > 1
+        const displayItems = [];
+        panier.forEach(item => {
+            const isPizza = item.nom.toLowerCase().includes('pizza');
+            if (isPizza && item.quantite > 1) {
+                // On clone autant de fois que la quantité
+                for (let i = 0; i < item.quantite; i++) {
+                    // Cloner l'objet en forçant quantite = 1
+                    const clone = {
+                        ...item,
+                        quantite: 1,
+                        // On pourrait garder un lien vers l'ID original
+                        originalId: item.id
+                    };
+                    displayItems.push(clone);
+                }
+            } else {
+                // Soit c'est une pizza avec quantite = 1, soit un autre produit
+                displayItems.push({ ...item, originalId: item.id });
+            }
+        });
+
+        // 2) On regroupe, mais comme on vient d’éclater, chaque pizza ne se retrouve qu’en groupe de taille 1
+        const groupedItems = groupItems(displayItems);
+
+        // 3) On génère le HTML pour chaque groupe (ici : toujours items.length === 1 pour les pizzas)
+        groupedItems.forEach((group, groupIndex) => {
+            const item0 = group.items[0];
+            const isPizza = item0.nom.toLowerCase().includes('pizza');
+            const totalGroupPrice = group.items.reduce((sum, it) => sum + calculerPrixTotalItem(it), 0);
+            const totalGroupQuantity = group.items.reduce((sum, it) => sum + it.quantite, 0);
+
+            const li = document.createElement('li');
+            li.classList.add('article-panier');
+            if (isPizza) {
+                li.classList.add('stacked-item');
+            }
+
+            const details = document.createElement('div');
+            details.classList.add('details-panier');
+            details.innerHTML = `
+                <img src="${item0.image || 'https://via.placeholder.com/100?text=Produit'}" 
+                     alt="${item0.nom}" 
+                     class="${isPizza ? 'stacked-img' : ''}" />
+                <div>
+                    <h4>${item0.nom}</h4>
+                    <p>${item0.description || 'Délicieuse création'}</p>
+                    <p>Quantité : ${totalGroupQuantity}</p>
+                    <div class="supplements-container">
+                        <button class="supplements-toggle">
+                            <span>${item0.supplements.length > 0 ? 'Modifier les' : 'Ajouter des'} suppléments</span>
+                            <i>▼</i>
+                        </button>
+                        <div class="supplements-list ${item0.supplements.length > 0 ? 'active' : ''}">
+                            ${supplementsDisponibles.map(sup => `
+                                <div class="supplement-item">
+                                    <label>
+                                        <input type="checkbox" 
+                                               data-sup-id="${sup.id}" 
+                                               ${item0.supplements.some(s => s.id === sup.id) ? 'checked' : ''}>
+                                        ${sup.nom}
+                                    </label>
+                                    <span class="supplement-prix">+${sup.prix.toFixed(2)} €</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    <p class="prix-total">${totalGroupPrice.toFixed(2)} €</p>
+                </div>
+            `;
+
+            // 4) Toggle de la liste de suppléments (affichage animé)
+            const toggleBtn = details.querySelector('.supplements-toggle');
+            const supplementsList = details.querySelector('.supplements-list');
+            if (item0.supplements.length > 0) {
+                // Si on a déjà des suppléments cochés, on ouvre
+                supplementsList.style.maxHeight = supplementsList.scrollHeight + 'px';
+                supplementsList.style.marginTop = '10px';
+                supplementsList.style.padding = '15px';
+                supplementsList.style.borderColor = '#eee';
+                setTimeout(() => {
+                    const itms = supplementsList.querySelectorAll('.supplement-item');
+                    itms.forEach((itm, i) => {
+                        itm.style.opacity = '1';
+                        itm.style.transform = 'translateY(0)';
+                    });
+                }, 10);
+            }
+            toggleBtn.addEventListener('click', () => {
+                supplementsList.classList.toggle('active');
+                toggleBtn.classList.toggle('active');
+                if (supplementsList.classList.contains('active')) {
+                    supplementsList.style.maxHeight = supplementsList.scrollHeight + 'px';
+                    supplementsList.style.marginTop = '10px';
+                    supplementsList.style.padding = '15px';
+                    supplementsList.style.borderColor = '#eee';
+                    const itms = supplementsList.querySelectorAll('.supplement-item');
+                    itms.forEach((itm, i) => {
+                        itm.style.transitionDelay = `${0.1 + i * 0.05}s`;
+                        setTimeout(() => {
+                            itm.style.opacity = '1';
+                            itm.style.transform = 'translateY(0)';
+                        }, 50);
+                    });
+                } else {
+                    supplementsList.style.maxHeight = '0';
+                    supplementsList.style.marginTop = '0';
+                    supplementsList.style.padding = '0 15px';
+                    supplementsList.style.borderColor = 'transparent';
+                    const itms = supplementsList.querySelectorAll('.supplement-item');
+                    itms.forEach(itm => {
+                        itm.style.opacity = '0';
+                        itm.style.transform = 'translateY(-10px)';
+                        itm.style.transitionDelay = '0s';
+                    });
+                }
+            });
+
+            // 5) Gestion de la sélection/déselection des suppléments
+            const checkboxes = details.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', () => {
+                    const supId = checkbox.dataset.supId;
+                    const supplement = supplementsDisponibles.find(s => s.id === supId);
+                    const prixTotalElement = details.querySelector('.prix-total');
+                    prixTotalElement.classList.add('pulse');
+                    setTimeout(() => prixTotalElement.classList.remove('pulse'), 500);
+
+                    if (checkbox.checked) {
+                        if (!item0.supplements.some(s => s.id === supId))
+                            item0.supplements.push(supplement);
+                    } else {
+                        item0.supplements = item0.supplements.filter(s => s.id !== supId);
+                    }
+                    toggleBtn.querySelector('span').textContent = 
+                        item0.supplements.length > 0 ? 'Modifier les' : 'Ajouter des';
+
+                    // On doit mettre à jour dans le vrai panier : 
+                    // trouver dans `panier` l’entrée dont id = item0.originalId,
+                    // et si c’est une pizza (donc quantite ≥ 1), on réduit d’abord quantite de 1 (on supprime une pizza identique), 
+                    // puis on ajoute un nouvel objet « pizza personnalisée » avec quantite = 1 + ces suppléments.
+                    const idxOrig = panier.findIndex(p => p.id === item0.originalId);
+                    if (idxOrig !== -1) {
+                        // --- Cas pizza (on a extrait une pizza "affichage" à part) ---
+                        const isPizzaLocal = item0.nom.toLowerCase().includes('pizza');
+                        if (isPizzaLocal) {
+                            // On décrémente la pizza générique
+                            if (panier[idxOrig].quantite > 1) {
+                                panier[idxOrig].quantite--;
+                            } else {
+                                panier.splice(idxOrig, 1);
+                            }
+                            // Puis on recrée un nouvel objet dans `panier` correspondant à cette pizza unique,
+                            // avec quantite = 1 et suppléments mis à jour
+                            const nouvelObjet = {
+                                ...item0,
+                                id: generateUniqueId(), // on peut forcer un ID unique pour éviter la confusion
+                                quantite: 1,
+                                // Déjà mis à jour : item0.supplements contient la sélection actuelle
+                                supplements: [...item0.supplements]
+                            };
+                            panier.push(nouvelObjet);
+                        } else {
+                            // --- Cas produit non pizza (quantite = 1 en général) ---
+                            panier[idxOrig].supplements = [...item0.supplements];
+                        }
+                    }
+                    localStorage.setItem('panier', JSON.stringify(panier));
+
+                    // Recalcul du prix pour ce groupe (qui ne fait plus qu'1 item en principe)
+                    const newGroupPrice = group.items.reduce((sum, it) => sum + calculerPrixTotalItem(it), 0);
+                    details.querySelector('.prix-total').textContent = `${newGroupPrice.toFixed(2)} €`;
+
+                    // Recalcul du total général
+                    total = panier.reduce((acc, it) => acc + calculerPrixTotalItem(it), 0);
+                    totalElement.textContent = isNaN(total) ? '0.00' : total.toFixed(2);
+                    // On rafraichit aussi le compteur
+                    compteurPanier.textContent = panier.reduce((acc, it) => acc + it.quantite, 0);
+                });
+            });
+
+            // 6) Bouton supprimer : supprime UNE seule « pizza éclatée » ou ENTIEREMENT le produit s’il n’y a qu’1 quantité
+            const boutonSupprimer = document.createElement('button');
+            boutonSupprimer.textContent = '×';
+            boutonSupprimer.classList.add('supprimer');
+            boutonSupprimer.addEventListener('click', () => {
+                li.style.transform = 'translateX(100%)';
+                li.style.opacity = '0';
+                setTimeout(() => {
+                    const isPizzaLocal = item0.nom.toLowerCase().includes('pizza');
+                    if (isPizzaLocal) {
+                        // On a un « clone pizza » : on retire 1 de la quantite de la pizza générique d’origine
+                        const idxOrig = panier.findIndex(p => p.id === item0.originalId);
+                        if (idxOrig !== -1) {
+                            if (panier[idxOrig].quantite > 1) {
+                                panier[idxOrig].quantite--;
+                            } else {
+                                panier.splice(idxOrig, 1);
+                            }
+                        } else {
+                            // Si la pizza avait déjà été éclatée en un objet distinct (custom), on la retire purement
+                            const idxCustom = panier.findIndex(p => p.id === item0.id);
+                            if (idxCustom !== -1) panier.splice(idxCustom, 1);
+                        }
+                    } else {
+                        // Produit non pizza : on supprime toute la ligne
+                        panier = panier.filter(p => p.id !== item0.originalId);
+                    }
+                    localStorage.setItem('panier', JSON.stringify(panier));
+                    afficherPanier();
+                }, 300);
+            });
+
+            li.appendChild(details);
+            li.appendChild(boutonSupprimer);
+            listePanier.appendChild(li);
+
+            total += totalGroupPrice;
+        });
+
+        // 7) On met à jour le compteur global et le total
+        compteurPanier.textContent = panier.reduce((acc, it) => acc + it.quantite, 0);
+        totalElement.textContent = isNaN(total) ? '0.00' : total.toFixed(2);
+    }
+
+    // ------ Fonction pour grouper (ici, chaque entrée dans displayItems est déjà seule) ------
+    function groupItems(items) {
+        const groups = [];
+        items.forEach(item => {
+            groups.push({
+                id: item.id, // dans displayItems, chaque pizza est déjà unique
+                items: [item]
+            });
+        });
+        return groups;
+    }
+
+    // ------ Calcul du prix total d'un item (prix unitaire + suppléments) * quantite ------
+    function calculerPrixTotalItem(item) {
+        const prixSupplements = item.supplements.reduce((acc, sup) => acc + sup.prix, 0);
+        return (item.prix + prixSupplements) * item.quantite;
+    }
+
+    // ------ Générer un ID unique pour un clone pizza personnalisé ------
+    function generateUniqueId() {
+        return 'pid_' + Math.random().toString(36).substring(2, 10);
+    }
+
+    // Initialisation
+    afficherPanier();
+</script>
