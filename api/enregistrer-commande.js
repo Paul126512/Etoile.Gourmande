@@ -1,15 +1,14 @@
 import { createClient } from '@supabase/supabase-js';
 import Stripe from 'stripe';
 
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_ANON_KEY;
-const supabase = createClient(supabaseUrl, supabaseKey);
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+// Initialisation correcte de Supabase (vous aviez une double initialisation)
 const supabase = createClient(
-  process.env.SUPABASE_URL,  // Your Supabase project URL
-  process.env.SUPABASE_KEY   // Your Supabase public/anonymous key
-)
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_ANON_KEY || process.env.SUPABASE_KEY // Utilise les deux noms possibles pour la clé
+);
+
+// Initialisation de Stripe
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -29,14 +28,14 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Le panier est vide' });
   }
 
-  // Calcul des totaux
-  const totalQuantity = [...panierPizzas, ...panierBoissons]
-    .reduce((acc, item) => acc + (item.quantite || 1), 0);
-
-  const totalPrix = [...panierPizzas, ...panierBoissons]
-    .reduce((acc, item) => acc + ((item.prix || 0) * (item.quantite || 1)), 0);
-
   try {
+    // Calcul des totaux
+    const totalQuantity = [...panierPizzas, ...panierBoissons]
+      .reduce((acc, item) => acc + (item.quantite || 1), 0);
+
+    const totalPrix = [...panierPizzas, ...panierBoissons]
+      .reduce((acc, item) => acc + ((item.prix || 0) * (item.quantite || 1)), 0);
+
     // Recherche du client existant
     let { data: client, error: clientError } = await supabase
       .from('clients')
@@ -79,16 +78,17 @@ export default async function handler(req, res) {
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       mode: 'payment',
-      line_items: [{
+      line_items: [...panierPizzas, ...panierBoissons].map(item => ({
         price_data: {
           currency: 'eur',
           product_data: {
-            name: `Commande #${order.id}`,
+            name: item.nom || `Produit #${item.id}`,
+            description: item.description || '',
           },
-          unit_amount: Math.round(totalPrix * 100), // en centimes
+          unit_amount: Math.round((item.prix || 0) * 100), // en centimes
         },
-        quantity: 1,
-      }],
+        quantity: item.quantite || 1,
+      })),
       customer_email: email,
       success_url: `${process.env.SITE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.SITE_URL}/cancel`,
@@ -101,7 +101,10 @@ export default async function handler(req, res) {
     // Mise à jour de la commande avec l'id session Stripe
     const { error: updateError } = await supabase
       .from('orders')
-      .update({ stripe_session_id: session.id })
+      .update({ 
+        stripe_session_id: session.id,
+        status: 'awaiting_payment'
+      })
       .eq('id', order.id);
 
     if (updateError) throw updateError;
