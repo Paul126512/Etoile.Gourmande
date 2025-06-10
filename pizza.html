@@ -9,6 +9,147 @@
 
 
 
+  <style>
+/* Style général inspiré de la pâtisserie haute-couture */
+.supplements {
+    position: relative;
+    font-family: 'Montserrat', sans-serif;
+    max-width: 300px;
+    margin: 15px 0;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Bouton principal - style minimaliste chic */
+.supplements > p {
+    background-color: #000;
+    color: #fff;
+    padding: 16px 20px;
+    margin: 0;
+    cursor: pointer;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    font-size: 14px;
+    position: relative;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    z-index: 2;
+}
+
+/* Flèche stylisée */
+.supplements > p::after {
+    content: "↓";
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%) rotate(0deg);
+    font-size: 14px;
+    transition: all 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+/* Conteneur des options (masqué par défaut) */
+.supplements .options-container {
+    max-height: 0;
+    overflow: hidden;
+    background: #fff;
+    transition: max-height 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+    will-change: max-height;
+}
+
+/* Options visibles quand actif */
+.supplements.active .options-container {
+    max-height: 500px; /* Valeur suffisamment grande */
+}
+
+/* Animation d'ouverture */
+.supplements.active > p::after {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+/* Style des options */
+.supplements label {
+    display: block;
+    padding: 14px 20px;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    opacity: 0;
+    transform: translateY(-10px);
+    border-bottom: 1px solid #f0f0f0;
+    animation: fadeIn 0.5s forwards;
+    animation-delay: calc(var(--i) * 0.1s);
+}
+
+/* Animation d'apparition séquentielle */
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Style des checkbox modernes */
+.supplements input[type="checkbox"] {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #000;
+    border-radius: 4px;
+    margin-right: 12px;
+    position: relative;
+    vertical-align: middle;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.supplements input[type="checkbox"]:checked {
+    background-color: #000;
+    animation: checkAnim 0.4s ease;
+}
+
+@keyframes checkAnim {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.supplements input[type="checkbox"]:checked::after {
+    content: "✓";
+    position: absolute;
+    color: #fff;
+    font-size: 12px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Effet hover subtil */
+.supplements label:hover {
+    background-color: #f9f9f9;
+    transform: translateX(5px);
+}
+
+/* Style pour le prix */
+.supplements label:after {
+    content: attr(data-price);
+    float: right;
+    color: #888;
+    font-size: 12px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.supplements label:hover:after {
+    color: #000;
+}
+  </style>
+
+
+
+
+
+
+
 <style>
  
 /* === Reset et base === */
@@ -701,6 +842,22 @@ document.getElementById('fermer-panier').addEventListener('click', function() {
     <option value="M" data-price="6.80">Moyenne - 6,80 €</option>
     <option value="L" data-price="10.80">Large - 10,80 €</option>
 </select>
+
+
+<div class="supplements" data-id="4-fromages">
+  <p><strong>Suppléments :</strong></p>
+  
+  <div class="options-container">
+    <label><input type="checkbox" name="supplement" value="aucun" id="aucun">Aucun</label>
+    <label><input type="checkbox" name="supplement" value="Mozzarella" data-price="1"> Mozzarella (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Kebab" data-price="1"> Kebab (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Pomme_de_terre" data-price="1"> Pomme de terre (+1,00 €)</label>
+    <label><input type="checkbox" name="supplement" value="Chedar" data-price="1"> Chedar (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Lardons" data-price="1">Lardons (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Champigons" data-price="1"> Champigons (+1 €)</label>
+  </div>
+</div>
+
          <p class="prix-produit" data-price="5.00">5,00 €</p>
           <button aria-label="Ajouter Cheese Burger au panier">Ajouter au panier</button>
         </div>
@@ -719,6 +876,21 @@ document.getElementById('fermer-panier').addEventListener('click', function() {
     <option value="M" data-price="6.80">Moyenne - 6,80 €</option>
     <option value="L" data-price="10.80">Large - 10,80 €</option>
 </select>
+
+<div class="supplements" data-id="4-fromages">
+  <p><strong>Suppléments :</strong></p>
+  
+  <div class="options-container">
+    <label><input type="checkbox" name="supplement" value="aucun" id="aucun">Aucun</label>
+    <label><input type="checkbox" name="supplement" value="Mozzarella" data-price="1"> Mozzarella (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Kebab" data-price="1"> Kebab (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Pomme_de_terre" data-price="1"> Pomme de terre (+1,00 €)</label>
+    <label><input type="checkbox" name="supplement" value="Chedar" data-price="1"> Chedar (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Lardons" data-price="1">Lardons (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Champigons" data-price="1"> Champigons (+1 €)</label>
+  </div>
+</div>
+
     <p class="prix-produit" data-price="5.00">5,00 €</p>
     <button aria-label="Ajouter Double Cheese au panier">Ajouter au panier</button>
     
@@ -740,21 +912,54 @@ document.getElementById('fermer-panier').addEventListener('click', function() {
     <option value="M" data-price="6.80">Moyenne - 6,80 €</option>
     <option value="L" data-price="10.80">Large - 10,80 €</option>
 </select>
+
+<div class="supplements" data-id="4-fromages">
+  <p><strong>Suppléments :</strong></p>
+  
+  <div class="options-container">
+    <label><input type="checkbox" name="supplement" value="aucun" id="aucun">Aucun</label>
+    <label><input type="checkbox" name="supplement" value="Mozzarella" data-price="1"> Mozzarella (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Kebab" data-price="1"> Kebab (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Pomme_de_terre" data-price="1"> Pomme de terre (+1,00 €)</label>
+    <label><input type="checkbox" name="supplement" value="Chedar" data-price="1"> Chedar (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Lardons" data-price="1">Lardons (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Champigons" data-price="1"> Champigons (+1 €)</label>
+  </div>
+</div>
+
           <p class="prix-produit" data-price="5.00">5,00 €</p>
           <button aria-label="Ajouter Chicken Burger au panier">Ajouter au panier</button>
         </div>
       </div>
 
+      
+
       <div class="produit" id="Reine">
         <img src="images/Pizzas/Reine.png" alt="Reine" class="image-produit" />
         <div class="produit-contenu">
           <h3>Reine</h3>
+          <p class="description-produit">Mozzarella, jambon, champignons, origan</p>
 <select class="taille-select" data-id="Reine">
     <option value="S" data-price="5.00">Petite - 5,00 €</option>
     <option value="M" data-price="6.80">Moyenne - 6,80 €</option>
     <option value="L" data-price="10.80">Large - 10,80 €</option>
 </select>
-          <p class="description-produit">Mozzarella, jambon, champignons, origan</p>
+
+<div class="supplements" data-id="Reine">
+  <p><strong>Suppléments :</strong></p>
+  
+  <div class="options-container">
+    <label><input type="checkbox" name="supplement" value="aucun" id="aucun">Aucun</label>
+    <label><input type="checkbox" name="supplement" value="Mozzarella" data-price="1"> Mozzarella (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Kebab" data-price="1"> Kebab (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Pomme_de_terre" data-price="1"> Pomme de terre (+1,00 €)</label>
+    <label><input type="checkbox" name="supplement" value="Chedar" data-price="1"> Chedar (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Lardons" data-price="1">Lardons (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Champigons" data-price="1"> Champigons (+1 €)</label>
+  </div>
+</div>
+
+          
           <p class="prix-produit" data-price="5.00">5,00 €</p>
           <button aria-label="Ajouter Pizza Reine au panier">Ajouter au panier</button>
         </div>
@@ -762,15 +967,30 @@ document.getElementById('fermer-panier').addEventListener('click', function() {
 
 
     <div class="produit" id="Campione">
-        <img src="images/Pizzas/Reine.png" alt="Reine" class="image-produit" />
+        <img src="images/Pizzas/Campione.png" alt="Reine" class="image-produit" />
         <div class="produit-contenu">
           <h3>Campione</h3>
+          <p class="description-produit"> Mozzarella, viande hachée, oignons, champignons, origan</p>
 <select class="taille-select" data-id=Campione>
     <option value="S" data-price="5.00">Petite - 5,00 €</option>
     <option value="M" data-price="6.80">Moyenne - 6,80 €</option>
     <option value="L" data-price="10.80">Large - 10,80 €</option>
 </select>
-          <p class="description-produit"> Mozzarella, viande hachée, oignons, champignons, origan</p>
+
+<div class="supplements" data-id="Campione">
+  <p><strong>Suppléments :</strong></p>
+  
+  <div class="options-container">
+    <label><input type="checkbox" name="supplement" value="aucun" id="aucun">Aucun</label>
+    <label><input type="checkbox" name="supplement" value="Mozzarella" data-price="1"> Mozzarella (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Kebab" data-price="1"> Kebab (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Pomme_de_terre" data-price="1"> Pomme de terre (+1,00 €)</label>
+    <label><input type="checkbox" name="supplement" value="Chedar" data-price="1"> Chedar (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Lardons" data-price="1">Lardons (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Champigons" data-price="1"> Champigons (+1 €)</label>
+  </div>
+</div>
+          
           <p class="prix-produit" data-price="5.00">5,00 €</p>
           <button aria-label="Ajouter Pizza Reine au panier">Ajouter au panier</button>
         </div>
@@ -783,15 +1003,28 @@ document.getElementById('fermer-panier').addEventListener('click', function() {
   <img src="images/Pizzas/brésilienne.png" alt="Bresilienne" class="image-produit" />
   <div class="produit-contenu">
     <h3>Bresilienne</h3>
- <select class="taille-select" data-id="Bresilienn>
+<p class="description-produit">Mozzarella, viande hachée, merguez, poivrons</p>
+<select class="taille-select" data-id="Bresilienne">
     <option value="S" data-price="5.00">Petite - 5,00 €</option>
     <option value="M" data-price="6.80">Moyenne - 6,80 €</option>
     <option value="L" data-price="10.80">Large - 10,80 €</option>
 </select>
-    <p class="description-produit">
 
-      Mozzarella, viande hachée, merguez, poivrons   </p>
-    <p class="prix-produit" data-price="5.00">5,00 €</p>
+<div class="supplements" data-id="Bresilienne">
+  <p><strong>Suppléments :</strong></p>
+  
+  <div class="options-container">
+    <label><input type="checkbox" name="supplement" value="aucun" id="aucun">Aucun</label>
+    <label><input type="checkbox" name="supplement" value="Mozzarella" data-price="1"> Mozzarella (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Kebab" data-price="1"> Kebab (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Pomme_de_terre" data-price="1"> Pomme de terre (+1,00 €)</label>
+    <label><input type="checkbox" name="supplement" value="Chedar" data-price="1"> Chedar (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Lardons" data-price="1">Lardons (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Champigons" data-price="1"> Champigons (+1 €)</label>
+  </div>
+</div>
+    
+      <p class="prix-produit" data-price="5.00">5,00 €</p>
     <button class="btn-ajouter">Ajouter au panier</button>
 
   </div>
@@ -801,15 +1034,27 @@ document.getElementById('fermer-panier').addEventListener('click', function() {
   <img src="images/Pizzas/Fermière.png" alt="Fermiere" class="image-produit" />
   <div class="produit-contenu">
     <h3>Fermière</h3>
+     <p class="description-produit">Mozzarella, poulet, pommes de terre, oignons, origan</p>
 <select class="taille-select" data-id="Fermière">
     <option value="S" data-price="5.00">Petite - 5,00 €</option>
     <option value="M" data-price="6.80">Moyenne - 6,80 €</option>
     <option value="L" data-price="10.80">Large - 10,80 €</option>
 </select>
-    <p class="description-produit">
 
-      Mozzarella, poulet, pommes de terre, oignons, origan
-    </p>
+<div class="supplements" data-id="Fermiere">
+  <p><strong>Suppléments :</strong></p>
+  
+  <div class="options-container">
+    <label><input type="checkbox" name="supplement" value="aucun" id="aucun">Aucun</label>
+    <label><input type="checkbox" name="supplement" value="Mozzarella" data-price="1"> Mozzarella (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Kebab" data-price="1"> Kebab (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Pomme_de_terre" data-price="1"> Pomme de terre (+1,00 €)</label>
+    <label><input type="checkbox" name="supplement" value="Chedar" data-price="1"> Chedar (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Lardons" data-price="1">Lardons (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Champigons" data-price="1"> Champigons (+1 €)</label>
+  </div>
+</div>
+   
     <p class="prix-produit" data-price="5.00">5,00 €</p>
     <button class="btn-ajouter">Ajouter au panier</button>
 
@@ -820,15 +1065,27 @@ document.getElementById('fermer-panier').addEventListener('click', function() {
   <img src="images/Pizzas/Regina.png" alt="Regina" class="image-produit" />
   <div class="produit-contenu">
     <h3>Regina</h3>
+     <p class="description-produit">Mozzarella, chorizo, champignons, olives</p>
 <select class="taille-select" data-id="Regina">
     <option value="S" data-price="5.00">Petite - 5,00 €</option>
     <option value="M" data-price="6.80">Moyenne - 6,80 €</option>
     <option value="L" data-price="10.80">Large - 10,80 €</option>
 </select>
-    <p class="description-produit">
+<div class="supplements" data-id="Regina">
+  <p><strong>Suppléments :</strong></p>
+  
+  <div class="options-container">
+    <label><input type="checkbox" name="supplement" value="aucun" id="aucun">Aucun</label>
+    <label><input type="checkbox" name="supplement" value="Mozzarella" data-price="1"> Mozzarella (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Kebab" data-price="1"> Kebab (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Pomme_de_terre" data-price="1"> Pomme de terre (+1,00 €)</label>
+    <label><input type="checkbox" name="supplement" value="Chedar" data-price="1"> Chedar (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Lardons" data-price="1">Lardons (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Champigons" data-price="1"> Champigons (+1 €)</label>
+  </div>
+</div>
 
-      Mozzarella, chorizo, champignons, olives
-    </p>
+   
     <p class="prix-produit" data-price="5.00">5,00 €</p>
     <button class="btn-ajouter">Ajouter au panier</button>
 
@@ -839,15 +1096,29 @@ document.getElementById('fermer-panier').addEventListener('click', function() {
   <img src="images/Pizzas/Orientale.png" alt="Orientale" class="image-produit" />
   <div class="produit-contenu">
     <h3>Orientale</h3>
+     <p class="description-produit">Mozzarella, merguez, oeuf, pomme de terre, oignons</p>
      <select class="taille-select" data-id="Orientale">
     <option value="S" data-price="5.00">Petite - 5,00 €</option>
     <option value="M" data-price="6.80">Moyenne - 6,80 €</option>
     <option value="L" data-price="10.80">Large - 10,80 €</option>
 </select>
-    <p class="description-produit">
 
-      Mozzarella, merguez, oeuf, pomme de terre, oignons
-    </p>
+<div class="supplements" data-id="Orientale">
+  <p><strong>Suppléments :</strong></p>
+  
+  <div class="options-container">
+    <label><input type="checkbox" name="supplement" value="aucun" id="aucun">Aucun</label>
+    <label><input type="checkbox" name="supplement" value="Mozzarella" data-price="1"> Mozzarella (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Kebab" data-price="1"> Kebab (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Pomme_de_terre" data-price="1"> Pomme de terre (+1,00 €)</label>
+    <label><input type="checkbox" name="supplement" value="Chedar" data-price="1"> Chedar (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Lardons" data-price="1">Lardons (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Champigons" data-price="1"> Champigons (+1 €)</label>
+  </div>
+</div>
+
+
+   
     <p class="prix-produit" data-price="5.00">5,00 €</p>
     <button class="btn-ajouter">Ajouter au panier</button>
 
@@ -858,15 +1129,28 @@ document.getElementById('fermer-panier').addEventListener('click', function() {
   <img src="images/Pizzas/Roquette.png" alt="Roquette" class="image-produit" />
   <div class="produit-contenu">
     <h3>Roquette</h3>
+    <p class="description-produit">Mozzarella, jambon, chévre, roquette, tomates fraiches</p>
      <select class="taille-select" data-id="Roquette">
     <option value="S" data-price="5.00">Petite - 5,00 €</option>
     <option value="M" data-price="6.80">Moyenne - 6,80 €</option>
     <option value="L" data-price="10.80">Large - 10,80 €</option>
 </select>
-    <p class="description-produit">
 
-      Mozzarella, jambon, chévre, roquette, tomates fraiches
-    </p>
+<div class="supplements" data-id="Fruits_de_Mer">
+  <p><strong>Suppléments :</strong></p>
+  
+  <div class="options-container">
+    <label><input type="checkbox" name="supplement" value="aucun" id="aucun">Aucun</label>
+    <label><input type="checkbox" name="supplement" value="Mozzarella" data-price="1"> Mozzarella (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Kebab" data-price="1"> Kebab (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Pomme_de_terre" data-price="1"> Pomme de terre (+1,00 €)</label>
+    <label><input type="checkbox" name="supplement" value="Chedar" data-price="1"> Chedar (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Lardons" data-price="1">Lardons (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Champigons" data-price="1"> Champigons (+1 €)</label>
+  </div>
+</div>
+
+
     <p class="prix-produit" data-price="5.00">5,00 €</p>
     <button class="btn-ajouter">Ajouter au panier</button>
 
@@ -877,15 +1161,28 @@ document.getElementById('fermer-panier').addEventListener('click', function() {
   <img src="images/Pizzas/Fruits_de_Mer.png" alt="Fruits_de_Mer" class="image-produit" />
   <div class="produit-contenu">
     <h3>Fruits de mer</h3>
+       <p class="description-produit"> Mozzarella, moules crevettes, calamars, persillade</p>
      <select class="taille-select" data-id="Fruits_de_Mer">
     <option value="S" data-price="5.00">Petite - 5,00 €</option>
     <option value="M" data-price="6.80">Moyenne - 6,80 €</option>
     <option value="L" data-price="10.80">Large - 10,80 €</option>
 </select>
-    <p class="description-produit">
 
-      Mozzarella, moules crevettes, calamars, persillade
-    </p>
+<div class="supplements" data-id="Fruits_de_Mer">
+  <p><strong>Suppléments :</strong></p>
+  
+  <div class="options-container">
+    <label><input type="checkbox" name="supplement" value="aucun" id="aucun">Aucun</label>
+    <label><input type="checkbox" name="supplement" value="Mozzarella" data-price="1"> Mozzarella (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Kebab" data-price="1"> Kebab (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Pomme_de_terre" data-price="1"> Pomme de terre (+1,00 €)</label>
+    <label><input type="checkbox" name="supplement" value="Chedar" data-price="1"> Chedar (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Lardons" data-price="1">Lardons (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Champigons" data-price="1"> Champigons (+1 €)</label>
+  </div>
+</div>
+
+ 
     <p class="prix-produit" data-price="5.00">5,00 €</p>
     <button class="btn-ajouter">Ajouter au panier</button>
 
@@ -893,18 +1190,30 @@ document.getElementById('fermer-panier').addEventListener('click', function() {
 </div>
 
 <div class="produit" id="Meat">
-  <img src="images/Pizzas/meat.png" alt="Roquette" class="image-produit" />
+  <img src="images/Pizzas/meat.png" alt="Meat" class="image-produit" />
   <div class="produit-contenu">
     <h3>Meat</h3>
+    <p class="description-produit">Mozzarella, jambon, merguez, viande hachée</p>
     <select class="taille-select" data-id="Meat">
     <option value="S" data-price="5.00">Petite - 5,00 €</option>
     <option value="M" data-price="6.80">Moyenne - 6,80 €</option>
     <option value="L" data-price="10.80">Large - 10,80 €</option>
 </select>
-    <p class="description-produit">
 
-      Mozzarella, jambon, merguez, viande hachée
-    </p>
+<div class="supplements" data-id="Meat">
+  <p><strong>Suppléments :</strong></p>
+  
+  <div class="options-container">
+    <label><input type="checkbox" name="supplement" value="aucun" id="aucun">Aucun</label>
+    <label><input type="checkbox" name="supplement" value="Mozzarella" data-price="1"> Mozzarella (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Kebab" data-price="1"> Kebab (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Pomme_de_terre" data-price="1"> Pomme de terre (+1,00 €)</label>
+    <label><input type="checkbox" name="supplement" value="Chedar" data-price="1"> Chedar (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Lardons" data-price="1">Lardons (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Champigons" data-price="1"> Champigons (+1 €)</label>
+  </div>
+</div>
+  
     <p class="prix-produit" data-price="5.00">5,00 €</p>
     <button class="btn-ajouter">Ajouter au panier</button>
 
@@ -912,37 +1221,65 @@ document.getElementById('fermer-panier').addEventListener('click', function() {
 </div>
 
 <div class="produit" id="Pecheur">
-  <img src="images/Pizzas/Pêcheur.png" alt="Roquette" class="image-produit" />
+  <img src="images/Pizzas/Pêcheur.png" alt="Pecheur" class="image-produit" />
   <div class="produit-contenu">
     <h3>Pêcheur</h3>
+    <p class="description-produit">  Mozzarella, thon, oeuf, olives, origan </p>
     <select class="taille-select" data-id="Pecheur">
     <option value="S" data-price="5.00">Petite - 5,00 €</option>
     <option value="M" data-price="6.80">Moyenne - 6,80 €</option>
     <option value="L" data-price="10.80">Large - 10,80 €</option>
 </select>
-    <p class="description-produit">
 
-      Mozzarella, thon, oeuf, olives, origan
-    </p>
+<div class="supplements" data-id="Pecheur">
+  <p><strong>Suppléments :</strong></p>
+  <div class="options-container">
+    <label><input type="checkbox" name="supplement" value="aucun" id="aucun">Aucun</label>
+    <label><input type="checkbox" name="supplement" value="Mozzarella" data-price="1"> Mozzarella (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Kebab" data-price="1"> Kebab (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Pomme_de_terre" data-price="1"> Pomme de terre (+1,00 €)</label>
+    <label><input type="checkbox" name="supplement" value="Chedar" data-price="1"> Chedar (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Lardons" data-price="1">Lardons (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Champigons" data-price="1"> Champigons (+1 €)</label>
+  </div>
+</div>
+
+
+   
     <p class="prix-produit" data-price="5.00">5,00 €</p>
     <button class="btn-ajouter">Ajouter au panier</button>
 
   </div>
 </div>
 
+
+
+
+
 <div class="produit" id="Vegetarienne">
-  <img src="images/Pizzas/Végétarienne.png" alt="Roquette" class="image-produit" />
+  <img src="images/Pizzas/Végétarienne.png" alt="Vegetarienne" class="image-produit" />
   <div class="produit-contenu">
-    <h3>Végétarienne</h3>
+  <h3>Végétarienne</h3>
+  <p class="description-produit"> Mozzarella, champignons, poivrons, olives, origan</p>
     <select class="taille-select" data-id="Vegetarienne">
     <option value="S" data-price="5.00">Petite - 5,00 €</option>
     <option value="M" data-price="6.80">Moyenne - 6,80 €</option>
     <option value="L" data-price="10.80">Large - 10,80 €</option>
 </select>
-    <p class="description-produit">
 
-      Mozzarella, champignons, poivrons, olives, origan
-    </p>
+<div class="supplements" data-id="Vegetarienne">
+  <p><strong>Suppléments :</strong></p>
+  <div class="options-container">
+    <label><input type="checkbox" name="supplement" value="aucun" id="aucun">Aucun</label>
+    <label><input type="checkbox" name="supplement" value="Mozzarella" data-price="1"> Mozzarella (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Kebab" data-price="1"> Kebab (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Pomme_de_terre" data-price="1"> Pomme de terre (+1,00 €)</label>
+    <label><input type="checkbox" name="supplement" value="Chedar" data-price="1"> Chedar (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Lardons" data-price="1">Lardons (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Champigons" data-price="1"> Champigons (+1 €)</label>
+  </div>
+</div>
+
     <p class="prix-produit" data-price="5.00">5,00 €</p>
     <button class="btn-ajouter">Ajouter au panier</button>
 
@@ -988,10 +1325,67 @@ document.getElementById('fermer-panier').addEventListener('click', function() {
 
 
 
+<script>
+
+
+
+
+  
+  // PANIER OUVERTURE FERMETURE"
+document.addEventListener('DOMContentLoaded', function() {
+    const supplementHeaders = document.querySelectorAll('.supplements > p');
+    
+    supplementHeaders.forEach(header => {
+        header.addEventListener('click', function() {
+            const supplements = this.parentElement;
+            supplements.classList.toggle('active');
+            
+            // Réinitialise les animations pour le réouverture
+            if (supplements.classList.contains('active')) {
+                const labels = supplements.querySelectorAll('label');
+                labels.forEach((label, index) => {
+                    label.style.setProperty('--i', index);
+                    label.style.animation = 'none';
+                    setTimeout(() => {
+                        label.style.animation = 'fadeIn 0.5s forwards';
+                    }, 10);
+                });
+            }
+        });
+    });
+
+    // Gestion de la sélection "Aucun"
+    const aucunCheckbox = document.querySelector('#aucun');
+    const otherCheckboxes = document.querySelectorAll('.supplements input[type="checkbox"]:not(#aucun)');
+    
+    aucunCheckbox.addEventListener('change', function() {
+        if (this.checked) {
+            otherCheckboxes.forEach(checkbox => {
+                checkbox.checked = false;
+            });
+        }
+    });
+    
+    otherCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            if (this.checked) {
+                aucunCheckbox.checked = false;
+            }
+        });
+    });
+});
+
+
+
+</script>
+
 
 
 
 <script>
+
+
+
   document.querySelector('.toggle').addEventListener('click', function() {
   document.getElementById('panier-flottant').classList.toggle('active');
 });
@@ -1000,175 +1394,242 @@ document.getElementById('fermer-panier').addEventListener('click', function() {
   document.getElementById('panier-flottant').classList.remove('active');
 });
 
+
+
+
+
+
 </script>
 
+
+
+
+
+
 <script>
-  // Mise à jour du prix affiché en fonction de la taille sélectionnée
-  document.querySelectorAll('.produit').forEach(produit => {
-    const selectTaille = produit.querySelector('select.taille-select');
-    const prixElement = produit.querySelector('.prix-produit');
+ document.querySelectorAll('.produit').forEach(produit => {
+  const selectTaille = produit.querySelector('select.taille-select');
+  const prixElement = produit.querySelector('.prix-produit');
+  const supplementsDiv = produit.querySelector('.supplements');
 
-    if (selectTaille && prixElement) {
-      // Au chargement, mettre à jour le prix en fonction de la taille sélectionnée par défaut
-      const optionChoisie = selectTaille.options[selectTaille.selectedIndex];
-      const prixInitial = parseFloat(optionChoisie.getAttribute('data-price'));
-      prixElement.setAttribute('data-price', prixInitial);
-      prixElement.textContent = prixInitial.toFixed(2) + ' €';
+  // Fonction pour calculer prix total (taille + suppléments)
+  function calculerPrix() {
+    const optionChoisie = selectTaille.options[selectTaille.selectedIndex];
+    const prixTaille = parseFloat(optionChoisie.getAttribute('data-price')) || 0;
 
-      // Quand on change la taille, on met à jour le prix affiché
-      selectTaille.addEventListener('change', () => {
-        const optionChoisie = selectTaille.options[selectTaille.selectedIndex];
-        const nouveauPrix = parseFloat(optionChoisie.getAttribute('data-price'));
-        prixElement.setAttribute('data-price', nouveauPrix);
-        prixElement.textContent = nouveauPrix.toFixed(2) + ' €';
-      });
-    }
-  });
+    // Suppléments cochés sauf "Aucun"
+    const supplementsChecked = supplementsDiv ? supplementsDiv.querySelectorAll('input[type="checkbox"]:checked') : [];
+    let totalSupplements = 0;
 
+    supplementsChecked.forEach(cb => {
+      if (cb.value.toLowerCase() === "aucun") {
+        totalSupplements = 0; // Si "Aucun" est coché, on ignore les autres
+        return;
+      }
+      const prixSup = parseFloat(cb.getAttribute('data-price')) || 0;
+      totalSupplements += prixSup;
+    });
 
-  // Gestion du panier
-  const boutonsAjouter = document.querySelectorAll('.produit button');
-  const compteurPanier = document.getElementById('compteur-panier');
-  const listePanier = document.getElementById('liste-panier');
-  const totalElement = document.getElementById('total');
-  const panierFlottant = document.getElementById('panier-flottant');
-  const togglePanier = document.querySelector('.toggle');
-  const fermerPanier = document.getElementById('fermer-panier');
-
-  let panier = JSON.parse(localStorage.getItem('panier')) || [];
-
-  panier = panier.map(item => ({
-    ...item,
-    quantite: item.quantite || 1
-  }));
-
-  // Trouver produit identique selon nom, prix, type et supplements (et taille)
-  function trouverProduitIdentique(nom, prix, type, supplements, taille) {
-    return panier.find(item => 
-      item.nom === nom && 
-      item.prix === prix && 
-      item.type === type && 
-      item.taille === taille &&
-      JSON.stringify(item.supplements) === JSON.stringify(supplements)
-    );
+    const total = prixTaille + totalSupplements;
+    prixElement.textContent = total.toFixed(2).replace('.', ',') + ' €';
+    prixElement.setAttribute('data-price', total.toFixed(2));
   }
 
-  // Ajouter au panier
-  boutonsAjouter.forEach(bouton => {
-    bouton.addEventListener('click', () => {
-      const produitElement = bouton.closest('.produit');
-      const nom = produitElement.querySelector('h3').textContent.trim();
-
-      // On récupère le select taille et le prix affiché (qui doit correspondre à la taille choisie)
-      const selectTaille = produitElement.querySelector('select.taille-select');
-      let prix;
-      let type;
-      let taille = null;
-
-      if (selectTaille) {
-        // Taille sélectionnée et prix correspondant
-        const optionChoisie = selectTaille.options[selectTaille.selectedIndex];
-        prix = parseFloat(optionChoisie.getAttribute('data-price'));
-        taille = optionChoisie.value;
-        type = 'pizza';
-      } else {
-        const prixElement = produitElement.querySelector('.prix-produit');
-        prix = parseFloat(prixElement.getAttribute('data-price'));
-        type = 'burger';
+  // Gestion exclusivité "Aucun" pour les suppléments
+  if (supplementsDiv) {
+    supplementsDiv.addEventListener('change', e => {
+      if (e.target.name === "supplement") {
+        if (e.target.value.toLowerCase() === "aucun" && e.target.checked) {
+          supplementsDiv.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+            if (cb !== e.target) cb.checked = false;
+          });
+        } else if (e.target.checked) {
+          const aucunCb = supplementsDiv.querySelector('input[value="aucun"]');
+          if (aucunCb && aucunCb.checked) {
+            aucunCb.checked = false;
+          }
+        }
+        calculerPrix();
       }
+    });
+  }
 
-      const image = produitElement.querySelector('img').src;
+  // Mise à jour prix quand on change la taille
+  if (selectTaille) {
+    selectTaille.addEventListener('change', calculerPrix);
+  }
 
-      const produitExistant = trouverProduitIdentique(nom, prix, type, [], taille);
+  // Calcul initial au chargement
+  calculerPrix();
+});
 
-      if (produitExistant) {
-        produitExistant.quantite += 1;
-      } else {
-        const produit = {
-          id: Date.now(),
-          nom,
-          prix,
-          image,
-          type,
-          taille,
-          supplements: [],
-          quantite: 1
-        };
-        panier.push(produit);
-      }
 
+// Gestion du panier avec prise en compte des suppléments
+const boutonsAjouter = document.querySelectorAll('.produit button');
+const compteurPanier = document.getElementById('compteur-panier');
+const listePanier = document.getElementById('liste-panier');
+const totalElement = document.getElementById('total');
+const panierFlottant = document.getElementById('panier-flottant');
+const togglePanier = document.querySelector('.toggle');
+const fermerPanier = document.getElementById('fermer-panier');
+
+let panier = JSON.parse(localStorage.getItem('panier')) || [];
+
+panier = panier.map(item => ({
+  ...item,
+  quantite: item.quantite || 1
+}));
+
+// Trouver produit identique selon nom, prix, type, suppléments et taille
+function trouverProduitIdentique(nom, prix, type, supplements, taille) {
+  return panier.find(item =>
+    item.nom === nom &&
+    item.prix === prix &&
+    item.type === type &&
+    item.taille === taille &&
+    JSON.stringify(item.supplements) === JSON.stringify(supplements)
+  );
+}
+
+// Ajouter au panier
+boutonsAjouter.forEach(bouton => {
+  bouton.addEventListener('click', () => {
+    const produitElement = bouton.closest('.produit');
+    const nom = produitElement.querySelector('h3').textContent.trim();
+
+    // Récupération de la taille et prix
+    const selectTaille = produitElement.querySelector('select.taille-select');
+    let prix, type, taille = null;
+
+    if (selectTaille) {
+      const optionChoisie = selectTaille.options[selectTaille.selectedIndex];
+      prix = parseFloat(produitElement.querySelector('.prix-produit').getAttribute('data-price'));
+      taille = optionChoisie.value;
+      type = 'pizza';
+    } else {
+      const prixElement = produitElement.querySelector('.prix-produit');
+      prix = parseFloat(prixElement.getAttribute('data-price'));
+      type = 'burger';
+    }
+
+    // Récupération des suppléments cochés
+    const supplementsDiv = produitElement.querySelector('.supplements');
+    let supplements = [];
+    if (supplementsDiv) {
+      const checkedSupps = supplementsDiv.querySelectorAll('input[type="checkbox"]:checked');
+      checkedSupps.forEach(cb => {
+        if (cb.value.toLowerCase() !== "aucun") {
+          supplements.push({
+            nom: cb.value,
+            prix: parseFloat(cb.getAttribute('data-price')) || 0
+          });
+        }
+      });
+    }
+
+    const image = produitElement.querySelector('img').src;
+
+    const produitExistant = trouverProduitIdentique(nom, prix, type, supplements, taille);
+
+    if (produitExistant) {
+      produitExistant.quantite += 1;
+    } else {
+      const produit = {
+        id: Date.now(),
+        nom,
+        prix,
+        image,
+        type,
+        taille,
+        supplements,
+        quantite: 1
+      };
+      panier.push(produit);
+    }
+
+    localStorage.setItem('panier', JSON.stringify(panier));
+    afficherPanier();
+  });
+});
+
+// Afficher le panier
+function afficherPanier() {
+  listePanier.innerHTML = '';
+  let total = 0;
+
+  panier.forEach(item => {
+    if (typeof item.prix !== 'number' || isNaN(item.prix)) {
+      console.error(`Prix non valide pour ${item.nom} :`, item.prix);
+      item.prix = 0;
+    }
+
+    const li = document.createElement('li');
+    li.classList.add('article-panier');
+
+    // Création liste suppléments en texte
+    const supplText = item.supplements.length > 0 ? 
+      `<p>Suppléments : ${item.supplements.map(s => s.nom).join(', ')}</p>` : '';
+
+    const details = document.createElement('div');
+    details.classList.add('details-panier');
+    details.innerHTML = `
+      <img src="${item.image}" alt="${item.nom}" />
+      <div>
+        <h4>
+          ${item.nom} 
+          ${item.taille ? `(Taille : ${item.taille})` : ''} × ${item.quantite}
+        </h4>
+        <p>Type : ${item.type === 'pizza' ? 'Pizza' : item.type === 'burger' ? 'Burger' : 'Autre'}</p>
+        ${supplText}
+        <p>Prix unitaire : ${item.prix.toFixed(2)} €</p>
+        <p>Prix total : ${(item.prix * item.quantite).toFixed(2)} €</p>
+      </div>
+    `;
+
+    const boutonSupprimer = document.createElement('button');
+    boutonSupprimer.textContent = '×';
+    boutonSupprimer.classList.add('supprimer');
+    boutonSupprimer.addEventListener('click', () => {
+      panier = panier.filter(p => p.id !== item.id);
       localStorage.setItem('panier', JSON.stringify(panier));
       afficherPanier();
     });
+
+    li.appendChild(details);
+    li.appendChild(boutonSupprimer);
+    listePanier.appendChild(li);
+
+    const sousTotal = item.prix * item.quantite;
+    if (!isNaN(sousTotal)) {
+      total += sousTotal;
+    } else {
+      console.error(`Sous-total invalide pour ${item.nom}:`, sousTotal);
+    }
   });
 
-  // Afficher le panier
-  function afficherPanier() {
-    listePanier.innerHTML = '';
-    let total = 0;
+  compteurPanier.textContent = panier.reduce((acc, item) => acc + item.quantite, 0);
+  totalElement.textContent = isNaN(total) ? '0.00' : total.toFixed(2);
+}
 
-    panier.forEach(item => {
-      if (typeof item.prix !== 'number' || isNaN(item.prix)) {
-        console.error(`Prix non valide pour ${item.nom} :`, item.prix);
-        item.prix = 0;
-      }
+// Toggle panier flottant
+togglePanier.addEventListener('click', () => {
+  document.getElementById('contenu-panier').classList.toggle('ouvert');
+});
 
-      const li = document.createElement('li');
-      li.classList.add('article-panier');
+fermerPanier.addEventListener('click', () => {
+  panierFlottant.classList.remove('ouvert');
+});
 
-      const details = document.createElement('div');
-      details.classList.add('details-panier');
-      details.innerHTML = `
-        <img src="${item.image}" alt="${item.nom}" />
-        <div>
-          <h4>
-  ${item.nom} 
-  ${item.taille ? `(${item.taille})` : ''} × ${item.quantite}
-</h4>
+// Initialisation
+afficherPanier();
 
-          <p>Type : ${item.type === 'pizza' ? 'Pizza' : item.type === 'burger' ? 'Burger' : 'Autre'}</p>
-          <p>Prix unitaire : ${item.prix.toFixed(2)} €</p>
-          <p>Prix total : ${(item.prix * item.quantite).toFixed(2)} €</p>
-        </div>
-      `;
-
-      const boutonSupprimer = document.createElement('button');
-      boutonSupprimer.textContent = '×';
-      boutonSupprimer.classList.add('supprimer');
-      boutonSupprimer.addEventListener('click', () => {
-        panier = panier.filter(p => p.id !== item.id);
-        localStorage.setItem('panier', JSON.stringify(panier));
-        afficherPanier();
-      });
-
-      li.appendChild(details);
-      li.appendChild(boutonSupprimer);
-      listePanier.appendChild(li);
-
-      const sousTotal = item.prix * item.quantite;
-      if (!isNaN(sousTotal)) {
-        total += sousTotal;
-      } else {
-        console.error(`Sous-total invalide pour ${item.nom}:`, sousTotal);
-      }
-    });
-
-    compteurPanier.textContent = panier.reduce((acc, item) => acc + item.quantite, 0);
-    totalElement.textContent = isNaN(total) ? '0.00' : total.toFixed(2);
-  }
-
-  // Toggle panier flottant
-  togglePanier.addEventListener('click', () => {
-    document.getElementById('contenu-panier').classList.toggle('ouvert');
-  });
-
-  fermerPanier.addEventListener('click', () => {
-    panierFlottant.classList.remove('ouvert');
-  });
-
-  // Initialisation
-  afficherPanier();
 </script>
 
 
 
+
+
+
+</body>
+
+</html>
