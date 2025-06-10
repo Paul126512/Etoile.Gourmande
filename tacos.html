@@ -2,334 +2,593 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Nos Tacos</title>
-    <link rel="stylesheet" href="css/Tacos.css" />
 
-  
+  <link rel="stylesheet" href="css/Tacos.css" />
+
+
+
+
+<script>
+  document.querySelector('.toggle').addEventListener('click', function() {
+  document.getElementById('panier-flottant').classList.toggle('active');
+});
+
+document.getElementById('fermer-panier').addEventListener('click', function() {
+  document.getElementById('panier-flottant').classList.remove('active');
+});
+
+
+
+</script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
 <body>
-  
   <div class="container">
-    <a href="index.html" class="bouton-retour">← Retour à l'accueil</a>
-    <h1>Nos Tacos</h1>
-    <p class="sous-titre">Garnis de frites & sauce</p>
+    <div class="container">
+  <a href="index.html" class="bouton-retour">
+    ← Retour à l'accueil
+  </a>
 
-    <h2 class="section-title">Nos créations</h2>
-    
-    <div class="liste-produits">
-      <!-- Tacos M -->
-      <div class="produit" id="tacosM">
-        <img src="images/Tacos/m.png" alt="Tacos-M" class="image-produit" />
+</div>
+
+    <h1>Nos Tacos </h1>
+    <p class="sous-titre">Garnis de frites & de sauce fromage</p>
+
+    <h2 class="section-title">Nos créations</h2>   
+
+
+
+<button id="creme-btn">
+  <span>En Menu →</span>
+</button>
+<br><br>
+
+<style>
+  /* On prépare une animation de fondu en sortie */
+  body.fade-out {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+</style>
+
+<script>
+  const btn = document.getElementById("creme-btn");
+
+  btn.addEventListener("click", function () {
+    // Ajoute la classe fade-out pour lancer la transition CSS
+    document.body.classList.add("fade-out");
+
+    // Après la durée de la transition (ici 500ms), on change de page
+    setTimeout(() => {
+      window.location.href = "base-creme.html";
+    }, 500); 
+  });
+</script>
+
+
+
+
+
+
+
+
+<div class="liste-produits">
+      <div class="produit" id="TacosM">
+        <img src="images/Tacos/m.png" alt="Cheese Burger" class="image-produit" />
         <div class="produit-contenu">
           <h3>Tacos M</h3>
-          <p class="description-produit">Garnis de frite & de sauce fromage - 1 viande</p>
-          
-          <div class="options-tacos">
-            <div class="option">
-              <label for="viande-tacosM">Viande :</label>
-              <select id="viande-tacosM" class="viande-select">
-                <option value="Kebab">Kebab</option>
-                <option value="Cordon Bleu">Cordon Bleu</option>
-                <option value="Tenders">Tenders</option>
-                <option value="Viande Hachée">Viande Hachée</option>
-                <option value="Poulet Curry">Poulet Curry</option>
-                <option value="Poulet Tandoori">Poulet Tandoori</option>
-              </select>
-            </div>
-            
-            <div class="option">
-              <label for="sauce-tacosM">Sauce :</label>
-              <select id="sauce-tacosM" class="sauce-select">
-                <option value="Mayo Blanche">Mayo Blanche</option>
-                <option value="Harissa">Harissa</option>
-                <option value="Samourai">Samourai</option>
-                <option value="Biggy">Biggy</option>
-                <option value="Ketchup">Ketchup</option>
-                <option value="Algérienne">Algérienne</option>
-                <option value="BBQ">BBQ</option>
-              </select>
-            </div>
-          </div>
-          
-          <p class="prix-produit" data-price="5.00">5,00 €</p>
+          <p class="description-produit"></p>
+    <select class="taille-select" data-id="TacosM">
+    <option value="M" data-price="5.00"> Taille M</option>
+
+</select>
+<div class="supplements" data-id="Viande">
+  <p><strong>Choix des viandes</strong></p>
+  <div class="options-container">
+    <label><input type="radio" name="supplement-TacosM" value="aucun" id="aucun" checked>Aucun</label>
+    <label><input type="radio" name="supplement-TacosM" value="Kebab" data-price="0">Kebab</label>
+    <label><input type="radio" name="supplement-TacosM" value="Cordon_Bleu" data-price="0">Cordon Bleu</label>
+    <label><input type="radio" name="supplement-TacosM" value="Tenders" data-price="0">Tenders</label>
+    <label><input type="radio" name="supplement-TacosM" value="Viande_Hachée" data-price="0">Viande Hachée</label>
+    <label><input type="radio" name="supplement-TacosM" value="Poulet_Curry" data-price="0">Poulet Curry</label>
+    <label><input type="radio" name="supplement-TacosM" value="Poulet_Tandoori" data-price="0">Poulet Tandoori</label>
+  </div>
+</div>
+<div class="supplements" data-id="sauces">
+  <p><strong>Choix de la ou des sauces </strong></p>
+  
+  <div class="options-container">
+    <label><input type="checkbox" name="supplement" value="aucun" id="aucun">Aucun</label>
+    <label><input type="checkbox" name="supplement" value="Mayo" data-price="0">Mayo</label>
+    <label><input type="checkbox" name="supplement" value="Blanche" data-price="0">Blanche</label>
+    <label><input type="checkbox" name="supplement" value="Harissa" data-price="0">Harissa</label>
+    <label><input type="checkbox" name="supplement" value="Samourai" data-price="0">Samourai</label>
+    <label><input type="checkbox" name="supplement" value="Biggy" data-price="0">Biggy</label>
+    <label><input type="checkbox" name="supplement" value="Ketchup" data-price="0">Ketchup</label>
+    <label><input type="checkbox" name="supplement" value="Algérienne" data-price="0">Algérienne</label>
+    <label><input type="checkbox" name="supplement" value="BBG" data-price="0">BBG</label>
+  </div>
+</div>
+
+         <p class="prix-produit" data-price="5.00">5,00 €</p>
           <button aria-label="Ajouter Tacos M au panier">Ajouter au panier</button>
         </div>
       </div>
 
-      <!-- Tacos L -->
-      <div class="produit" id="Tacos-L">
-        <img src="images/Tacos/L.png" alt="Tacos-L" class="image-produit" />
+
+     
+
+
+<div class="produit" id="Calzone">
+  <img src="images/Pizzas/Calzone.png" alt="Calzone" class="image-produit" />
+  <div class="produit-contenu">
+    <h3>Pizza Calzone</h3>
+    <p class="description-produit">Mozzarella, viande au choix</p>
+<select class="taille-select" data-id=" Calzone">
+    <option value="S" data-price="5.00">Petite - 5,00 €</option>
+    <option value="M" data-price="6.80">Moyenne - 6,80 €</option>
+    <option value="L" data-price="10.80">Large - 10,80 €</option>
+</select>
+
+<div class="supplements" data-id="4-fromages">
+  <p><strong>Suppléments :</strong></p>
+  
+  <div class="options-container">
+    <label><input type="checkbox" name="supplement" value="aucun" id="aucun">Aucun</label>
+    <label><input type="checkbox" name="supplement" value="Mozzarella" data-price="1"> Mozzarella (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Kebab" data-price="1"> Kebab (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Pomme_de_terre" data-price="1"> Pomme de terre (+1,00 €)</label>
+    <label><input type="checkbox" name="supplement" value="Chedar" data-price="1"> Chedar (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Lardons" data-price="1">Lardons (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Champigons" data-price="1"> Champigons (+1 €)</label>
+  </div>
+</div>
+
+    <p class="prix-produit" data-price="5.00">5,00 €</p>
+    <button aria-label="Ajouter Double Cheese au panier">Ajouter au panier</button>
+    
+  </div>
+</div>
+
+
+
+
+
+
+      <div class="produit" id="4-fromages">
+        <img src="images/Pizzas/4_fromage.png" alt="4_fromages" class="image-produit" />
         <div class="produit-contenu">
-          <h3>Tacos L</h3>
-          <p class="description-produit">Garnis de frite & de sauce fromage - 2 viandes</p>
-          
-          <div class="options-tacos">
-            <div class="option">
-              <label for="viande1-tacosL">Viande 1 :</label>
-              <select id="viande1-tacosL" class="viande-select">
-                <option value="Kebab">Kebab</option>
-                <option value="Cordon Bleu">Cordon Bleu</option>
-                <option value="Tenders">Tenders</option>
-                <option value="Viande Hachée">Viande Hachée</option>
-                <option value="Poulet Curry">Poulet Curry</option>
-                <option value="Poulet Tandoori">Poulet Tandoori</option>
-              </select>
-            </div>
-            
-            <div class="option">
-              <label for="viande2-tacosL">Viande 2 :</label>
-              <select id="viande2-tacosL" class="viande-select">
-                <option value="Kebab">Kebab</option>
-                <option value="Cordon Bleu">Cordon Bleu</option>
-                <option value="Tenders">Tenders</option>
-                <option value="Viande Hachée">Viande Hachée</option>
-                <option value="Poulet Curry">Poulet Curry</option>
-                <option value="Poulet Tandoori">Poulet Tandoori</option>
-              </select>
-            </div>
-            
-            <div class="option">
-              <label for="sauce-tacosL">Sauce :</label>
-              <select id="sauce-tacosL" class="sauce-select">
-                <option value="Mayo Blanche">Mayo Blanche</option>
-                <option value="Harissa">Harissa</option>
-                <option value="Samourai">Samourai</option>
-                <option value="Biggy">Biggy</option>
-                <option value="Ketchup">Ketchup</option>
-                <option value="Algérienne">Algérienne</option>
-                <option value="BBQ">BBQ</option>
-              </select>
-            </div>
-          </div>
-          
-          <p class="prix-produit" data-price="6.00">6,00 €</p>
-          <button aria-label="Ajouter Tacos L au panier">Ajouter au panier</button>
+          <h3>Pizza 4 Fromages</h3>
+          <p class="description-produit">Mozzarella, gorgonzola , chévre, parmesan</p>
+<select class="taille-select" data-id="4-fromages">
+    <option value="S" data-price="5.00">Petite - 5,00 €</option>
+    <option value="M" data-price="6.80">Moyenne - 6,80 €</option>
+    <option value="L" data-price="10.80">Large - 10,80 €</option>
+</select>
+
+<div class="supplements" data-id="4-fromages">
+  <p><strong>Suppléments :</strong></p>
+  
+  <div class="options-container">
+    <label><input type="checkbox" name="supplement" value="aucun" id="aucun">Aucun</label>
+    <label><input type="checkbox" name="supplement" value="Mozzarella" data-price="1"> Mozzarella (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Kebab" data-price="1"> Kebab (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Pomme_de_terre" data-price="1"> Pomme de terre (+1,00 €)</label>
+    <label><input type="checkbox" name="supplement" value="Chedar" data-price="1"> Chedar (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Lardons" data-price="1">Lardons (+1 €)</label>
+    <label><input type="checkbox" name="supplement" value="Champigons" data-price="1"> Champigons (+1 €)</label>
+  </div>
+</div>
+
+          <p class="prix-produit" data-price="5.00">5,00 €</p>
+          <button aria-label="Ajouter Chicken Burger au panier">Ajouter au panier</button>
         </div>
       </div>
 
-      <!-- Tacos XL -->
-      <div class="produit" id="Tacos-XL">
-        <img src="images/Tacos/XL.png" alt="Tacos XL" class="image-produit" />
-        <div class="produit-contenu">
-          <h3>TACOS XL</h3>
-          <p class="description-produit">Garnis de frite & de sauce fromage - 3 viandes</p>
-          
-          <div class="options-tacos">
-            <div class="option">
-              <label for="viande1-tacosXL">Viande 1 :</label>
-              <select id="viande1-tacosXL" class="viande-select">
-                <option value="Kebab">Kebab</option>
-                <option value="Cordon Bleu">Cordon Bleu</option>
-                <option value="Tenders">Tenders</option>
-                <option value="Viande Hachée">Viande Hachée</option>
-                <option value="Poulet Curry">Poulet Curry</option>
-                <option value="Poulet Tandoori">Poulet Tandoori</option>
-              </select>
-            </div>
-            
-            <div class="option">
-              <label for="viande2-tacosXL">Viande 2 :</label>
-              <select id="viande2-tacosXL" class="viande-select">
-                <option value="Kebab">Kebab</option>
-                <option value="Cordon Bleu">Cordon Bleu</option>
-                <option value="Tenders">Tenders</option>
-                <option value="Viande Hachée">Viande Hachée</option>
-                <option value="Poulet Curry">Poulet Curry</option>
-                <option value="Poulet Tandoori">Poulet Tandoori</option>
-              </select>
-            </div>
-            
-            <div class="option">
-              <label for="viande3-tacosXL">Viande 3 :</label>
-              <select id="viande3-tacosXL" class="viande-select">
-                <option value="Kebab">Kebab</option>
-                <option value="Cordon Bleu">Cordon Bleu</option>
-                <option value="Tenders">Tenders</option>
-                <option value="Viande Hachée">Viande Hachée</option>
-                <option value="Poulet Curry">Poulet Curry</option>
-                <option value="Poulet Tandoori">Poulet Tandoori</option>
-              </select>
-            </div>
-            
-            <div class="option">
-              <label for="sauce-tacosXL">Sauce :</label>
-              <select id="sauce-tacosXL" class="sauce-select">
-                <option value="Mayo Blanche">Mayo Blanche</option>
-                <option value="Harissa">Harissa</option>
-                <option value="Samourai">Samourai</option>
-                <option value="Biggy">Biggy</option>
-                <option value="Ketchup">Ketchup</option>
-                <option value="Algérienne">Algérienne</option>
-                <option value="BBQ">BBQ</option>
-              </select>
-            </div>
-          </div>
-          
-          <p class="prix-produit" data-price="8.00">8,00 €</p>
-          <button aria-label="Ajouter Tacos XL au panier">Ajouter au panier</button>
-        </div>
-      </div>
-    </div>
+      
 
-    <!-- Panier Flottant -->
-    <div id="panier-flottant">
-      <button class="toggle">
-        <span>Panier</span>
-        <span id="compteur-panier">0</span>
-      </button>
 
-      <div id="contenu-panier">
-        <h3>
-          Votre sélection
-          <button id="fermer-panier" aria-label="Fermer le panier">×</button>
-        </h3>
-        <ul id="liste-panier"></ul>
-        <div class="total-fixe">
-          <p>Total : <span id="total">0</span> €</p>
-          <a href="Card.html">
-            <button id="valider-commande">Voir le panier</button>
-          </a>
-        </div>
-      </div>
+
+
+
+
+
+
+
+<!-- === Panier Flottant === -->
+<div id="panier-flottant">
+  <button class="toggle">
+    <span>Panier</span>
+    <span id="compteur-panier">0</span>
+  </button>
+
+  <div id="contenu-panier">
+    <h3>
+      Votre sélection
+      <button id="fermer-panier" aria-label="Fermer le panier">×</button>
+    </h3>
+
+    <ul id="liste-panier"></ul>
+
+    <div class="total-fixe">
+      <p>Total : <span id="total">0</span> €</p>
+      <a href="Card.html">
+        <button id="valider-commande">Voir le panier</button>
+      </a>
     </div>
   </div>
+</div>
 
-  <script>
-    // Gestion du panier flottant
-    document.querySelector('.toggle').addEventListener('click', function() {
-      document.getElementById('panier-flottant').classList.toggle('active');
-      document.getElementById('contenu-panier').classList.toggle('ouvert');
-    });
 
-    document.getElementById('fermer-panier').addEventListener('click', function() {
-      document.getElementById('panier-flottant').classList.remove('active');
-      document.getElementById('contenu-panier').classList.remove('ouvert');
-    });
 
-    // Gestion du panier
-    const boutonsAjouter = document.querySelectorAll('.produit button');
-    const compteurPanier = document.getElementById('compteur-panier');
-    const listePanier = document.getElementById('liste-panier');
-    const totalElement = document.getElementById('total');
 
-    let panier = JSON.parse(localStorage.getItem('panier')) || [];
 
-    function getTacosOptions(produitElement) {
-      const options = {
-        viandes: [],
-        sauce: ''
-      };
-      
-      const viandeSelects = produitElement.querySelectorAll('.viande-select');
-      viandeSelects.forEach(select => {
-        options.viandes.push(select.value);
-      });
-      
-      const sauceSelect = produitElement.querySelector('.sauce-select');
-      if (sauceSelect) {
-        options.sauce = sauceSelect.value;
-      }
-      
-      return options;
-    }
 
-    function trouverProduitIdentique(nom, prix, options) {
-      return panier.find(item => 
-        item.nom === nom && 
-        item.prix === prix && 
-        JSON.stringify(item.options) === JSON.stringify(options)
-      );
-    }
 
-    boutonsAjouter.forEach(bouton => {
-      bouton.addEventListener('click', () => {
-        const produitElement = bouton.closest('.produit');
-        const nom = produitElement.querySelector('h3').textContent.trim();
-        const prix = parseFloat(produitElement.querySelector('.prix-produit').getAttribute('data-price'));
-        const image = produitElement.querySelector('img').src;
-        const options = getTacosOptions(produitElement);
+<script>
 
-        const produitExistant = trouverProduitIdentique(nom, prix, options);
 
-        if (produitExistant) {
-          produitExistant.quantite += 1;
-        } else {
-          const produit = {
-            id: Date.now(),
-            nom,
-            prix,
-            image,
-            type: 'tacos',
-            options,
-            quantite: 1
-          };
-          panier.push(produit);
-        }
 
-        localStorage.setItem('panier', JSON.stringify(panier));
-        afficherPanier();
-        
-        // Ouvrir le panier après ajout
-        document.getElementById('panier-flottant').classList.add('active');
-        document.getElementById('contenu-panier').classList.add('ouvert');
-      });
-    });
 
-    function afficherPanier() {
-      listePanier.innerHTML = '';
-      let total = 0;
-
-      panier.forEach(item => {
-        if (typeof item.prix !== 'number' || isNaN(item.prix)) {
-          item.prix = 0;
-        }
-
-        const li = document.createElement('li');
-        li.classList.add('article-panier');
-
-        const details = document.createElement('div');
-        details.classList.add('details-panier');
-        
-        let optionsText = '';
-        if (item.type === 'tacos') {
-          optionsText = `
-            <p>Viandes: ${item.options.viandes.join(', ')}</p>
-            <p>Sauce: ${item.options.sauce}</p>
-          `;
-        }
-
-        details.innerHTML = `
-          <img src="${item.image}" alt="${item.nom}" />
-          <div>
-            <h4>${item.nom} × ${item.quantite}</h4>
-            ${optionsText}
-            <p>Prix unitaire : ${item.prix.toFixed(2)} €</p>
-            <p>Prix total : ${(item.prix * item.quantite).toFixed(2)} €</p>
-          </div>
-        `;
-
-        const boutonSupprimer = document.createElement('button');
-        boutonSupprimer.textContent = '×';
-        boutonSupprimer.classList.add('supprimer');
-        boutonSupprimer.addEventListener('click', () => {
-          panier = panier.filter(p => p.id !== item.id);
-          localStorage.setItem('panier', JSON.stringify(panier));
-          afficherPanier();
+  
+  // PANIER OUVERTURE FERMETURE"
+document.addEventListener('DOMContentLoaded', function() {
+    const supplementHeaders = document.querySelectorAll('.supplements > p');
+    
+    supplementHeaders.forEach(header => {
+        header.addEventListener('click', function() {
+            const supplements = this.parentElement;
+            supplements.classList.toggle('active');
+            
+            // Réinitialise les animations pour le réouverture
+            if (supplements.classList.contains('active')) {
+                const labels = supplements.querySelectorAll('label');
+                labels.forEach((label, index) => {
+                    label.style.setProperty('--i', index);
+                    label.style.animation = 'none';
+                    setTimeout(() => {
+                        label.style.animation = 'fadeIn 0.5s forwards';
+                    }, 10);
+                });
+            }
         });
+    });
 
-        li.appendChild(details);
-        li.appendChild(boutonSupprimer);
-        listePanier.appendChild(li);
+    // Gestion de la sélection "Aucun"
+    const aucunCheckbox = document.querySelector('#aucun');
+    const otherCheckboxes = document.querySelectorAll('.supplements input[type="checkbox"]:not(#aucun)');
+    
+    aucunCheckbox.addEventListener('change', function() {
+        if (this.checked) {
+            otherCheckboxes.forEach(checkbox => {
+                checkbox.checked = false;
+            });
+        }
+    });
+    
+    otherCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            if (this.checked) {
+                aucunCheckbox.checked = false;
+            }
+        });
+    });
+});
 
-        total += item.prix * item.quantite;
-      });
 
-      compteurPanier.textContent = panier.reduce((acc, item) => acc + item.quantite, 0);
-      totalElement.textContent = total.toFixed(2);
+
+</script>
+
+
+
+
+<script>
+  document.querySelector('.toggle').addEventListener('click', function() {
+  document.getElementById('panier-flottant').classList.toggle('active');
+});
+
+document.getElementById('fermer-panier').addEventListener('click', function() {
+  document.getElementById('panier-flottant').classList.remove('active');
+});
+</script>
+
+
+
+
+
+
+<script>
+document.querySelectorAll('.produit').forEach(produit => {
+  const selectTaille = produit.querySelector('select.taille-select');
+  const prixElement = produit.querySelector('.prix-produit');
+  const supplementsViandeDiv = produit.querySelector('.supplements[data-id="Viande"]');
+  const supplementsSaucesDiv = produit.querySelector('.supplements[data-id="sauces"]');
+
+  // Fonction pour calculer prix total (taille + suppléments)
+  function calculerPrix() {
+    const optionChoisie = selectTaille ? selectTaille.options[selectTaille.selectedIndex] : null;
+    const prixTaille = optionChoisie ? parseFloat(optionChoisie.getAttribute('data-price')) || 0 : 0;
+
+    // Viande : radio checked
+    let prixSuppViande = 0;
+    if (supplementsViandeDiv) {
+      const radioChoisi = supplementsViandeDiv.querySelector('input[type="radio"]:checked');
+      if (radioChoisi && radioChoisi.value.toLowerCase() !== 'aucun') {
+        prixSuppViande = parseFloat(radioChoisi.getAttribute('data-price')) || 0;
+      }
     }
 
+    // Sauces : checkboxes checked sauf "Aucun"
+    let prixSuppSauces = 0;
+    if (supplementsSaucesDiv) {
+      const saucesChecked = supplementsSaucesDiv.querySelectorAll('input[type="checkbox"]:checked');
+      let aucunChecked = false;
+      saucesChecked.forEach(cb => {
+        if (cb.value.toLowerCase() === 'aucun') {
+          aucunChecked = true;
+        }
+      });
+      if (!aucunChecked) {
+        saucesChecked.forEach(cb => {
+          if (cb.value.toLowerCase() !== 'aucun') {
+            prixSuppSauces += parseFloat(cb.getAttribute('data-price')) || 0;
+          }
+        });
+      } else {
+        prixSuppSauces = 0;
+      }
+    }
+
+    const total = prixTaille + prixSuppViande + prixSuppSauces;
+    prixElement.textContent = total.toFixed(2).replace('.', ',') + ' €';
+    prixElement.setAttribute('data-price', total.toFixed(2));
+  }
+
+  // Gestion exclusivité "Aucun" pour sauces (checkbox)
+  if (supplementsSaucesDiv) {
+    supplementsSaucesDiv.addEventListener('change', e => {
+      if (e.target.type === 'checkbox' && e.target.name === 'supplement') {
+        if (e.target.value.toLowerCase() === 'aucun' && e.target.checked) {
+          supplementsSaucesDiv.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+            if (cb !== e.target) cb.checked = false;
+          });
+        } else if (e.target.checked) {
+          const aucunCb = supplementsSaucesDiv.querySelector('input[value="aucun"]');
+          if (aucunCb && aucunCb.checked) {
+            aucunCb.checked = false;
+          }
+        }
+        calculerPrix();
+      }
+    });
+  }
+
+  // Gestion changement viande (radio)
+  if (supplementsViandeDiv) {
+    supplementsViandeDiv.addEventListener('change', e => {
+      if (e.target.type === 'radio' && e.target.name.startsWith('supplement-')) {
+        calculerPrix();
+      }
+    });
+  }
+
+  // Mise à jour prix quand on change la taille
+  if (selectTaille) {
+    selectTaille.addEventListener('change', calculerPrix);
+  }
+
+  // Calcul initial au chargement
+  calculerPrix();
+});
+
+// Gestion du panier
+const boutonsAjouter = document.querySelectorAll('.produit button');
+const compteurPanier = document.getElementById('compteur-panier');
+const listePanier = document.getElementById('liste-panier');
+const totalElement = document.getElementById('total');
+const panierFlottant = document.getElementById('panier-flottant');
+const togglePanier = document.querySelector('.toggle');
+const fermerPanier = document.getElementById('fermer-panier');
+
+let panier = JSON.parse(localStorage.getItem('panier')) || [];
+
+// Trouver produit identique selon nom, prix, type, suppléments et taille
+function trouverProduitIdentique(nom, prix, type, supplements, taille) {
+  return panier.find(item =>
+    item.nom === nom &&
+    item.prix === prix &&
+    item.type === type &&
+    item.taille === taille &&
+    JSON.stringify(item.supplements) === JSON.stringify(supplements)
+  );
+}
+
+// Ajouter au panier
+boutonsAjouter.forEach(bouton => {
+  bouton.addEventListener('click', () => {
+    const produitElement = bouton.closest('.produit');
+    const nom = produitElement.querySelector('h3').textContent.trim();
+
+    // Récupérer la viande choisie
+    const supplementsViandeDiv = produitElement.querySelector('.supplements[data-id="Viande"]');
+    let viandeChoisie = null;
+    let radioChoisi = null;
+    if (supplementsViandeDiv) {
+      radioChoisi = supplementsViandeDiv.querySelector('input[type="radio"]:checked');
+      if (radioChoisi) {
+        viandeChoisie = radioChoisi.value.toLowerCase();
+      }
+    }
+
+    // Vérifier que viande est obligatoire : ne doit pas être "aucun"
+    if (viandeChoisie === 'aucun' || viandeChoisie === null) {
+      alert("Veuillez sélectionner une viande pour votre Tacos avant d'ajouter au panier.");
+      return; // Stopper l'ajout au panier
+    }
+
+    const selectTaille = produitElement.querySelector('select.taille-select');
+    const optionChoisie = selectTaille.options[selectTaille.selectedIndex];
+    const prix = parseFloat(produitElement.querySelector('.prix-produit').getAttribute('data-price')) || 0;
+    const taille = optionChoisie.value;
+    const type = 'tacos';
+    const image = produitElement.querySelector('img').src;
+
+    // Construire liste suppléments (viande et sauces)
+    const supplements = [];
+
+    // Viande (forcément choisie, pas "aucun")
+    supplements.push({
+      type: 'viande',
+      nom: radioChoisi.value,
+      prix: parseFloat(radioChoisi.getAttribute('data-price')) || 0
+    });
+
+    // Sauces
+// Sauces
+// Sauces
+const supplementsSaucesDiv = produitElement.querySelector('.supplements[data-id="sauces"]');
+if (supplementsSaucesDiv) {
+  const saucesChecked = supplementsSaucesDiv.querySelectorAll('input[type="checkbox"]:checked');
+  let aucunChecked = false;
+  
+  saucesChecked.forEach(cb => {
+    if (cb.value.toLowerCase() === 'aucun') {
+      aucunChecked = true;
+    }
+  });
+
+  if (aucunChecked || saucesChecked.length === 0) {
+    supplements.push({
+      type: 'sauce',
+      nom: 'Aucun', // On ajoute explicitement "Aucun" dans les suppléments
+      prix: 0
+    });
+  } else {
+    saucesChecked.forEach(cb => {
+      if (cb.value.toLowerCase() !== "aucun") {
+        supplements.push({
+          type: 'sauce',
+          nom: cb.value,
+          prix: parseFloat(cb.getAttribute('data-price')) || 0
+        });
+      }
+    });
+  }
+}
+
+
+    // Vérifier si produit identique déjà dans panier
+    const produitExistant = trouverProduitIdentique(nom, prix, type, supplements, taille);
+    if (produitExistant) {
+      produitExistant.quantite++;
+    } else {
+      panier.push({
+        id: Date.now(),
+        nom,
+        prix,
+        image,
+        type,
+        taille,
+        supplements,
+        quantite: 1
+      });
+    }
+
+    localStorage.setItem('panier', JSON.stringify(panier));
     afficherPanier();
-  </script>
+  });
+});
+
+// Afficher le panier
+function afficherPanier() {
+  listePanier.innerHTML = '';
+  let total = 0;
+
+  panier.forEach(item => {
+    if (typeof item.prix !== 'number' || isNaN(item.prix)) {
+      console.error(`Prix non valide pour ${item.nom} :`, item.prix);
+      item.prix = 0;
+    }
+
+    const li = document.createElement('li');
+    li.classList.add('article-panier');
+
+    // Séparer viande et sauces pour affichage
+    const viandes = item.supplements.filter(s => s.type === 'viande').map(s => s.nom);
+    const sauces = item.supplements.filter(s => s.type === 'sauce').map(s => s.nom);
+
+    const viandeText = viandes.length > 0 ? `<p>Viande : ${viandes.join(', ')}</p>` : '';
+    const saucesText = sauces.length > 0 ? `<p>Sauces : ${sauces.join(', ')}</p>` : '';
+
+    const details = document.createElement('div');
+    details.classList.add('details-panier');
+    details.innerHTML = `
+      <img src="${item.image}" alt="${item.nom}" />
+      <div>
+        <h4>
+          ${item.nom} 
+          ${item.taille ? `(Taille : ${item.taille})` : ''} × ${item.quantite}
+        </h4>
+        <p>Type : ${item.type === 'pizza' ? 'Pizza' : item.type === 'burger' ? 'Burger' : item.type === 'tacos' ? 'Tacos' : 'Autre'}</p>
+        ${viandeText}
+        ${saucesText}
+        <p>Prix unitaire : ${item.prix.toFixed(2)} €</p>
+        <p>Prix total : ${(item.prix * item.quantite).toFixed(2)} €</p>
+      </div>
+    `;
+
+    const boutonSupprimer = document.createElement('button');
+    boutonSupprimer.textContent = '×';
+    boutonSupprimer.classList.add('supprimer');
+    boutonSupprimer.addEventListener('click', () => {
+      panier = panier.filter(p => p.id !== item.id);
+      localStorage.setItem('panier', JSON.stringify(panier));
+      afficherPanier();
+    });
+
+    li.appendChild(details);
+    li.appendChild(boutonSupprimer);
+    listePanier.appendChild(li);
+
+    total += item.prix * item.quantite;
+  });
+
+  compteurPanier.textContent = panier.reduce((acc, item) => acc + item.quantite, 0);
+  totalElement.textContent = total.toFixed(2);
+}
+
+// Toggle panier flottant
+if (togglePanier) {
+  togglePanier.addEventListener('click', () => {
+    const contenu = document.getElementById('contenu-panier');
+    if (contenu) {
+      contenu.classList.toggle('ouvert');
+      togglePanier.classList.toggle('ouvert');
+    }
+  });
+}
+
+// Fermer panier
+if (fermerPanier) {
+  fermerPanier.addEventListener('click', () => {
+    const contenu = document.getElementById('contenu-panier');
+    if (contenu) {
+      contenu.classList.remove('ouvert');
+      togglePanier.classList.remove('ouvert');
+    }
+  });
+}
+
+// Initialisation affichage panier au chargement
+afficherPanier();
+</script>
+
+
+
+
+
 </body>
+
 </html>
