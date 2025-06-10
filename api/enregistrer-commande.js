@@ -6,6 +6,10 @@ const supabaseKey = process.env.SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+const supabase = createClient(
+  process.env.SUPABASE_URL,  // Your Supabase project URL
+  process.env.SUPABASE_KEY   // Your Supabase public/anonymous key
+)
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
