@@ -114,34 +114,36 @@ export default async function handler(req, res) {
         }
 
         // --- 2. Créer une session Stripe Checkout ---
-        const lineItems = produits.map(item => ({
-            price_data: {
-                currency: 'eur',
-                product_data: {
-                    name: `${item.nom} ${item.taille ? `(${item.taille})` : ''}`,
-                    description: item.description || '', // Description de base de l'article
-                    images: [item.image || 'https://via.placeholder.com/150?text=Produit'], // Image pour Stripe
-                },
-                unit_amount: Math.round(parseFloat(item.prix) * 100), // Prix unitaire en centimes
-            },
-            quantity: parseInt(item.quantite || 1, 10), // Quantité de l'article
-        }));
+       // ... (code précédent) ...
 
-        const session = await stripe.checkout.sessions.create({
-            payment_method_types: ['card'],
-            line_items: lineItems,
-            mode: 'payment',
-            // Assurez-vous que siteUrl est correctement configuré dans Vercel
-            success_url: `${siteUrl}/success.html?session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${siteUrl}/cancel.html`,
-            customer_email: email,
-            metadata: {
-                client_id: client_id,
-                // Si vous souhaitez stocker une version JSON des produits dans les métadonnées Stripe,
-                // attention à la limite de taille (500 caractères). La BDD est meilleure pour ça.
-                // cart_summary: JSON.stringify(produits.map(p => ({id: p.id, qty: p.quantite})))
-            },
+        // 2. Créer une session Stripe Checkout
+        const lineItems = produits.map(item => {
+            // Créer un objet product_data de manière conditionnelle
+            const productData = {
+                name: `${item.nom} ${item.taille ? `(${item.taille})` : ''}`,
+                images: [item.image || 'https://via.placeholder.com/150?text=Produit'],
+            };
+
+            // Ajouter la description SEULEMENT si elle existe et n'est pas vide
+            if (item.description && item.description.trim() !== '') {
+                productData.description = item.description;
+            }
+            // Si vous voulez inclure les suppléments dans la description, assurez-vous qu'elle ne soit pas vide
+            else if (item.supplements && item.supplements.length > 0) {
+                 productData.description = `Suppléments : ${item.supplements.map(s => s.nom).join(', ')}`;
+            }
+
+            return {
+                price_data: {
+                    currency: 'eur',
+                    product_data: productData, // Utilisez l'objet productData construit
+                    unit_amount: Math.round(parseFloat(item.prix) * 100),
+                },
+                quantity: parseInt(item.quantite || 1, 10),
+            };
         });
+
+// ... (reste du code) ...
 
         // --- 3. Enregistrer la commande dans la base de données Supabase ---
         const { data: orderData, error: orderInsertError } = await supabase
