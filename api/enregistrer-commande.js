@@ -68,18 +68,25 @@ export default async function handler(req, res) {
     }
 
     // Préparer les items Stripe
-    const lineItems = produits.map(item => ({
-      price_data: {
-        currency: 'eur',
-        product_data: {
-          name: `${item.nom} ${item.taille ? `(${item.taille})` : ''}`,
-          description: item.description || '',
-          images: item.image ? [item.image] : ['https://via.placeholder.com/150?text=Produit'],
-        },
-        unit_amount: Math.round(parseFloat(item.prix) * 100),
-      },
-      quantity: parseInt(item.quantite || 1, 10),
-    }));
+ const lineItems = produits.map(item => {
+  const productData = {
+    name: `${item.nom} ${item.taille ? `(${item.taille})` : ''}`,
+    images: item.image ? [item.image] : ['https://via.placeholder.com/150?text=Produit'],
+  };
+  if (item.description && item.description.trim() !== '') {
+    productData.description = item.description;
+  }
+
+  return {
+    price_data: {
+      currency: 'eur',
+      product_data: productData,
+      unit_amount: Math.round(parseFloat(item.prix) * 100),
+    },
+    quantity: parseInt(item.quantite || 1, 10),
+  };
+});
+
 
     // Créer session Stripe
     const session = await stripe.checkout.sessions.create({
