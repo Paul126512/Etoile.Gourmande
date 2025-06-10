@@ -10,24 +10,27 @@ const supabaseKey = process.env.SUPABASE_KEY; // Utilisez SUPABASE_KEY ou SUPABA
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
 const siteUrl = process.env.SITE_URL;
 
-if (!supabaseUrl || !supabaseKey) {
-    console.error('Erreur: SUPABASE_URL ou SUPABASE_KEY non définies.');
-    // Dans un environnement de production, vous pourriez vouloir crasher ou loguer différemment
-    // Pour Vercel, une erreur au top-level comme celle-ci pourrait causer un build failure ou runtime error
-    // Si la fonction est déjà lancée, elle continuera jusqu'à son premier appel à Supabase
+// IMPORTANT : Assurez-vous que ces variables sont bien définies dans les paramètres de votre projet Vercel
+// Si elles ne le sont pas, le script s'arrêtera ici lors du démarrage de la fonction.
+if (!supabaseUrl) {
+    console.error('ERREUR DE CONFIGURATION: La variable d\'environnement SUPABASE_URL n\'est pas définie.');
+    // Vous pouvez choisir de forcer la sortie ou de laisser l'erreur être attrapée plus tard.
+    // Pour une fonction serverless, souvent, une erreur au top-level peut causer un crash au déploiement ou au runtime.
 }
-
+if (!supabaseKey) {
+    console.error('ERREUR DE CONFIGURATION: La variable d\'environnement SUPABASE_KEY n\'est pas définie.');
+}
 if (!stripeSecretKey) {
-    console.error('Erreur: STRIPE_SECRET_KEY non définie.');
+    console.error('ERREUR DE CONFIGURATION: La variable d\'environnement STRIPE_SECRET_KEY n\'est pas définie.');
 }
-
 if (!siteUrl) {
-    console.warn('Attention: SITE_URL non définie. Les redirections Stripe pourraient ne pas fonctionner correctement.');
-    // Définissez une URL par défaut pour éviter un crash si vous ne la mettez pas toujours.
-    // Pour le développement local, ce serait 'http://localhost:3000'
-    // Pour Vercel, l'URL de votre déploiement.
+    console.warn('ATTENTION: La variable d\'environnement SITE_URL n\'est pas définie. Les redirections Stripe pourraient ne pas fonctionner correctement.');
+    // Si SITE_URL n'est pas critique pour le fonctionnement (ex: juste pour des logs), on peut laisser un avertissement.
+    // Si c'est critique (ce qui est le cas pour Stripe), assurez-vous de la définir.
 }
 
+// Initialisation de Supabase et Stripe avec les variables d'environnement
+// Ces lignes peuvent crasher si les clés ne sont pas définies, d'où les vérifications ci-dessus.
 const supabase = createClient(supabaseUrl, supabaseKey);
 const stripe = new Stripe(stripeSecretKey);
 
@@ -44,9 +47,9 @@ export default async function handler(req, res) {
     if (!name || !email) {
         return res.status(400).json({ message: 'Le nom et l\'email sont obligatoires.' });
     }
-    // Note: panierPizzas et panierBoissons peuvent être vides mais doivent exister comme tableaux
+    // Assurez-vous que panierPizzas et panierBoissons sont bien des tableaux, même s'ils sont vides
     if (!Array.isArray(panierPizzas) || !Array.isArray(panierBoissons)) {
-        return res.status(400).json({ message: 'Les données du panier sont mal formatées.' });
+        return res.status(400).json({ message: 'Les données du panier sont mal formatées. Attendu des tableaux pour panierPizzas et panierBoissons.' });
     }
 
     // Combiner tous les articles du panier en un seul tableau `produits`
@@ -57,20 +60,20 @@ export default async function handler(req, res) {
         return res.status(400).json({ message: 'Votre panier est vide. Veuillez ajouter des articles pour passer commande.' });
     }
 
-    // Calcul du prix total côté serveur pour la sécurité et la fiabilité
+    // Calcul du prix total côté serveur (pour la sécurité et la fiabilité)
     let totalCents = 0;
     for (const item of produits) {
         const prixItem = parseFloat(item.prix);
-        const quantiteItem = parseInt(item.quantite || 1, 10);
+        const quantiteItem = parseInt(item.quantite || 1, 10); // Default quantity to 1 if not present
 
-        // Vérification robuste des valeurs numériques
+        // Vérification robuste des valeurs numériques et positives
         if (isNaN(prixItem) || prixItem < 0) {
             console.error(`Erreur: Prix d'article invalide ou manquant: ${JSON.stringify(item)}`);
-            return res.status(400).json({ message: `Prix invalide pour l'article ${item.nom || 'inconnu'}.` });
+            return res.status(400).json({ message: `Prix invalide pour l'article ${item.nom || 'inconnu'}. Veuillez vérifier le panier.` });
         }
         if (isNaN(quantiteItem) || quantiteItem <= 0) {
             console.error(`Erreur: Quantité d'article invalide ou manquante: ${JSON.stringify(item)}`);
-            return res.status(400).json({ message: `Quantité invalide pour l'article ${item.nom || 'inconnu'}.` });
+            return res.status(400).json({ message: `Quantité invalide pour l'article ${item.nom || 'inconnu'}. Veuillez vérifier le panier.` });
         }
         totalCents += Math.round(prixItem * quantiteItem * 100); // Prix en centimes
     }
@@ -114,36 +117,42 @@ export default async function handler(req, res) {
         }
 
         // --- 2. Créer une session Stripe Checkout ---
-       // ... (code précédent) ...
-
-        // 2. Créer une session Stripe Checkout
         const lineItems = produits.map(item => {
-            // Créer un objet product_data de manière conditionnelle
             const productData = {
                 name: `${item.nom} ${item.taille ? `(${item.taille})` : ''}`,
-                images: [item.image || 'https://via.placeholder.com/150?text=Produit'],
+                images: [item.image || 'https://via.placeholder.com/150?text=Produit'], // Image de fallback
             };
 
             // Ajouter la description SEULEMENT si elle existe et n'est pas vide
+            // Sinon, tenter d'ajouter une description basée sur les suppléments
             if (item.description && item.description.trim() !== '') {
                 productData.description = item.description;
-            }
-            // Si vous voulez inclure les suppléments dans la description, assurez-vous qu'elle ne soit pas vide
-            else if (item.supplements && item.supplements.length > 0) {
-                 productData.description = `Suppléments : ${item.supplements.map(s => s.nom).join(', ')}`;
+            } else if (item.supplements && item.supplements.length > 0) {
+                 productData.description = `Suppléments: ${item.supplements.map(s => s.nom).join(', ')}`;
             }
 
             return {
                 price_data: {
                     currency: 'eur',
-                    product_data: productData, // Utilisez l'objet productData construit
-                    unit_amount: Math.round(parseFloat(item.prix) * 100),
+                    product_data: productData,
+                    unit_amount: Math.round(parseFloat(item.prix) * 100), // Prix unitaire en centimes
                 },
-                quantity: parseInt(item.quantite || 1, 10),
+                quantity: parseInt(item.quantite || 1, 10), // Quantité de l'article
             };
         });
 
-// ... (reste du code) ...
+        // Tenter de créer la session Stripe
+        const session = await stripe.checkout.sessions.create({
+            payment_method_types: ['card'],
+            line_items: lineItems,
+            mode: 'payment',
+            success_url: `${siteUrl}/success.html?session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: `${siteUrl}/cancel.html`,
+            customer_email: email,
+            metadata: {
+                client_id: client_id,
+            },
+        });
 
         // --- 3. Enregistrer la commande dans la base de données Supabase ---
         const { data: orderData, error: orderInsertError } = await supabase
@@ -153,12 +162,11 @@ export default async function handler(req, res) {
                     client_id: client_id,
                     email: email,
                     // Stocke tous les articles du panier dans la colonne 'produits' (doit être JSONB)
-                    produits: produits, // <--- C'est la ligne clé pour votre colonne 'produits'
+                    produits: produits, // Assurez-vous que 'produits' est de type JSONB dans Supabase
                     total_price: totalCents / 100, // Stocke le prix en euros
                     status: 'awaiting_payment', // Statut initial de la commande
-                    stripe_session_id: session.id,
-                    // Calcul de la quantité totale d'articles (pas de la valeur monétaire)
-                    quantity: produits.reduce((sum, item) => sum + (parseInt(item.quantite || 1, 10)), 0),
+                    stripe_session_id: session.id, // ID de session Stripe
+                    quantity: produits.reduce((sum, item) => sum + (parseInt(item.quantite || 1, 10)), 0), // Quantité totale d'articles
                 }
             ])
             .select() // Pour récupérer les données insérées (comme l'ID de la commande)
@@ -174,7 +182,18 @@ export default async function handler(req, res) {
 
     } catch (error) {
         // Gérer toutes les erreurs qui pourraient survenir dans le bloc try
-        console.error('Erreur dans la fonction enregistrer-commande:', error);
-        return res.status(500).json({ message: `Erreur interne du serveur: ${error.message}` });
+        console.error('Erreur détaillée dans la fonction enregistrer-commande:', error); // Log l'objet 'error' complet
+
+        let clientErrorMessage = 'Une erreur inattendue est survenue lors du traitement de votre commande.';
+        if (error.type === 'StripeCardError' || error.type === 'StripeInvalidRequestError') {
+            // Erreurs spécifiques de Stripe avec un message convivial
+            clientErrorMessage = `Erreur de paiement : ${error.raw.message || error.message}`;
+        } else if (error instanceof Error) {
+            // Autres erreurs JavaScript standard
+            clientErrorMessage = `Erreur interne du serveur : ${error.message}`;
+        }
+
+        // Toujours renvoyer une erreur 500 pour le serveur, avec un message clair pour le client
+        return res.status(500).json({ message: clientErrorMessage });
     }
 }
