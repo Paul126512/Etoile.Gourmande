@@ -790,36 +790,33 @@ button[type="submit"].valid {
 
 
 
-                    // Prepare pizzas and drinks separately for the backend
+                // Assurez-vous que tous les types de paniers sont préparés pour le backend
+const panierPizzas = panier.filter(item => item.type === 'pizza');
+const panierBoissons = panier.filter(item => item.type === 'boisson');
+// --- AJOUTEZ CES LIGNES POUR INCLURE LES BURGERS ET AUTRES TYPES ---
+const panierBurgers = panier.filter(item => item.type === 'burger');
+const panierDesserts = panier.filter(item => item.type === 'dessert'); // Si vous avez des desserts
+const panierBaseCremes = panier.filter(item => item.type === 'basecreme'); // Si vous avez des bases crème
+// Ajoutez d'autres types si nécessaire (ex: 'frite', 'sauce', etc.)
 
-                    const panierPizzas = panier.filter(item => item.type === 'pizza');
-
-                    const panierBoissons = panier.filter(item => item.type === 'boisson');
-
-
-
-                    try {
-
-                        const response = await fetch('/api/enregistrer-commande', {
-
-                            method: 'POST',
-
-                            headers: { 'Content-Type': 'application/json' },
-
-                            body: JSON.stringify({
-
-                                name,
-
-                                email,
-
-                                panierPizzas,
-
-                                panierBoissons
-
-                            })
-
-                        });
-
+try {
+    const response = await fetch('/api/enregistrer-commande', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            name,
+            email,
+            panierPizzas,
+            panierBoissons,
+            // --- AJOUTEZ CES VARIABLES DANS LE CORPS DE LA REQUÊTE ---
+            panierBurgers,
+            panierDesserts,
+            panierBaseCremes
+            // N'oubliez pas d'ajouter ici toutes les variables que vous avez filtrées ci-dessus
+        })
+    });
+    // ... reste du code ...
+}
 
 
                         if (!response.ok) {
