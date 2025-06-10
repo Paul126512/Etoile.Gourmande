@@ -1,322 +1,323 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <title>Formulaire & Résumé commande</title>
+  <meta charset="UTF-8" />
+  <title>Formulaire & Résumé commande</title>
+
 
 <style>
-  /* Style général noir et blanc */
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Montserrat', sans-serif;
-  }
+  /* Style général noir et blanc */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+  }
 
-  body {
-    background-color: #000;
-    color: #fff;
-    line-height: 1.6;
-    padding: 0;
-    margin: 0;
-  }
+  body {
+    background-color: #000;
+    color: #fff;
+    line-height: 1.6;
+    padding: 0;
+    margin: 0;
+  }
 
-  .header {
-    background-color: #000;
-    color: #fff;
-    padding: 2rem;
-    text-align: center;
-    border-bottom: 1px solid #fff;
-  }
+  .header {
+    background-color: #000;
+    color: #fff;
+    padding: 2rem;
+    text-align: center;
+    border-bottom: 1px solid #fff;
+  }
 
-  .header h1 {
-    font-weight: 400;
-    letter-spacing: 0.5rem;
-    text-transform: uppercase;
-    font-size: 1.8rem;
-  }
+  .header h1 {
+    font-weight: 400;
+    letter-spacing: 0.5rem;
+    text-transform: uppercase;
+    font-size: 1.8rem;
+  }
 
-  .container {
-    display: flex;
-    justify-content: space-between;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem;
-    gap: 3rem;
-  }
+  .container {
+    display: flex;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    gap: 3rem;
+  }
 
-  /* Formulaire */
-  #form {
-    flex: 1;
-    max-width: 500px;
-    background-color: #000;
-    padding: 2rem;
-    border: 1px solid #fff;
-  }
+  /* Formulaire */
+  #form {
+    flex: 1;
+    max-width: 500px;
+    background-color: #000;
+    padding: 2rem;
+    border: 1px solid #fff;
+  }
 
-  #form h2 {
-    font-weight: 400;
-    margin-bottom: 2rem;
-    text-align: center;
-    letter-spacing: 0.2rem;
-    text-transform: uppercase;
-    font-size: 1.5rem;
-  }
+  #form h2 {
+    font-weight: 400;
+    margin-bottom: 2rem;
+    text-align: center;
+    letter-spacing: 0.2rem;
+    text-transform: uppercase;
+    font-size: 1.5rem;
+  }
 
-  label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 300;
-    letter-spacing: 0.1rem;
-  }
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 300;
+    letter-spacing: 0.1rem;
+  }
 
-  input {
-    width: 100%;
-    padding: 1rem;
-    margin-bottom: 1.5rem;
-    background-color: transparent;
-    border: 1px solid #fff;
-    color: #fff;
-    font-size: 1rem;
-  }
+  input {
+    width: 100%;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    background-color: transparent;
+    border: 1px solid #fff;
+    color: #fff;
+    font-size: 1rem;
+  }
 
-  input:focus {
-    outline: none;
-    border-color: #fff;
-  }
+  input:focus {
+    outline: none;
+    border-color: #fff;
+  }
 
 button[type="submit"] {
-  padding: 0.8rem 1.5rem;
-  font-size: 1rem;
-  border: 2px solid #ccc;
-  background-color: #f5f5f5;
-  color: #333;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  border: 2px solid #ccc;
+  background-color: #f5f5f5;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 /* 💚 Style complètement vert si valide */
 button[type="submit"].valid {
-  background-color: #28a745 !important; /* vert */
-  border-color: #28a745 !important;
-  color: #fff !important;
+  background-color: #28a745 !important; /* vert */
+  border-color: #28a745 !important;
+  color: #fff !important;
 }
 
 
-  #message {
-    margin-top: 1rem;
-    text-align: center;
-    font-weight: 300;
-  }
+  #message {
+    margin-top: 1rem;
+    text-align: center;
+    font-weight: 300;
+  }
 
-  /* Résumé commande */
-  .summary {
-    flex: 1;
-    max-width: 500px;
-    background-color: #000;
-    padding: 2rem;
-    border: 1px solid #fff;
-  }
+  /* Résumé commande */
+  .summary {
+    flex: 1;
+    max-width: 500px;
+    background-color: #000;
+    padding: 2rem;
+    border: 1px solid #fff;
+  }
 
-  .summary h3 {
-    font-weight: 400;
-    margin-bottom: 2rem;
-    text-align: center;
-    letter-spacing: 0.2rem;
-    text-transform: uppercase;
-    font-size: 1.5rem;
-  }
+  .summary h3 {
+    font-weight: 400;
+    margin-bottom: 2rem;
+    text-align: center;
+    letter-spacing: 0.2rem;
+    text-transform: uppercase;
+    font-size: 1.5rem;
+  }
 
-  #commande-list {
-    margin-bottom: 2rem;
-  }
+  #commande-list {
+    margin-bottom: 2rem;
+  }
 
-  .article-panier {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 0;
-    border-bottom: 1px solid #fff;
-    position: relative;
-  }
+  .article-panier {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid #fff;
+    position: relative;
+  }
 
-  .details-panier {
-    display: flex;
-    gap: 1rem;
-  }
+  .details-panier {
+    display: flex;
+    gap: 1rem;
+  }
 
-  .details-panier img {
-    width: 80px;
-    height: 80px;
-    object-fit: cover;
-    border: 1px solid #fff;
-  }
+  .details-panier img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border: 1px solid #fff;
+  }
 
-  .details-panier h4 {
-    font-weight: 500;
-    margin-bottom: 0.5rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05rem;
-  }
+  .details-panier h4 {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05rem;
+  }
 
-  .details-panier p {
-    font-weight: 300;
-    font-size: 0.9rem;
-    margin-bottom: 0.3rem;
-  }
+  .details-panier p {
+    font-weight: 300;
+    font-size: 0.9rem;
+    margin-bottom: 0.3rem;
+  }
 
-  .prix-total {
-    font-weight: 500;
-    margin-top: 0.5rem;
-  }
+  .prix-total {
+    font-weight: 500;
+    margin-top: 0.5rem;
+  }
 
-  .supprimer {
-    background: none;
-    border: none;
-    color: #fff;
-    font-size: 1.5rem;
-    cursor: pointer;
-    padding: 0 0.5rem;
-  }
+  .supprimer {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0 0.5rem;
+  }
 
-  .commande-total {
-    text-align: right;
-    font-size: 1.2rem;
-    font-weight: 500;
-    letter-spacing: 0.1rem;
-  }
+  .commande-total {
+    text-align: right;
+    font-size: 1.2rem;
+    font-weight: 500;
+    letter-spacing: 0.1rem;
+  }
 
-  /* Corrected CSS for the "Payer" button */
+ 
 #payer-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.8rem 1.5rem;
-  margin: 2rem;
-  text-decoration: none;
-  color: #fff;
-  border: 1.5px solid #fff;
-  background: transparent;
-  font-size: 0.8rem;
-  letter-spacing: 0.1rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  gap: 0.5rem;
-  position: relative;
-  overflow: hidden;
-  transition: color 0.2s 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.8rem 1.5rem;
+  margin: 2rem;
+  text-decoration: none;
+  color: #fff;
+  border: 1.5px solid #fff;
+  background: transparent;
+  font-size: 0.8rem;
+  letter-spacing: 0.1rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  gap: 0.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: color 0.2s 0.2s;
 }
 
 #payer-btn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 0;
-  height: 100%;
-  background: #fff;
-  transition: width 0.3s ease-out;
-  z-index: -1;
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  background: #fff;
+  transition: width 0.3s ease-out;
+  z-index: -1;
 }
 
 /* Éléments du bouton (texte et icône) */
 #payer-btn > * {
-  position: relative;
-  z-index: 1;
+  position: relative;
+  z-index: 1;
 }
 
 #payer-btn:hover {
-   color: #000 !important;
-  transition-delay: 0.1s;
+   color: #000 !important;
+  transition-delay: 0.1s;
 }
 
 #payer-btn:hover::before {
-  width: 100%;
+  width: 100%;
 }
 
 /* Animation spécifique pour le prix */
 #prix-stripe {
-  transition: transform 0.2s ease, color 0.2s;
+  transition: transform 0.2s ease, color 0.2s;
 }
 
 #payer-btn:hover #prix-stripe {
-  color: #000;
-  transform: translateX(2px);
+  color: #000;
+  transform: translateX(2px);
 }
 
 /* Style de l'icône */
 .btn-icon {
-  transition: transform 0.2s ease;
+  transition: transform 0.2s ease;
 }
 
 #payer-btn:hover .btn-icon {
-  transform: translateX(-3px);
+  transform: translateX(-3px);
 }
 
 
 
 
 #btn-retour {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.8rem 1.5rem;
-  margin: 2rem;
-  text-decoration: none;
-  color: #fff;
-  border: 1.5px solid #fff;
-  background: transparent;
-  font-size: 0.8rem;
-  letter-spacing: 0.1rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  gap: 0.5rem;
-  position: relative;
-  overflow: hidden;
-  transition: color 0.2s 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.8rem 1.5rem;
+  margin: 2rem;
+  text-decoration: none;
+  color: #fff;
+  border: 1.5px solid #fff;
+  background: transparent;
+  font-size: 0.8rem;
+  letter-spacing: 0.1rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  gap: 0.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: color 0.2s 0.2s;
 }
 
 #btn-retour::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 0;
-  height: 100%;
-  background: #fff;
-  transition: width 0.3s ease-out;
-  z-index: -1;
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  background: #fff;
+  transition: width 0.3s ease-out;
+  z-index: -1;
 }
 
 
 /* Éléments du bouton (texte et icône) */
 #btn-retour > * {
-  position: relative;
-  z-index: 1;
+  position: relative;
+  z-index: 1;
 }
 
 #btn-retour:hover {
-   color: #000 !important;
-  transition-delay: 0.1s;
+   color: #000 !important;
+  transition-delay: 0.1s;
 }
 
 #btn-retour:hover::before {
-  width: 100%;
+  width: 100%;
 }
 
 
 #btn-retour:hover #prix-stripe {
-  color: #000;
-  transform: translateX(2px);
+  color: #000;
+  transform: translateX(2px);
 }
 
 /* Style de l'icône */
 .btn-icon {
-  transition: transform 0.2s ease;
+  transition: transform 0.2s ease;
 }
 
 #btn-retour:hover .btn-icon {
-  transform: translateX(-3px);
+  transform: translateX(-3px);
 }
 
 
@@ -326,19 +327,19 @@ button[type="submit"].valid {
 
 /* État désactivé - à garder en dernier pour priorité */
 #payer-btn.btn-disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  pointer-events: auto;
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: auto;
 }
 
 @keyframes clignoter {
-  0%, 100% { background-color: red; }
-  50% { background-color: #ff4d4d; }
+  0%, 100% { background-color: red; }
+  50% { background-color: #ff4d4d; }
 }
 
 .btn-error {
-  background-color: red !important;
-  animation: clignoter 0.4s ease-in-out 3;
+  background-color: red !important;
+  animation: clignoter 0.4s ease-in-out 3;
 }
 
 
@@ -349,308 +350,734 @@ button[type="submit"].valid {
 
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
 
+
+  <script src="https://js.stripe.com/v3/"></script>
+
 </head>
 <body>
 
+
 <header class="header">
-  <h1>COMMANDE</h1>
+  <h1>COMMANDE</h1>
+
+ 
+
 </header>
 
-<a href="Card.html" id="btn-retour">
-   <span class="btn-icon">←</span> Retour
+<a href="Card.html" id="btn-retour" class="btn-disabled" aria-disabled="true">
+   <span class="btn-icon">←</span> Retour
 </a>
 
+
+
+
 <div class="container">
-  <form id="form">
-    <h2>Inscription</h2>
+  <form id="form">
+    <h2>Inscription</h2>
 
-    <label for="name">Prénom</label>
-    <input type="text" id="name" name="name" required />
+    <label for="name">Prénom</label>
+    <input type="text" id="name" name="name" required />
 
-    <label for="email">Email</label>
-    <input type="email" id="email" name="email" required />
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" required />
 
-    <button type="submit">Envoyer</button>
+    <button type="submit">Envoyer</button>
 
-    <p id="message"></p>
-  </form>
+    <p id="message"></p>
+  </form>
 
-  <div class="summary">
-    <h3>Résumé de votre commande</h3>
-    <div id="commande-list">
-      <div id="liste-pizzas-panier"></div>
-      <div id="liste-panier"></div>
-    </div>
-    <div id="commande-total" class="commande-total"></div>
-    <button id="payer-btn">
-        Payer<span id="prix-stripe"></span>
-        <span class="btn-icon">→</span>
-    </button>
-  </div>
+  <div class="summary">
+    <h3>Résumé de votre commande</h3>
+    <div id="commande-list">
+      <div id="liste-pizzas-panier"></div>
+      <div id="liste-panier"></div>
+    </div>
+    <div id="commande-total" class="commande-total"></div>
+  </div>
 </div>
 
-  <script src="https://js.stripe.com/v3/"></script>
-  <script>
-        // Use DOMContentLoaded to ensure the script runs after the HTML is fully parsed.
-        document.addEventListener('DOMContentLoaded', () => {
-
-            // Element selections: These variables must find existing HTML elements.
-            const listePanier = document.getElementById('liste-panier');
-            const commandeTotal = document.getElementById('commande-total');
-            const payerBtn = document.getElementById('payer-btn'); // Corrected query selector
-            const prixStripeSpan = document.getElementById('prix-stripe');
-            const form = document.getElementById('form');
-            const message = document.getElementById('message');
-
-            // --- Robustness Checks: Log errors if elements are missing ---
-            if (!listePanier) console.error("Error: Element with ID 'liste-panier' not found.");
-            if (!commandeTotal) console.error("Error: Element with ID 'commande-total' not found.");
-            if (!payerBtn) console.error("Error: Element with ID 'payer-btn' not found.");
-            if (!prixStripeSpan) console.error("Error: Element with ID 'prix-stripe' not found.");
-            if (!form) console.error("Error: Element with ID 'form' not found.");
-            if (!message) console.error("Error: Element with ID 'message' not found.");
 
 
-            const supplementsDisponibles = [
-                { id: 'sup1', nom: 'OLD SYSTEM / DISABLE', prix: 1.50 },
-                { id: 'sup2', nom: 'OLD SYSTEM / DISABLE', prix: 2.00 },
-                { id: 'sup3', nom: 'OLD SYSTEM / DISABLE', prix: 1.00 },
-                { id: 'sup4', nom: 'OLD SYSTEM / DISABLE ! ', prix: 1.20 },
-            ];
 
-            // Retrieve cart from localStorage or initialize as empty array
-            let panier = JSON.parse(localStorage.getItem('panier')) || [];
 
-            // Add default values for quantity and supplements if missing
-            panier = panier.map(item => ({
-                ...item,
-                quantite: item.quantite || 1,
-                supplements: item.supplements || []
-            }));
 
-            // Function to calculate the total price of a single item (with supplements)
-            function calculerPrixTotalItem(item) {
-                const prixBase = item.prix || 0;
-                // Assuming supplement prices are already factored into item.prix or handled elsewhere
-                return prixBase * (item.quantite || 1);
-            }
 
-            // Group identical items in the cart (by id, size, and sorted supplements)
-            function groupItems(items) {
-                const groups = [];
-                items.forEach(item => {
-                    const supplementsIdsSorted = item.supplements.map(s => s.id).sort();
+  
+    <script src="https://js.stripe.com/v3/"></script> <script>
 
-                    const found = groups.find(g => {
-                        const gSupplementsIdsSorted = g.supplements.map(s => s.id).sort();
-                        return (
-                            g.id === item.id &&
-                            g.taille === item.taille &&
-                            JSON.stringify(gSupplementsIdsSorted) === JSON.stringify(supplementsIdsSorted)
-                        );
-                    });
 
-                    if (found) {
-                        found.items.push(item);
-                    } else {
-                        groups.push({
-                            id: item.id,
-                            taille: item.taille,
-                            supplements: item.supplements,
-                            items: [item]
-                        });
-                    }
-                });
-                return groups;
-            }
+      <!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Formulaire & Résumé commande</title>
 
-            // Displays the cart content in the DOM
-            function afficherPanier() {
-                if (listePanier) {
-                    listePanier.innerHTML = '';
-                } else {
-                    console.error("Cannot display cart: 'liste-panier' element not found.");
-                    return;
-                }
 
-                if (panier.length === 0) {
-                    listePanier.innerHTML = '<p>Votre panier est vide.</p>';
-                    if (commandeTotal) commandeTotal.textContent = '0.00 €';
-                    if (payerBtn) {
-                        payerBtn.classList.add('btn-disabled');
-                        payerBtn.setAttribute('aria-disabled', 'true');
-                    }
-                    if (prixStripeSpan) prixStripeSpan.textContent = '';
-                    return;
-                }
+<style>
+  /* Style général noir et blanc */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+  }
 
-                const groupedItems = groupItems(panier);
-                let total = 0;
+  body {
+    background-color: #000;
+    color: #fff;
+    line-height: 1.6;
+    padding: 0;
+    margin: 0;
+  }
 
-                groupedItems.forEach(group => {
-                    const item = group.items[0];
-                    const quantiteTotale = group.items.reduce((acc, it) => acc + (it.quantite || 1), 0);
-                    const prixTotalGroup = group.items.reduce((sum, it) => sum + calculerPrixTotalItem(it), 0);
-                    total += prixTotalGroup;
+  .header {
+    background-color: #000;
+    color: #fff;
+    padding: 2rem;
+    text-align: center;
+    border-bottom: 1px solid #fff;
+  }
 
-                    const li = document.createElement('div');
-                    li.classList.add('article-panier');
-                    li.innerHTML = `
-                        <div class="details-panier">
-                            <img src="${item.image || 'https://via.placeholder.com/100?text=Produit'}" alt="${item.nom || 'Produit'}" />
-                            <div>
-                                <h4>${item.nom || 'Article inconnu'} ${quantiteTotale > 1 ? `x${quantiteTotale}` : ''}</h4>
-                                <p><strong>Taille :</strong> ${item.taille || 'Standard'}</p>
-                                <p>${item.description || ''}</p>
-                                ${item.supplements && item.supplements.length > 0 ? `<p>Suppléments : ${item.supplements.map(s => s.nom).join(', ')}</p>` : ''}
-                                <p class="prix-total">${prixTotalGroup.toFixed(2)} €</p>
-                            </div>
-                        </div>
-                        <button class="supprimer" title="Supprimer cet article">×</button>
-                    `;
+  .header h1 {
+    font-weight: 400;
+    letter-spacing: 0.5rem;
+    text-transform: uppercase;
+    font-size: 1.8rem;
+  }
 
-                    li.querySelector('.supprimer').addEventListener('click', () => {
-                        panier = panier.filter(pItem =>
-                            !(pItem.id === item.id &&
-                              pItem.taille === item.taille &&
-                              JSON.stringify(pItem.supplements.map(s => s.id).sort()) === JSON.stringify(item.supplements.map(s => s.id).sort()))
-                        );
-                        sauvegarderPanier();
-                        afficherPanier();
-                    });
+  .container {
+    display: flex;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    gap: 3rem;
+  }
 
-                    listePanier.appendChild(li);
-                });
+  /* Formulaire */
+  #form {
+    flex: 1;
+    max-width: 500px;
+    background-color: #000;
+    padding: 2rem;
+    border: 1px solid #fff;
+  }
 
-                if (commandeTotal) commandeTotal.textContent = total.toFixed(2) + ' €';
+  #form h2 {
+    font-weight: 400;
+    margin-bottom: 2rem;
+    text-align: center;
+    letter-spacing: 0.2rem;
+    text-transform: uppercase;
+    font-size: 1.5rem;
+  }
 
-                // Update "payer" button with total price
-                if (payerBtn && prixStripeSpan) {
-                    if (total > 0) {
-                        payerBtn.classList.remove('btn-disabled');
-                        payerBtn.removeAttribute('aria-disabled');
-                        prixStripeSpan.textContent = ` - ${total.toFixed(2)} €`;
-                    } else {
-                        payerBtn.classList.add('btn-disabled');
-                        payerBtn.setAttribute('aria-disabled', 'true');
-                        prixStripeSpan.textContent = '';
-                    }
-                }
-            }
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 300;
+    letter-spacing: 0.1rem;
+  }
 
-            // Save cart to localStorage
-            function sauvegarderPanier() {
-                localStorage.setItem('panier', JSON.stringify(panier));
-            }
+  input {
+    width: 100%;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    background-color: transparent;
+    border: 1px solid #fff;
+    color: #fff;
+    font-size: 1rem;
+  }
 
-            // Function to launch error animation on the payment button
-            function lancerAnimationErreur() {
-                if (payerBtn) {
-                    payerBtn.classList.remove('btn-error');
-                    void payerBtn.offsetWidth;
-                    payerBtn.classList.add('btn-error');
-                } else {
-                    console.warn("Attempted to launch error animation, but 'payer-btn' was not found.");
-                }
-            }
+  input:focus {
+    outline: none;
+    border-color: #fff;
+  }
 
-            // Handle form submission
-            if (form) {
-                form.addEventListener('submit', async e => {
-                    e.preventDefault();
+button[type="submit"] {
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  border: 2px solid #ccc;
+  background-color: #f5f5f5;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
 
-                    const name = form.name.value.trim();
-                    const email = form.email.value.trim();
+/* 💚 Style complètement vert si valide */
+button[type="submit"].valid {
+  background-color: #28a745 !important; /* vert */
+  border-color: #28a745 !important;
+  color: #fff !important;
+}
 
-                    // Simple validation
-                    if (name === '' || email === '') {
-                        if (message) {
-                            message.textContent = 'Veuillez remplir tous les champs.';
-                            message.style.color = 'red';
-                        }
-                        lancerAnimationErreur();
-                        return;
-                    }
 
-                    if (panier.length === 0) {
-                        if (message) {
-                            message.textContent = 'Votre panier est vide.';
-                            message.style.color = 'red';
-                        }
-                        lancerAnimationErreur();
-                        return;
-                    }
+  #message {
+    margin-top: 1rem;
+    text-align: center;
+    font-weight: 300;
+  }
 
-                    // Success/info message
-                    if (message) {
-                        message.textContent = 'Informations reçues, préparation du paiement...';
-                        message.style.color = 'green';
-                    }
+  /* Résumé commande */
+  .summary {
+    flex: 1;
+    max-width: 500px;
+    background-color: #000;
+    padding: 2rem;
+    border: 1px solid #fff;
+  }
 
-                    // --- MODIFICATION ICI : Récupérer tous les types d'articles ---
-                    const panierPizzas = panier.filter(item => item.type === 'pizza');
-                    const panierBoissons = panier.filter(item => item.type === 'boisson');
-                    const panierBurgers = panier.filter(item => item.type === 'burger'); // <--- AJOUTÉ
-                    const panierDesserts = panier.filter(item => item.type === 'dessert'); // <--- AJOUTÉ (si vous avez ce type)
-                    const panierBaseCremes = panier.filter(item => item.type === 'baseCreme'); // <--- AJOUTÉ (si vous avez ce type)
+  .summary h3 {
+    font-weight: 400;
+    margin-bottom: 2rem;
+    text-align: center;
+    letter-spacing: 0.2rem;
+    text-transform: uppercase;
+    font-size: 1.5rem;
+  }
 
-                    try {
-                        const response = await fetch('/api/enregistrer-commande', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                name,
-                                email,
-                                panierPizzas,
-                                panierBoissons,
-                                panierBurgers, // <--- AJOUTÉ
-                                panierDesserts, // <--- AJOUTÉ
-                                panierBaseCremes // <--- AJOUTÉ
-                            })
-                        });
+  #commande-list {
+    margin-bottom: 2rem;
+  }
 
-                        if (!response.ok) {
-                            const err = await response.json();
-                            throw new Error(err.message || 'Erreur inconnue lors de l\'enregistrement de la commande.');
-                        }
+  .article-panier {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid #fff;
+    position: relative;
+  }
 
-                        const data = await response.json();
+  .details-panier {
+    display: flex;
+    gap: 1rem;
+  }
 
-                        if (!window.Stripe) {
-                            if (message) {
-                                message.textContent = 'Erreur: La bibliothèque Stripe.js n\'est pas chargée.';
-                                message.style.color = 'red';
-                            }
-                            lancerAnimationErreur();
-                            return;
-                        }
+  .details-panier img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border: 1px solid #fff;
+  }
 
-                        const stripe = Stripe('pk_test_51RTMhuLFHVbWJugP4qxMRQfifObErZnVAbMeDFwFTGcneOkBYomW3KFhvPHudKzoIn1IvdA6CAbOlL0lbAiNLrX300TLI92CDE');
+  .details-panier h4 {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05rem;
+  }
 
-                        const result = await stripe.redirectToCheckout({ sessionId: data.sessionId });
+  .details-panier p {
+    font-weight: 300;
+    font-size: 0.9rem;
+    margin-bottom: 0.3rem;
+  }
 
-                        if (result.error) {
-                            if (message) {
-                                message.textContent = `Erreur Stripe: ${result.error.message}`;
-                                message.style.color = 'red';
-                            }
-                            lancerAnimationErreur();
-                        }
-                    } catch (error) {
-                        if (message) {
-                            message.textContent = `Erreur lors du traitement de la commande : ${error.message}`;
-                            message.style.color = 'red';
-                        }
-                        lancerAnimationErreur();
-                    }
-                });
-            } else {
-                console.error("Form element with ID 'form' not found. Form submission functionality will not work.");
-            }
+  .prix-total {
+    font-weight: 500;
+    margin-top: 0.5rem;
+  }
 
-            // Initial cart display after all elements are guaranteed to be loaded
-            afficherPanier();
-        }); // End DOMContentLoaded listener
-    </script>
+  .supprimer {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0 0.5rem;
+  }
+
+  .commande-total {
+    text-align: right;
+    font-size: 1.2rem;
+    font-weight: 500;
+    letter-spacing: 0.1rem;
+  }
+
+ 
+#payer-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.8rem 1.5rem;
+  margin: 2rem;
+  text-decoration: none;
+  color: #fff;
+  border: 1.5px solid #fff;
+  background: transparent;
+  font-size: 0.8rem;
+  letter-spacing: 0.1rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  gap: 0.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: color 0.2s 0.2s;
+}
+
+#payer-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  background: #fff;
+  transition: width 0.3s ease-out;
+  z-index: -1;
+}
+
+/* Éléments du bouton (texte et icône) */
+#payer-btn > * {
+  position: relative;
+  z-index: 1;
+}
+
+#payer-btn:hover {
+   color: #000 !important;
+  transition-delay: 0.1s;
+}
+
+#payer-btn:hover::before {
+  width: 100%;
+}
+
+/* Animation spécifique pour le prix */
+#prix-stripe {
+  transition: transform 0.2s ease, color 0.2s;
+}
+
+#payer-btn:hover #prix-stripe {
+  color: #000;
+  transform: translateX(2px);
+}
+
+/* Style de l'icône */
+.btn-icon {
+  transition: transform 0.2s ease;
+}
+
+#payer-btn:hover .btn-icon {
+  transform: translateX(-3px);
+}
+
+
+
+
+#btn-retour {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.8rem 1.5rem;
+  margin: 2rem;
+  text-decoration: none;
+  color: #fff;
+  border: 1.5px solid #fff;
+  background: transparent;
+  font-size: 0.8rem;
+  letter-spacing: 0.1rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  gap: 0.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: color 0.2s 0.2s;
+}
+
+#btn-retour::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  background: #fff;
+  transition: width 0.3s ease-out;
+  z-index: -1;
+}
+
+
+/* Éléments du bouton (texte et icône) */
+#btn-retour > * {
+  position: relative;
+  z-index: 1;
+}
+
+#btn-retour:hover {
+   color: #000 !important;
+  transition-delay: 0.1s;
+}
+
+#btn-retour:hover::before {
+  width: 100%;
+}
+
+
+#btn-retour:hover #prix-stripe {
+  color: #000;
+  transform: translateX(2px);
+}
+
+/* Style de l'icône */
+.btn-icon {
+  transition: transform 0.2s ease;
+}
+
+#btn-retour:hover .btn-icon {
+  transform: translateX(-3px);
+}
+
+
+
+
+
+
+/* État désactivé - à garder en dernier pour priorité */
+#payer-btn.btn-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: auto;
+}
+
+@keyframes clignoter {
+  0%, 100% { background-color: red; }
+  50% { background-color: #ff4d4d; }
+}
+
+.btn-error {
+  background-color: red !important;
+  animation: clignoter 0.4s ease-in-out 3;
+}
+
+
+
+
+
+</style>
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+
+  <script src="https://js.stripe.com/v3/"></script>
+
+</head>
+<body>
+
+
+<header class="header">
+  <h1>COMMANDE</h1>
+
+ 
+
+</header>
+
+<a href="Card.html" id="btn-retour" class="btn-disabled" aria-disabled="true">
+   <span class="btn-icon">←</span> Retour
+</a>
+
+
+
+
+<div class="container">
+  <form id="form">
+    <h2>Inscription</h2>
+
+    <label for="name">Prénom</label>
+    <input type="text" id="name" name="name" required />
+
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" required />
+
+    <button type="submit">Envoyer</button>
+
+    <p id="message"></p>
+  </form>
+
+  <div class="summary">
+    <h3>Résumé de votre commande</h3>
+    <div id="commande-list">
+      <div id="liste-pizzas-panier"></div>
+      <div id="liste-panier"></div>
+    </div>
+    <div id="commande-total" class="commande-total"></div>
+  </div>
+</div>
+
+
+
+
+
+
+
+  
+    <script src="https://js.stripe.com/v3/"></script> <script>
+        // Use DOMContentLoaded to ensure the script runs after the HTML is fully parsed.
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // Element selections: These variables must find existing HTML elements.
+            const listePanier = document.getElementById('liste-panier');
+            const commandeTotal = document.getElementById('commande-total');
+            const payerBtn = document.getElementById('payer-btn');
+            const prixStripeSpan = document.getElementById('prix-stripe');
+            const form = document.getElementById('form');
+            const message = document.getElementById('message');
+
+            // --- Robustness Checks: Log errors if elements are missing ---
+            if (!listePanier) console.error("Error: Element with ID 'liste-panier' not found.");
+            if (!commandeTotal) console.error("Error: Element with ID 'commande-total' not found.");
+            if (!payerBtn) console.error("Error: Element with ID 'payer-btn' not found.");
+            if (!prixStripeSpan) console.error("Error: Element with ID 'prix-stripe' not found.");
+            if (!form) console.error("Error: Element with ID 'form' not found.");
+            if (!message) console.error("Error: Element with ID 'message' not found.");
+
+
+            const supplementsDisponibles = [
+                { id: 'sup1', nom: 'OLD SYSTEM / DISABLE', prix: 1.50 },
+                { id: 'sup2', nom: 'OLD SYSTEM / DISABLE', prix: 2.00 },
+                { id: 'sup3', nom: 'OLD SYSTEM / DISABLE', prix: 1.00 },
+                { id: 'sup4', nom: 'OLD SYSTEM / DISABLE ! ', prix: 1.20 },
+            ];
+
+            // Retrieve cart from localStorage or initialize as empty array
+            let panier = JSON.parse(localStorage.getItem('panier')) || [];
+
+            // Add default values for quantity and supplements if missing
+            panier = panier.map(item => ({
+                ...item,
+                quantite: item.quantite || 1,
+                supplements: item.supplements || []
+            }));
+
+            // Function to calculate the total price of a single item (with supplements)
+            function calculerPrixTotalItem(item) {
+                const prixBase = item.prix || 0;
+                // Assuming supplement prices are already factored into item.prix or handled elsewhere
+                return prixBase * (item.quantite || 1);
+            }
+
+            // Group identical items in the cart (by id, size, and sorted supplements)
+            function groupItems(items) {
+                const groups = [];
+                items.forEach(item => {
+                    const supplementsIdsSorted = item.supplements.map(s => s.id).sort();
+
+                    const found = groups.find(g => {
+                        const gSupplementsIdsSorted = g.supplements.map(s => s.id).sort();
+                        return (
+                            g.id === item.id &&
+                            g.taille === item.taille &&
+                            JSON.stringify(gSupplementsIdsSorted) === JSON.stringify(supplementsIdsSorted)
+                        );
+                    });
+
+                    if (found) {
+                        found.items.push(item);
+                    } else {
+                        groups.push({
+                            id: item.id,
+                            taille: item.taille,
+                            supplements: item.supplements,
+                            items: [item]
+                        });
+                    }
+                });
+                return groups;
+            }
+
+            // Displays the cart content in the DOM
+            function afficherPanier() {
+                if (listePanier) { // Ensure listePanier exists before manipulating it
+                    listePanier.innerHTML = '';
+                } else {
+                    console.error("Cannot display cart: 'liste-panier' element not found.");
+                    return;
+                }
+
+                if (panier.length === 0) {
+                    listePanier.innerHTML = '<p>Votre panier est vide.</p>';
+                    if (commandeTotal) commandeTotal.textContent = '0.00 €';
+                    if (payerBtn) {
+                        payerBtn.classList.add('btn-disabled');
+                        payerBtn.setAttribute('aria-disabled', 'true');
+                    }
+                    if (prixStripeSpan) prixStripeSpan.textContent = '';
+                    return;
+                }
+
+                const groupedItems = groupItems(panier);
+                let total = 0;
+
+                groupedItems.forEach(group => {
+                    const item = group.items[0];
+                    const quantiteTotale = group.items.reduce((acc, it) => acc + (it.quantite || 1), 0);
+                    const prixTotalGroup = group.items.reduce((sum, it) => sum + calculerPrixTotalItem(it), 0);
+                    total += prixTotalGroup;
+
+                    const li = document.createElement('div');
+                    li.classList.add('article-panier');
+                    li.innerHTML = `
+                        <div class="details-panier">
+                            <img src="${item.image || 'https://via.placeholder.com/100?text=Produit'}" alt="${item.nom || 'Produit'}" />
+                            <div>
+                                <h4>${item.nom || 'Article inconnu'} ${quantiteTotale > 1 ? `x${quantiteTotale}` : ''}</h4>
+                                <p><strong>Taille :</strong> ${item.taille || 'Standard'}</p>
+                                <p>${item.description || ''}</p>
+                                ${item.supplements && item.supplements.length > 0 ? `<p>Suppléments : ${item.supplements.map(s => s.nom).join(', ')}</p>` : ''}
+                                <p class="prix-total">${prixTotalGroup.toFixed(2)} €</p>
+                            </div>
+                        </div>
+                        <button class="supprimer" title="Supprimer cet article">×</button>
+                    `;
+
+                    li.querySelector('.supprimer').addEventListener('click', () => {
+                        panier = panier.filter(pItem =>
+                            !(pItem.id === item.id &&
+                              pItem.taille === item.taille &&
+                              JSON.stringify(pItem.supplements.map(s => s.id).sort()) === JSON.stringify(item.supplements.map(s => s.id).sort()))
+                        );
+                        sauvegarderPanier();
+                        afficherPanier();
+                    });
+
+                    listePanier.appendChild(li);
+                });
+
+                if (commandeTotal) commandeTotal.textContent = total.toFixed(2) + ' €';
+
+                // Update "payer" button with total price
+                if (payerBtn && prixStripeSpan) { // Ensure both elements exist
+                    if (total > 0) {
+                        payerBtn.classList.remove('btn-disabled');
+                        payerBtn.removeAttribute('aria-disabled');
+                        prixStripeSpan.textContent = ` - ${total.toFixed(2)} €`;
+                    } else {
+                        payerBtn.classList.add('btn-disabled');
+                        payerBtn.setAttribute('aria-disabled', 'true');
+                        prixStripeSpan.textContent = '';
+                    }
+                }
+            }
+
+            // Save cart to localStorage
+            function sauvegarderPanier() {
+                localStorage.setItem('panier', JSON.stringify(panier));
+            }
+
+            // Function to launch error animation on the payment button
+            function lancerAnimationErreur() {
+                if (payerBtn) { // **Crucial: Only try to animate if payerBtn exists**
+                    payerBtn.classList.remove('btn-error');
+                    // Trigger reflow to restart animation (a trick to re-apply CSS animation)
+                    void payerBtn.offsetWidth;
+                    payerBtn.classList.add('btn-error');
+                } else {
+                    console.warn("Attempted to launch error animation, but 'payer-btn' was not found.");
+                }
+            }
+
+            // Handle form submission
+            if (form) { // Ensure the form element exists before adding event listener
+                form.addEventListener('submit', async e => {
+                    e.preventDefault();
+
+                    const name = form.name.value.trim();
+                    const email = form.email.value.trim();
+
+                    // Simple validation
+                    if (name === '' || email === '') {
+                        if (message) {
+                            message.textContent = 'Veuillez remplir tous les champs.';
+                            message.style.color = 'red';
+                        }
+                        lancerAnimationErreur();
+                        return;
+                    }
+
+                    if (panier.length === 0) {
+                        if (message) {
+                            message.textContent = 'Votre panier est vide.';
+                            message.style.color = 'red';
+                        }
+                        lancerAnimationErreur();
+                        return;
+                    }
+
+                    // Success/info message
+                    if (message) {
+                        message.textContent = 'Informations reçues, préparation du paiement...';
+                        message.style.color = 'green';
+                    }
+
+                    // Prepare pizzas and drinks separately for the backend
+                    const panierPizzas = panier.filter(item => item.type === 'pizza');
+                    const panierBoissons = panier.filter(item => item.type === 'boisson');
+
+                    try {
+                        const response = await fetch('/api/enregistrer-commande', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                name,
+                                email,
+                                panierPizzas,
+                                panierBoissons
+                            })
+                        });
+
+                        if (!response.ok) {
+                            const err = await response.json();
+                            // Use err.message from the backend for more specific errors
+                            throw new Error(err.message || 'Erreur inconnue lors de l\'enregistrement de la commande.');
+                        }
+
+                        const data = await response.json();
+
+                        // Check if Stripe.js is loaded
+                        if (!window.Stripe) {
+                            if (message) {
+                                message.textContent = 'Erreur: La bibliothèque Stripe.js n\'est pas chargée.';
+                                message.style.color = 'red';
+                            }
+                            lancerAnimationErreur();
+                            return;
+                        }
+
+                        // Initialize Stripe with your public key
+                        const stripe = Stripe('pk_test_51RTMhuLFHVbWJugP4qxMRQfifObErZnVAbMeDFwFTGcneOkBYomW3KFhvPHudKzoIn1IvdA6CAbOlL0lbAiNLrX300TLI92CDE');
+
+                        // Redirect to Stripe checkout
+                        const result = await stripe.redirectToCheckout({ sessionId: data.sessionId });
+
+                        if (result.error) {
+                            if (message) {
+                                message.textContent = `Erreur Stripe: ${result.error.message}`;
+                                message.style.color = 'red';
+                            }
+                            lancerAnimationErreur();
+                        }
+                    } catch (error) {
+                        if (message) {
+                            message.textContent = `Erreur lors du traitement de la commande : ${error.message}`;
+                            message.style.color = 'red';
+                        }
+                        lancerAnimationErreur();
+                    }
+                });
+            } else {
+                console.error("Form element with ID 'form' not found. Form submission functionality will not work.");
+            }
+
+            // Initial cart display after all elements are guaranteed to be loaded
+            afficherPanier();
+        }); // End DOMContentLoaded listener
+    </script>
 </body>
 </html>
+
+
+
+</body>
+</html>
+
+
