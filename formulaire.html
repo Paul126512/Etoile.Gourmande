@@ -5,251 +5,348 @@
   <title>Formulaire & Résumé commande</title>
 
 
-
 <style>
-  /* Base stylée */
-  body {
-    font-family: 'Montserrat', sans-serif;
-    background-color: #ffffff;
-    color: #000000;
+  /* Style général noir et blanc */
+  * {
     margin: 0;
     padding: 0;
-    line-height: 1.6;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
   }
 
-  /* Header */
+  body {
+    background-color: #000;
+    color: #fff;
+    line-height: 1.6;
+    padding: 0;
+    margin: 0;
+  }
+
   .header {
-    background-color: #000000;
-    color: white;
-    padding: 1.5rem 0;
+    background-color: #000;
+    color: #fff;
+    padding: 2rem;
     text-align: center;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    margin-bottom: 2rem;
+    border-bottom: 1px solid #fff;
   }
 
   .header h1 {
-    margin: 0;
+    font-weight: 400;
+    letter-spacing: 0.5rem;
+    text-transform: uppercase;
     font-size: 1.8rem;
-    letter-spacing: 1px;
-    font-weight: 500;
   }
 
-  /* Container principal */
   .container {
     display: flex;
+    justify-content: space-between;
     max-width: 1200px;
-    margin: 0 auto 3rem;
-    padding: 0 2rem;
+    margin: 0 auto;
+    padding: 2rem;
     gap: 3rem;
   }
 
   /* Formulaire */
   #form {
     flex: 1;
+    max-width: 500px;
+    background-color: #000;
     padding: 2rem;
-    background: white;
-    border-radius: 0;
-    border: 1px solid #e0e0e0;
+    border: 1px solid #fff;
   }
 
   #form h2 {
-    font-size: 1.8rem;
-    margin-bottom: 2rem;
     font-weight: 400;
+    margin-bottom: 2rem;
     text-align: center;
+    letter-spacing: 0.2rem;
     text-transform: uppercase;
-    letter-spacing: 2px;
+    font-size: 1.5rem;
   }
 
   label {
     display: block;
     margin-bottom: 0.5rem;
-    font-size: 0.9rem;
-    letter-spacing: 0.5px;
+    font-weight: 300;
+    letter-spacing: 0.1rem;
   }
 
   input {
     width: 100%;
-    padding: 12px 15px;
+    padding: 1rem;
     margin-bottom: 1.5rem;
-    border: 1px solid #e0e0e0;
-    border-radius: 0;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 0.95rem;
-    background-color: white;
-    transition: all 0.3s ease;
+    background-color: transparent;
+    border: 1px solid #fff;
+    color: #fff;
+    font-size: 1rem;
   }
 
   input:focus {
     outline: none;
-    border-color: #000000;
+    border-color: #fff;
   }
 
-  button {
-    width: 100%;
-    padding: 14px;
-    background-color: #000000;
-    color: white;
-    border: none;
-    border-radius: 0;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 500;
-    letter-spacing: 1.5px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-    margin-top: 1rem;
-  }
+button[type="submit"] {
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  border: 2px solid #ccc;
+  background-color: #f5f5f5;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
 
-  button:hover {
-    background-color: #333333;
-  }
+/* 💚 Style complètement vert si valide */
+button[type="submit"].valid {
+  background-color: #28a745 !important; /* vert */
+  border-color: #28a745 !important;
+  color: #fff !important;
+}
+
 
   #message {
-    margin-top: 1.5rem;
-    padding: 0.8rem;
+    margin-top: 1rem;
     text-align: center;
-    font-size: 0.9rem;
+    font-weight: 300;
   }
 
   /* Résumé commande */
   .summary {
     flex: 1;
+    max-width: 500px;
+    background-color: #000;
     padding: 2rem;
-    background: white;
-    border: 1px solid #e0e0e0;
+    border: 1px solid #fff;
   }
 
   .summary h3 {
-    font-size: 1.5rem;
-    margin-bottom: 1.5rem;
     font-weight: 400;
+    margin-bottom: 2rem;
     text-align: center;
+    letter-spacing: 0.2rem;
     text-transform: uppercase;
-    letter-spacing: 2px;
+    font-size: 1.5rem;
   }
 
   #commande-list {
     margin-bottom: 2rem;
   }
 
-  #commande-list > div {
-    margin-bottom: 1.5rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid #e0e0e0;
+  .article-panier {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid #fff;
+    position: relative;
   }
 
-  #commande-list > div:last-child {
-    border-bottom: none;
+  .details-panier {
+    display: flex;
+    gap: 1rem;
   }
 
-  #commande-list div div {
-    margin-bottom: 1rem;
-    padding: 1rem;
-    background: #f9f9f9;
+  .details-panier img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border: 1px solid #fff;
+  }
+
+  .details-panier h4 {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05rem;
+  }
+
+  .details-panier p {
+    font-weight: 300;
+    font-size: 0.9rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .prix-total {
+    font-weight: 500;
+    margin-top: 0.5rem;
+  }
+
+  .supprimer {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0 0.5rem;
   }
 
   .commande-total {
-    font-size: 1.1rem;
+    text-align: right;
+    font-size: 1.2rem;
     font-weight: 500;
-    text-align: center;
-    padding: 1rem;
-    background: #f9f9f9;
-    border: 1px solid #e0e0e0;
-    margin-top: 1rem;
-    letter-spacing: 1px;
+    letter-spacing: 0.1rem;
   }
 
-.error {
-  border: 2px solid red !important;
-}
-
-.success {
-  border: 2px solid green !important;
-}
-
-
-
-
-  /* Responsive */
-  @media (max-width: 768px) {
-    .container {
-      flex-direction: column;
-      padding: 0 1rem;
-    }
-
-    #form, .summary {
-      padding: 1.5rem;
-      border-left: none;
-      border-right: none;
-    }
-
-
-
-
-  }
-
-
+ 
 #payer-btn {
-  background-color: white;
-  color: #000000;
-  border: 2px solid #000000;
-  padding: 14px 28px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.8rem 1.5rem;
+  margin: 2rem;
+  text-decoration: none;
+  color: #fff;
+  border: 1.5px solid #fff;
+  background: transparent;
+  font-size: 0.8rem;
+  letter-spacing: 0.1rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  gap: 0.5rem;
   position: relative;
   overflow: hidden;
-  z-index: 1;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  font-family: 'Montserrat', sans-serif;
-  text-transform: uppercase;
-  text-decoration: none;
-  display: inline-block;
-    right: -4%;    /* au lieu de -100%, pour ne pas coller au bord */
-  
+  transition: color 0.2s 0.2s;
 }
 
 #payer-btn::before {
   content: '';
   position: absolute;
   top: 0;
-  right: -100%;
-  width: 100%;
+  left: 0;
+  width: 0;
   height: 100%;
-  background: #000000;
+  background: #fff;
+  transition: width 0.3s ease-out;
   z-index: -1;
-  transition: all 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+/* Éléments du bouton (texte et icône) */
+#payer-btn > * {
+  position: relative;
+  z-index: 1;
 }
 
 #payer-btn:hover {
-  color: white;
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+   color: #000 !important;
+  transition-delay: 0.1s;
 }
 
 #payer-btn:hover::before {
-  right: 0;
+  width: 100%;
 }
 
-#payer-btn span {
-  position: relative;
-  z-index: 2;
+/* Animation spécifique pour le prix */
+#prix-stripe {
+  transition: transform 0.2s ease, color 0.2s;
+}
+
+#payer-btn:hover #prix-stripe {
+  color: #000;
+  transform: translateX(2px);
+}
+
+/* Style de l'icône */
+.btn-icon {
+  transition: transform 0.2s ease;
+}
+
+#payer-btn:hover .btn-icon {
+  transform: translateX(-3px);
+}
+
+
+
+
+#btn-retour {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.8rem 1.5rem;
+  margin: 2rem;
   text-decoration: none;
+  color: #fff;
+  border: 1.5px solid #fff;
+  background: transparent;
+  font-size: 0.8rem;
+  letter-spacing: 0.1rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  gap: 0.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: color 0.2s 0.2s;
 }
 
+#btn-retour::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  background: #fff;
+  transition: width 0.3s ease-out;
+  z-index: -1;
+}
+
+
+/* Éléments du bouton (texte et icône) */
+#btn-retour > * {
+  position: relative;
+  z-index: 1;
+}
+
+#btn-retour:hover {
+   color: #000 !important;
+  transition-delay: 0.1s;
+}
+
+#btn-retour:hover::before {
+  width: 100%;
+}
+
+
+#btn-retour:hover #prix-stripe {
+  color: #000;
+  transform: translateX(2px);
+}
+
+/* Style de l'icône */
+.btn-icon {
+  transition: transform 0.2s ease;
+}
+
+#btn-retour:hover .btn-icon {
+  transform: translateX(-3px);
+}
+
+
+
+
+
+
+/* État désactivé - à garder en dernier pour priorité */
+#payer-btn.btn-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: auto;
+}
+
+@keyframes clignoter {
+  0%, 100% { background-color: red; }
+  50% { background-color: #ff4d4d; }
+}
+
+.btn-error {
+  background-color: red !important;
+  animation: clignoter 0.4s ease-in-out 3;
+}
 
 
 
 
 
 </style>
-
-
 
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
 
@@ -267,11 +364,12 @@
 
 </header>
 
-  <a href="boissons.html" id="payer-btn" class="btn-disabled" aria-disabled="true">
-   < - Retour  <span id="prix-stripe"></span>
+<a href="Card.html" id="btn-retour" class="btn-disabled" aria-disabled="true">
+   <span class="btn-icon">←</span> Retour
 </a>
 
-<br><br><br><br><br><br><br>
+
+
 
 <div class="container">
   <form id="form">
@@ -304,240 +402,229 @@
 
 
 
+<script src="https://js.stripe.com/v3/"></script>
+
+
 
 
 <script>
-  // Affiche les pizzas dans le panier et retourne le total pizzas
-  function afficherPanierPizzas() {
-    const listePizzasEl = document.getElementById('liste-pizzas-panier');
-    const panierPizzas = JSON.parse(localStorage.getItem('panier')) || [];
-    listePizzasEl.innerHTML = '';
+const listePanier = document.getElementById('liste-panier');
+const commandeTotal = document.getElementById('commande-total');
+const payerBtn = document.getElementById('payer-btn');
+const prixStripeSpan = document.getElementById('prix-stripe');
 
-    if (panierPizzas.length === 0) {
-        listePizzasEl.textContent = "Votre panier pizzas est vide.";
-        return 0;
+const supplementsDisponibles = [
+  { id: 'sup1', nom: 'OLD SYSTEM  / DISABLE', prix: 1.50 },
+  { id: 'sup2', nom: 'OLD SYSTEM  / DISABLE', prix: 2.00 },
+  { id: 'sup3', nom: 'OLD SYSTEM  / DISABLE', prix: 1.00 },
+  { id: 'sup4', nom: 'OLD SYSTEM  / DISABLE  ! ', prix: 1.20 },
+];
+
+// Récupérer panier depuis localStorage ou tableau vide
+let panier = JSON.parse(localStorage.getItem('panier')) || [];
+
+// Ajouter valeurs par défaut
+panier = panier.map(item => ({
+  ...item,
+  quantite: item.quantite || 1,
+  supplements: item.supplements || []
+}));
+
+// Fonction pour calculer le prix total d’un article (avec suppléments)
+function calculerPrixTotalItem(item) {
+  const prixBase = item.prix || 0;
+  // On ne fait plus la somme des suppléments, on suppose que c’est déjà inclus dans item.prix
+  return prixBase * (item.quantite || 1);
+}
+
+// Grouper les articles identiques (par id et suppléments)
+function groupItems(items) {
+  const groups = [];
+  items.forEach(item => {
+    // On crée un tableau trié des ids de suppléments pour la comparaison
+    const supplementsIdsSorted = item.supplements.map(s => s.id).sort();
+
+    // Chercher un groupe existant avec même id, même taille et mêmes suppléments
+    const found = groups.find(g => {
+      const gSupplementsIdsSorted = g.supplements.map(s => s.id).sort();
+      return (
+        g.id === item.id &&
+        g.taille === item.taille &&  // Ajout de la condition taille
+        JSON.stringify(gSupplementsIdsSorted) === JSON.stringify(supplementsIdsSorted)
+      );
+    });
+
+    if (found) {
+      found.items.push(item);
+    } else {
+      groups.push({ 
+        id: item.id, 
+        taille: item.taille,     // On stocke aussi la taille dans le groupe
+        supplements: item.supplements, 
+        items: [item] 
+      });
+    }
+  });
+  return groups;
+}
+
+// Affiche le panier dans le DOM
+function afficherPanier() {
+  listePanier.innerHTML = '';
+  if (panier.length === 0) {
+    listePanier.innerHTML = '<p>Votre panier est vide.</p>';
+    commandeTotal.textContent = '0.00 €';
+    payerBtn.classList.add('btn-disabled');
+    payerBtn.setAttribute('aria-disabled', 'true');
+    prixStripeSpan.textContent = '';
+    return;
+  }
+
+  // Regroupe les articles
+  const groupedItems = groupItems(panier);
+
+  let total = 0;
+
+  groupedItems.forEach(group => {
+    const item = group.items[0];
+    const quantiteTotale = group.items.reduce((acc, it) => acc + (it.quantite || 1), 0);
+    const prixTotalGroup = group.items.reduce((sum, it) => sum + calculerPrixTotalItem(it), 0);
+    total += prixTotalGroup;
+
+    const li = document.createElement('div');
+    li.classList.add('article-panier');
+    li.innerHTML = `
+      <div class="details-panier">
+        <img src="${item.image || 'https://via.placeholder.com/100?text=Produit'}" alt="${item.nom}" />
+        <div>
+          <h4>${item.nom} ${quantiteTotale > 1 ? `x${quantiteTotale}` : ''}</h4>
+          <p><strong>Taille :</strong> ${item.taille || 'Standard'}</p>
+          <p>${item.description || ''}</p>
+          ${item.supplements.length > 0 ? `<p>Suppléments : ${item.supplements.map(s => s.nom).join(', ')}</p>` : ''}
+          <p class="prix-total">${prixTotalGroup.toFixed(2)} €</p>
+        </div>
+      </div>
+      <button class="supprimer" title="Supprimer cet article">×</button>
+    `;
+
+    // Supprimer cet article du panier
+    li.querySelector('.supprimer').addEventListener('click', () => {
+      // Supprimer toutes les occurrences correspondantes dans le panier
+      panier = panier.filter(pItem => 
+        !(pItem.id === item.id && 
+          pItem.taille === item.taille &&
+          JSON.stringify(pItem.supplements.map(s => s.id).sort()) === JSON.stringify(item.supplements.map(s => s.id).sort()))
+      );
+      sauvegarderPanier();
+      afficherPanier();
+    });
+
+    listePanier.appendChild(li);
+  });
+
+  commandeTotal.textContent = total.toFixed(2) + ' €';
+
+  // Met à jour le bouton "payer" avec le prix total
+  if (total > 0) {
+    payerBtn.classList.remove('btn-disabled');
+    payerBtn.removeAttribute('aria-disabled');
+    prixStripeSpan.textContent = ` - ${total.toFixed(2)} €`;
+  } else {
+    payerBtn.classList.add('btn-disabled');
+    payerBtn.setAttribute('aria-disabled', 'true');
+    prixStripeSpan.textContent = '';
+  }
+}
+
+// Sauvegarde panier dans localStorage
+function sauvegarderPanier() {
+  localStorage.setItem('panier', JSON.stringify(panier));
+}
+
+// Gestion du formulaire
+const form = document.getElementById('form');
+const message = document.getElementById('message');
+
+function lancerAnimationErreur() {
+  payerBtn.classList.remove('btn-error');  // reset animation
+  void payerBtn.offsetWidth;                // trigger reflow
+  payerBtn.classList.add('btn-error');     // lance l'animation
+}
+
+form.addEventListener('submit', async e => {
+  e.preventDefault();
+
+  const name = form.name.value.trim();
+  const email = form.email.value.trim();
+
+  // Simple validation
+  if (name === '' || email === '') {
+    message.textContent = 'Veuillez remplir tous les champs.';
+    message.style.color = 'red';
+    lancerAnimationErreur();
+    return;
+  }
+
+  if (panier.length === 0) {
+    message.textContent = 'Votre panier est vide.';
+    message.style.color = 'red';
+    lancerAnimationErreur();
+    return;
+  }
+
+  // Message succès / infos ok
+  message.textContent = 'Informations reçues, préparation du paiement...';
+  message.style.color = 'green';
+
+  // Préparer les pizzas et boissons séparément
+  const panierPizzas = panier.filter(item => item.type === 'pizza');
+  const panierBoissons = panier.filter(item => item.type === 'boisson');
+
+  try {
+    const response = await fetch('/api/enregistrer-commande', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name,
+        email,
+        panierPizzas,
+        panierBoissons
+      })
+    });
+
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.error || 'Erreur inconnue');
     }
 
-    let totalPizzas = 0;
-    
-    // Regrouper les éléments identiques
-    const groupedItems = {};
-    
-    panierPizzas.forEach(p => {
-        // Créer une clé unique pour chaque combinaison pizza + suppléments
-        const suppKey = p.supplements && p.supplements.length > 0 && !(p.supplements.length === 1 && p.supplements[0].id === 'aucun')
-            ? p.supplements.map(sup => sup.id).sort().join(',')
-            : 'no_supp';
-        
-        const key = `${p.nom}_${p.taille || 'notaille'}_${suppKey}`;
-        
-        if (!groupedItems[key]) {
-            groupedItems[key] = {
-                ...p,
-                quantity: 1,
-                supplementsList: p.supplements || []
-            };
-        } else {
-            groupedItems[key].quantity++;
-        }
-    });
+    const data = await response.json();
 
-    // Afficher les éléments groupés
-    Object.values(groupedItems).forEach(item => {
-        let prixPizza = item.prix || 0;
-        let supplementsText = '';
+    if (!window.Stripe) {
+      message.textContent = 'Erreur Stripe non chargée.';
+      message.style.color = 'red';
+      lancerAnimationErreur();
+      return;
+    }
 
-        if (item.supplementsList && item.supplementsList.length > 0 && !(item.supplementsList.length === 1 && item.supplementsList[0].id === 'aucun')) {
-            const prixSupp = item.supplementsList.reduce((acc, sup) => acc + (sup.prix || 0), 0);
-            prixPizza += prixSupp;
-            supplementsText = 'Suppléments : ' + item.supplementsList.map(sup => `${sup.nom} (${sup.prix.toFixed(2)} €)`).join(', ');
-        }
+    const stripe = Stripe('pk_test_51RTMhuLFHVbWJugP4qxMRQfifObErZnVAbMeDFwFTGcneOkBYomW3KFhvPHudKzoIn1IvdA6CAbOlL0lbAiNLrX300TLI92CDE');
 
-        totalPizzas += prixPizza * item.quantity;
+    // Redirection vers Stripe checkout
+    const result = await stripe.redirectToCheckout({ sessionId: data.sessionId });
 
-        // Affiche la taille uniquement si c'est une pizza
-        let tailleTexte = '';
-        if (item.nom.toLowerCase().includes('pizza')) {
-            tailleTexte = item.taille ? ` (${item.taille})` : ' (taille inconnue)';
-        }
-
-        const div = document.createElement('div');
-        div.innerHTML = `<strong>${item.quantity}x ${item.nom}</strong>${tailleTexte} - Prix total : ${(prixPizza * item.quantity).toFixed(2)} €<br>${supplementsText}`;
-        listePizzasEl.appendChild(div);
-    });
-
-    return totalPizzas;
-}
-
-  // Affiche les boissons dans le panier et retourne le total boissons
-function afficherPanierBoissons() {
-  const listeBoissonsEl = document.getElementById('liste-panier');  // <-- ici
-  const panierBoissons = JSON.parse(localStorage.getItem('boissons')) || [];
-  listeBoissonsEl.innerHTML = '';
-
-  if (panierBoissons.length === 0) {
-    listeBoissonsEl.textContent = "Votre panier boissons est vide.";
-    return 0;
+    if (result.error) {
+      message.textContent = result.error.message;
+      message.style.color = 'red';
+      lancerAnimationErreur();
+    }
+  } catch (error) {
+    message.textContent = `Erreur : ${error.message}`;
+    message.style.color = 'red';
+    lancerAnimationErreur();
   }
-
-  let totalBoissons = 0;
-
-  panierBoissons.forEach(b => {
-    const prixBoisson = b.prix || 0;
-    totalBoissons += prixBoisson;
-
-    const div = document.createElement('div');
-    div.innerHTML = `<strong>${b.nom}</strong> - Prix : ${prixBoisson.toFixed(2)} €`;
-    listeBoissonsEl.appendChild(div);
-  });
-
-  return totalBoissons;
-}
+});
 
 
-  // Affiche le montant total de la commande (pizzas + boissons)
-  function afficherTotalGeneral() {
-    const totalEl = document.getElementById('commande-total');
-    const totalPizzas = afficherPanierPizzas();
-    const totalBoissons = afficherPanierBoissons();
-    const totalGeneral = totalPizzas + totalBoissons;
-    totalEl.textContent = `Montant total de la commande : ${totalGeneral.toFixed(2)} €`;
-  }
 
-  // Nettoie les données des suppléments (pour éviter d’envoyer trop d’infos inutiles)
-  function nettoyerSupplements(supplements) {
-    if (!Array.isArray(supplements)) return [];
-    return supplements.map(sup => ({
-      id: sup.id,
-      nom: sup.nom,
-      prix: sup.prix
-    }));
-  }
-
-  // Validation simple d'email avec regex
-  function validateEmail(email) {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(email);
-  }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    afficherTotalGeneral();
-
-    const form = document.getElementById('form');
-    const nameInput = document.getElementById('name');
-    const emailInput = document.getElementById('email');
-    const messageEl = document.getElementById('message');
-    const totalGlobal = afficherPanierPizzas() + afficherPanierBoissons();
-     console.log("Total global de la commande :", totalGlobal.toFixed(2) + " €");
-
-
-    // Gestion du style lors de la saisie du nom
-    nameInput.addEventListener('input', () => {
-      if (nameInput.value.trim() === '') {
-        nameInput.classList.add('error');
-        nameInput.classList.remove('success');
-      } else {
-        nameInput.classList.remove('error');
-        nameInput.classList.add('success');
-      }
-    });
-
-    // Gestion du style lors de la saisie de l'email
-    emailInput.addEventListener('input', () => {
-      const email = emailInput.value.trim();
-      if (email === '' || !validateEmail(email)) {
-        emailInput.classList.add('error');
-        emailInput.classList.remove('success');
-      } else {
-        emailInput.classList.remove('error');
-        emailInput.classList.add('success');
-      }
-    });
-
-    // Soumission du formulaire
-    form.addEventListener('submit', async (event) => {
-      event.preventDefault();
-
-      const name = nameInput.value.trim();
-      const email = emailInput.value.trim();
-
-      nameInput.classList.remove('error', 'success');
-      emailInput.classList.remove('error', 'success');
-      messageEl.textContent = '';
-
-      let hasError = false;
-
-      if (name === '') {
-        nameInput.classList.add('error');
-        hasError = true;
-      } else {
-        nameInput.classList.add('success');
-      }
-
-      if (email === '' || !validateEmail(email)) {
-        emailInput.classList.add('error');
-        hasError = true;
-      } else {
-        emailInput.classList.add('success');
-      }
-
-      if (hasError) {
-        messageEl.textContent = "Veuillez corriger les erreurs avant de soumettre.";
-        messageEl.style.color = 'red';
-        return;
-      }
-
-      // Préparer les données du panier avec les suppléments nettoyés
-      let panierPizzas = JSON.parse(localStorage.getItem('panier')) || [];
-      const panierBoissons = JSON.parse(localStorage.getItem('boissons')) || [];
-
-      panierPizzas = panierPizzas.map(pizza => ({
-        ...pizza,
-        supplements: nettoyerSupplements(pizza.supplements)
-      }));
-
-      messageEl.textContent = "Création de la session de paiement...";
-      messageEl.style.color = 'inherit';
-
-      try {
-        // Enregistrer la commande dans la base (API backend)
-        const supabaseResponse = await fetch('/api/enregistrer-commande', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, email, panierPizzas, panierBoissons }),
-        });
-
-        if (!supabaseResponse.ok) {
-          throw new Error('Échec de l\'enregistrement de la commande');
-        }
-
-        // Créer la session de paiement Stripe
-        const response = await fetch('/api/create-checkout-session', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, email, panierPizzas, panierBoissons }),
-        });
-
-        if (!response.ok) {
-          throw new Error('Erreur lors de la création du paiement');
-        }
-
-        const data = await response.json();
-
-        const stripe = Stripe('pk_test_51RTMhuLFHVbWJugP4qxMRQfifObErZnVAbMeDFwFTGcneOkBYomW3KFhvPHudKzoIn1IvdA6CAbOlL0lbAiNLrX300TLI92CDE');
-        const { error } = await stripe.redirectToCheckout({ sessionId: data.sessionId });
-
-        if (error) {
-          throw error;
-        }
-      } catch (error) {
-        console.error('Erreur:', error);
-        messageEl.textContent = "Erreur : " + error.message;
-        messageEl.style.color = 'red';
-      }
-    });
-  });
+// Initialisation
+afficherPanier();
 </script>
-
-  </body>
-</html>
