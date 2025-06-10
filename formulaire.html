@@ -395,274 +395,295 @@ button[type="submit"].valid {
 </div>
 
 
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
 
+        // Element selections: These variables must find existing HTML elements.
+        const listePanier = document.getElementById('liste-panier');
+        const commandeTotal = document.getElementById('commande-total');
+        const payerBtn = document.getElementById('payer-btn');
+        const prixStripeSpan = document.getElementById('prix-stripe');
+        const form = document.getElementById('form');
+        const message = document.getElementById('message');
 
+        // --- Robustness Checks: Log errors if elements are missing ---
+        // These checks help identify if your HTML elements are correctly linked to the JavaScript.
+        if (!listePanier) console.error("Error: Element with ID 'liste-panier' not found.");
+        if (!commandeTotal) console.error("Error: Element with ID 'commande-total' not found.");
+        if (!payerBtn) console.error("Error: Element with ID 'payer-btn' not found.");
+        if (!prixStripeSpan) console.error("Error: Element with ID 'prix-stripe' not found.");
+        if (!form) console.error("Error: Element with ID 'form' not found.");
+        if (!message) console.error("Error: Element with ID 'message' not found.");
 
+        // Define available supplements (if still used - marked as OLD SYSTEM / DISABLE in original)
+        const supplementsDisponibles = [
+            { id: 'sup1', nom: 'OLD SYSTEM / DISABLE', prix: 1.50 },
+            { id: 'sup2', nom: 'OLD SYSTEM / DISABLE', prix: 2.00 },
+            { id: 'sup3', nom: 'OLD SYSTEM / DISABLE', prix: 1.00 },
+            { id: 'sup4', nom: 'OLD SYSTEM / DISABLE ! ', prix: 1.20 },
+        ];
 
+        // Retrieve cart from localStorage or initialize as an empty array.
+        // The `panier` will hold all your cart items (pizzas, burgers, drinks, etc.).
+        let panier = JSON.parse(localStorage.getItem('panier')) || [];
 
-  
-    <script src="https://js.stripe.com/v3/"></script> <script>
-        // Use DOMContentLoaded to ensure the script runs after the HTML is fully parsed.
-        document.addEventListener('DOMContentLoaded', () => {
+        // Ensure each item in the cart has a quantity and supplements array, defaulting if missing.
+        panier = panier.map(item => ({
+            ...item,
+            quantite: item.quantite || 1,
+            supplements: item.supplements || []
+        }));
 
-            // Element selections: These variables must find existing HTML elements.
-            const listePanier = document.getElementById('liste-panier');
-            const commandeTotal = document.getElementById('commande-total');
-            const payerBtn = document.getElementById('payer-btn');
-            const prixStripeSpan = document.getElementById('prix-stripe');
-            const form = document.getElementById('form');
-            const message = document.getElementById('message');
+        /**
+         * Calculates the total price of a single cart item, considering its quantity.
+         * @param {object} item - The cart item object.
+         * @returns {number} The total price for the item.
+         */
+        function calculerPrixTotalItem(item) {
+            const prixBase = item.prix || 0;
+            // This assumes supplement prices are already included in item.prix or are handled elsewhere.
+            return prixBase * (item.quantite || 1);
+        }
 
-            // --- Robustness Checks: Log errors if elements are missing ---
-            if (!listePanier) console.error("Error: Element with ID 'liste-panier' not found.");
-            if (!commandeTotal) console.error("Error: Element with ID 'commande-total' not found.");
-            if (!payerBtn) console.error("Error: Element with ID 'payer-btn' not found.");
-            if (!prixStripeSpan) console.error("Error: Element with ID 'prix-stripe' not found.");
-            if (!form) console.error("Error: Element with ID 'form' not found.");
-            if (!message) console.error("Error: Element with ID 'message' not found.");
+        /**
+         * Groups identical items in the cart to display them as a single line item with a total quantity.
+         * Items are considered identical if they have the same ID, size, and sorted supplements.
+         * @param {Array<object>} items - The array of cart items.
+         * @returns {Array<object>} An array of grouped items.
+         */
+        function groupItems(items) {
+            const groups = [];
+            items.forEach(item => {
+                // Create a consistent key for grouping by sorting supplement IDs.
+                const supplementsIdsSorted = item.supplements.map(s => s.id).sort();
 
-
-            const supplementsDisponibles = [
-                { id: 'sup1', nom: 'OLD SYSTEM / DISABLE', prix: 1.50 },
-                { id: 'sup2', nom: 'OLD SYSTEM / DISABLE', prix: 2.00 },
-                { id: 'sup3', nom: 'OLD SYSTEM / DISABLE', prix: 1.00 },
-                { id: 'sup4', nom: 'OLD SYSTEM / DISABLE ! ', prix: 1.20 },
-            ];
-
-            // Retrieve cart from localStorage or initialize as empty array
-            let panier = JSON.parse(localStorage.getItem('panier')) || [];
-
-            // Add default values for quantity and supplements if missing
-            panier = panier.map(item => ({
-                ...item,
-                quantite: item.quantite || 1,
-                supplements: item.supplements || []
-            }));
-
-            // Function to calculate the total price of a single item (with supplements)
-            function calculerPrixTotalItem(item) {
-                const prixBase = item.prix || 0;
-                // Assuming supplement prices are already factored into item.prix or handled elsewhere
-                return prixBase * (item.quantite || 1);
-            }
-
-            // Group identical items in the cart (by id, size, and sorted supplements)
-            function groupItems(items) {
-                const groups = [];
-                items.forEach(item => {
-                    const supplementsIdsSorted = item.supplements.map(s => s.id).sort();
-
-                    const found = groups.find(g => {
-                        const gSupplementsIdsSorted = g.supplements.map(s => s.id).sort();
-                        return (
-                            g.id === item.id &&
-                            g.taille === item.taille &&
-                            JSON.stringify(gSupplementsIdsSorted) === JSON.stringify(supplementsIdsSorted)
-                        );
-                    });
-
-                    if (found) {
-                        found.items.push(item);
-                    } else {
-                        groups.push({
-                            id: item.id,
-                            taille: item.taille,
-                            supplements: item.supplements,
-                            items: [item]
-                        });
-                    }
+                // Try to find an existing group for this item.
+                const found = groups.find(g => {
+                    const gSupplementsIdsSorted = g.supplements.map(s => s.id).sort();
+                    return (
+                        g.id === item.id &&
+                        g.taille === item.taille &&
+                        JSON.stringify(gSupplementsIdsSorted) === JSON.stringify(supplementsIdsSorted)
+                    );
                 });
-                return groups;
-            }
 
-            // Displays the cart content in the DOM
-            function afficherPanier() {
-                if (listePanier) { // Ensure listePanier exists before manipulating it
-                    listePanier.innerHTML = '';
+                // If a group exists, add the item to it; otherwise, create a new group.
+                if (found) {
+                    found.items.push(item);
                 } else {
-                    console.error("Cannot display cart: 'liste-panier' element not found.");
-                    return;
-                }
-
-                if (panier.length === 0) {
-                    listePanier.innerHTML = '<p>Votre panier est vide.</p>';
-                    if (commandeTotal) commandeTotal.textContent = '0.00 €';
-                    if (payerBtn) {
-                        payerBtn.classList.add('btn-disabled');
-                        payerBtn.setAttribute('aria-disabled', 'true');
-                    }
-                    if (prixStripeSpan) prixStripeSpan.textContent = '';
-                    return;
-                }
-
-                const groupedItems = groupItems(panier);
-                let total = 0;
-
-                groupedItems.forEach(group => {
-                    const item = group.items[0];
-                    const quantiteTotale = group.items.reduce((acc, it) => acc + (it.quantite || 1), 0);
-                    const prixTotalGroup = group.items.reduce((sum, it) => sum + calculerPrixTotalItem(it), 0);
-                    total += prixTotalGroup;
-
-                    const li = document.createElement('div');
-                    li.classList.add('article-panier');
-                    li.innerHTML = `
-                        <div class="details-panier">
-                            <img src="${item.image || 'https://via.placeholder.com/100?text=Produit'}" alt="${item.nom || 'Produit'}" />
-                            <div>
-                                <h4>${item.nom || 'Article inconnu'} ${quantiteTotale > 1 ? `x${quantiteTotale}` : ''}</h4>
-                                <p><strong>Taille :</strong> ${item.taille || 'Standard'}</p>
-                                <p>${item.description || ''}</p>
-                                ${item.supplements && item.supplements.length > 0 ? `<p>Suppléments : ${item.supplements.map(s => s.nom).join(', ')}</p>` : ''}
-                                <p class="prix-total">${prixTotalGroup.toFixed(2)} €</p>
-                            </div>
-                        </div>
-                        <button class="supprimer" title="Supprimer cet article">×</button>
-                    `;
-
-                    li.querySelector('.supprimer').addEventListener('click', () => {
-                        panier = panier.filter(pItem =>
-                            !(pItem.id === item.id &&
-                              pItem.taille === item.taille &&
-                              JSON.stringify(pItem.supplements.map(s => s.id).sort()) === JSON.stringify(item.supplements.map(s => s.id).sort()))
-                        );
-                        sauvegarderPanier();
-                        afficherPanier();
+                    groups.push({
+                        id: item.id,
+                        taille: item.taille,
+                        supplements: item.supplements,
+                        items: [item]
                     });
-
-                    listePanier.appendChild(li);
-                });
-
-                if (commandeTotal) commandeTotal.textContent = total.toFixed(2) + ' €';
-
-                // Update "payer" button with total price
-                if (payerBtn && prixStripeSpan) { // Ensure both elements exist
-                    if (total > 0) {
-                        payerBtn.classList.remove('btn-disabled');
-                        payerBtn.removeAttribute('aria-disabled');
-                        prixStripeSpan.textContent = ` - ${total.toFixed(2)} €`;
-                    } else {
-                        payerBtn.classList.add('btn-disabled');
-                        payerBtn.setAttribute('aria-disabled', 'true');
-                        prixStripeSpan.textContent = '';
-                    }
                 }
-            }
+            });
+            return groups;
+        }
 
-            // Save cart to localStorage
-            function sauvegarderPanier() {
-                localStorage.setItem('panier', JSON.stringify(panier));
-            }
-
-            // Function to launch error animation on the payment button
-            function lancerAnimationErreur() {
-                if (payerBtn) { // **Crucial: Only try to animate if payerBtn exists**
-                    payerBtn.classList.remove('btn-error');
-                    // Trigger reflow to restart animation (a trick to re-apply CSS animation)
-                    void payerBtn.offsetWidth;
-                    payerBtn.classList.add('btn-error');
-                } else {
-                    console.warn("Attempted to launch error animation, but 'payer-btn' was not found.");
-                }
-            }
-
-            // Handle form submission
-            if (form) { // Ensure the form element exists before adding event listener
-                form.addEventListener('submit', async e => {
-                    e.preventDefault();
-
-                    const name = form.name.value.trim();
-                    const email = form.email.value.trim();
-
-                    // Simple validation
-                    if (name === '' || email === '') {
-                        if (message) {
-                            message.textContent = 'Veuillez remplir tous les champs.';
-                            message.style.color = 'red';
-                        }
-                        lancerAnimationErreur();
-                        return;
-                    }
-
-                    if (panier.length === 0) {
-                        if (message) {
-                            message.textContent = 'Votre panier est vide.';
-                            message.style.color = 'red';
-                        }
-                        lancerAnimationErreur();
-                        return;
-                    }
-
-                    // Success/info message
-                    if (message) {
-                        message.textContent = 'Informations reçues, préparation du paiement...';
-                        message.style.color = 'green';
-                    }
-
-                    // Prepare pizzas and drinks separately for the backend
-                    const panierPizzas = panier.filter(item => item.type === 'pizza');
-                    const panierBoissons = panier.filter(item => item.type === 'boisson');
-
-                    try {
-                        const response = await fetch('/api/enregistrer-commande', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                name,
-                                email,
-                                panierPizzas,
-                                panierBoissons
-                            })
-                        });
-
-                        if (!response.ok) {
-                            const err = await response.json();
-                            // Use err.message from the backend for more specific errors
-                            throw new Error(err.message || 'Erreur inconnue lors de l\'enregistrement de la commande.');
-                        }
-
-                        const data = await response.json();
-
-                        // Check if Stripe.js is loaded
-                        if (!window.Stripe) {
-                            if (message) {
-                                message.textContent = 'Erreur: La bibliothèque Stripe.js n\'est pas chargée.';
-                                message.style.color = 'red';
-                            }
-                            lancerAnimationErreur();
-                            return;
-                        }
-
-                        // Initialize Stripe with your public key
-                        const stripe = Stripe('pk_test_51RTMhuLFHVbWJugP4qxMRQfifObErZnVAbMeDFwFTGcneOkBYomW3KFhvPHudKzoIn1IvdA6CAbOlL0lbAiNLrX300TLI92CDE');
-
-                        // Redirect to Stripe checkout
-                        const result = await stripe.redirectToCheckout({ sessionId: data.sessionId });
-
-                        if (result.error) {
-                            if (message) {
-                                message.textContent = `Erreur Stripe: ${result.error.message}`;
-                                message.style.color = 'red';
-                            }
-                            lancerAnimationErreur();
-                        }
-                    } catch (error) {
-                        if (message) {
-                            message.textContent = `Erreur lors du traitement de la commande : ${error.message}`;
-                            message.style.color = 'red';
-                        }
-                        lancerAnimationErreur();
-                    }
-                });
+        /**
+         * Displays the current content of the cart in the DOM.
+         * Updates the total price and the state of the payment button.
+         */
+        function afficherPanier() {
+            // Clear existing cart display.
+            if (listePanier) {
+                listePanier.innerHTML = '';
             } else {
-                console.error("Form element with ID 'form' not found. Form submission functionality will not work.");
+                console.error("Cannot display cart: 'liste-panier' element not found.");
+                return;
             }
 
-            // Initial cart display after all elements are guaranteed to be loaded
-            afficherPanier();
-        }); // End DOMContentLoaded listener
-    </script>
-</body>
-</html>
+            // If the cart is empty, display a message and disable the payment button.
+            if (panier.length === 0) {
+                listePanier.innerHTML = '<p>Votre panier est vide.</p>';
+                if (commandeTotal) commandeTotal.textContent = '0.00 €';
+                if (payerBtn) {
+                    payerBtn.classList.add('btn-disabled');
+                    payerBtn.setAttribute('aria-disabled', 'true');
+                }
+                if (prixStripeSpan) prixStripeSpan.textContent = '';
+                return;
+            }
+
+            const groupedItems = groupItems(panier);
+            let total = 0;
+
+            // Iterate through grouped items to display them.
+            groupedItems.forEach(group => {
+                const item = group.items[0]; // Take the first item from the group for details.
+                const quantiteTotale = group.items.reduce((acc, it) => acc + (it.quantite || 1), 0);
+                const prixTotalGroup = group.items.reduce((sum, it) => sum + calculerPrixTotalItem(it), 0);
+                total += prixTotalGroup;
+
+                // Create a list item for each grouped product.
+                const li = document.createElement('div');
+                li.classList.add('article-panier');
+                li.innerHTML = `
+                    <div class="details-panier">
+                        <img src="${item.image || 'https://via.placeholder.com/100?text=Produit'}" alt="${item.nom || 'Produit'}" />
+                        <div>
+                            <h4>${item.nom || 'Article inconnu'} ${quantiteTotale > 1 ? `x${quantiteTotale}` : ''}</h4>
+                            <p><strong>Taille :</strong> ${item.taille || 'Standard'}</p>
+                            <p>${item.description || ''}</p>
+                            ${item.supplements && item.supplements.length > 0 ? `<p>Suppléments : ${item.supplements.map(s => s.nom).join(', ')}</p>` : ''}
+                            <p class="prix-total">${prixTotalGroup.toFixed(2)} €</p>
+                        </div>
+                    </div>
+                    <button class="supprimer" title="Supprimer cet article">×</button>
+                `;
+
+                // Add event listener to the remove button.
+                li.querySelector('.supprimer').addEventListener('click', () => {
+                    // Remove all items in the group from the cart.
+                    panier = panier.filter(pItem =>
+                        !(pItem.id === item.id &&
+                          pItem.taille === item.taille &&
+                          JSON.stringify(pItem.supplements.map(s => s.id).sort()) === JSON.stringify(item.supplements.map(s => s.id).sort()))
+                    );
+                    sauvegarderPanier(); // Save updated cart to localStorage.
+                    afficherPanier();   // Re-render the cart display.
+                });
+
+                listePanier.appendChild(li);
+            });
+
+            // Update the overall total displayed.
+            if (commandeTotal) commandeTotal.textContent = total.toFixed(2) + ' €';
+
+            // Update the payment button's state and text with the total price.
+            if (payerBtn && prixStripeSpan) {
+                if (total > 0) {
+                    payerBtn.classList.remove('btn-disabled');
+                    payerBtn.removeAttribute('aria-disabled');
+                    prixStripeSpan.textContent = ` - ${total.toFixed(2)} €`;
+                } else {
+                    payerBtn.classList.add('btn-disabled');
+                    payerBtn.setAttribute('aria-disabled', 'true');
+                    prixStripeSpan.textContent = '';
+                }
+            }
+        }
+
+        /**
+         * Saves the current `panier` array to localStorage.
+         */
+        function sauvegarderPanier() {
+            localStorage.setItem('panier', JSON.stringify(panier));
+        }
+
+        /**
+         * Triggers a visual error animation on the payment button.
+         */
+        function lancerAnimationErreur() {
+            if (payerBtn) {
+                payerBtn.classList.remove('btn-error');
+                // Force a reflow to restart the animation if it's already active.
+                void payerBtn.offsetWidth;
+                payerBtn.classList.add('btn-error');
+            } else {
+                console.warn("Attempted to launch error animation, but 'payer-btn' was not found.");
+            }
+        }
+
+        // Handle form submission for payment.
+        if (form) {
+            form.addEventListener('submit', async e => {
+                e.preventDefault(); // Prevent default form submission.
+
+                const name = form.name.value.trim();
+                const email = form.email.value.trim();
+
+                // Basic validation for name and email.
+                if (name === '' || email === '') {
+                    if (message) {
+                        message.textContent = 'Veuillez remplir tous les champs.';
+                        message.style.color = 'red';
+                    }
+                    lancerAnimationErreur();
+                    return;
+                }
+
+                // Check if the cart is empty before proceeding.
+                if (panier.length === 0) {
+                    if (message) {
+                        message.textContent = 'Votre panier est vide.';
+                        message.style.color = 'red';
+                    }
+                    lancerAnimationErreur();
+                    return;
+                }
+
+                // Display a success/info message before API call.
+                if (message) {
+                    message.textContent = 'Informations reçues, préparation du paiement...';
+                    message.style.color = 'green';
+                }
+
+                try {
+                    // Send the entire cart (panierItems) to your backend.
+                    // Your backend will be responsible for differentiating between item types (pizza, burger, boisson, etc.)
+                    const response = await fetch('/api/enregistrer-commande', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            name,
+                            email,
+                            panierItems: panier // Send the full cart array
+                        })
+                    });
+
+                    // Handle API response errors.
+                    if (!response.ok) {
+                        const err = await response.json();
+                        throw new Error(err.message || 'Erreur inconnue lors de l\'enregistrement de la commande.');
+                    }
+
+                    const data = await response.json();
+
+                    // Check if Stripe.js library is loaded.
+                    if (!window.Stripe) {
+                        if (message) {
+                            message.textContent = 'Erreur: La bibliothèque Stripe.js n\'est pas chargée.';
+                            message.style.color = 'red';
+                        }
+                        lancerAnimationErreur();
+                        return;
+                    }
+
+                    // Initialize Stripe with your public test key.
+                    const stripe = Stripe('pk_test_51RTMhuLFHVbWJugP4qxMRQfifObErZnVAbMeDFwFTGcneOkBYomW3KFhvPHudKzoIn1IvdA6CAbOlL0lbAiNLrX300TLI92CDE');
+
+                    // Redirect the user to Stripe Checkout.
+                    const result = await stripe.redirectToCheckout({ sessionId: data.sessionId });
+
+                    // Handle any errors from Stripe redirection.
+                    if (result.error) {
+                        if (message) {
+                            message.textContent = `Erreur Stripe: ${result.error.message}`;
+                            message.style.color = 'red';
+                        }
+                        lancerAnimationErreur();
+                    }
+                } catch (error) {
+                    // Catch and display any errors during the fetch or Stripe process.
+                    if (message) {
+                        message.textContent = `Erreur lors du traitement de la commande : ${error.message}`;
+                        message.style.color = 'red';
+                    }
+                    lancerAnimationErreur();
+                }
+            });
+        } else {
+            console.error("Form element with ID 'form' not found. Form submission functionality will not work.");
+        }
+
+        // Initial display of the cart when the page loads.
+        afficherPanier();
+    }); // End DOMContentLoaded listener
+</script>
+
 
 
