@@ -561,12 +561,14 @@ button[type="submit"].valid {
                 }
 
                 // Filtrer le panier par type pour l'envoi au backend
-                const panierPizzas = panier.filter(item => item.type === 'pizza');
-                const panierBoissons = panier.filter(item => item.type === 'boisson');
-                const panierBurgers = panier.filter(item => item.type === 'burger');
-                const panierDesserts = panier.filter(item => item.type === 'dessert');
-                const panierBaseCremes = panier.filter(item => item.type === 'basecreme');
-                const panierTacos = panier.filter(item => item.type === 'tacos');
+const panierPizzas = panier.filter(item => item.type === 'pizza');
+const panierBoissons = panier.filter(item => item.type === 'boisson');
+const panierBurgers = panier.filter(item => item.type === 'burger');
+const panierDesserts = panier.filter(item => item.type === 'dessert');
+const panierBaseCremes = panier.filter(item => item.type === 'basecreme');
+const panierTacos = panier.filter(item => item.type === 'tacos');
+const panierBagels = panier.filter(item => item.type === 'bagel');
+
 
 
                 try {
@@ -581,7 +583,8 @@ button[type="submit"].valid {
                             panierBurgers,
                             panierDesserts,
                             panierBaseCremes,
-                            panierTacos
+                            panierTacos,
+                            panierBagels
                         })
                     });
 
