@@ -9,21 +9,24 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Méthode non autorisée. Utilisez POST.' });
   }
 
-  const { name, email, panierPizzas, panierBoissons, panierBurgers, panierDesserts, panierBaseCremes, panierTacos } = req.body;
+  const { name, email, panierPizzas, panierBoissons, panierBurgers, panierDesserts, panierBaseCremes, panierTacos, panierBagels } = req.body;
+
 
   if (!name || !email) {
     return res.status(400).json({ message: 'Nom et email obligatoires.' });
   }
 
   // Récupérer tous les paniers, s'assurer que ce sont des tableaux
-  const produits = [
-    ...(Array.isArray(panierPizzas) ? panierPizzas : []),
-    ...(Array.isArray(panierBoissons) ? panierBoissons : []),
-    ...(Array.isArray(panierBurgers) ? panierBurgers : []),
-    ...(Array.isArray(panierDesserts) ? panierDesserts : []),
-    ...(Array.isArray(panierBaseCremes) ? panierBaseCremes : []),
-    ...(Array.isArray(panierTacos) ? panierTacos : []),
-  ];
+const produits = [
+  ...(Array.isArray(panierPizzas) ? panierPizzas : []),
+  ...(Array.isArray(panierBoissons) ? panierBoissons : []),
+  ...(Array.isArray(panierBurgers) ? panierBurgers : []),
+  ...(Array.isArray(panierDesserts) ? panierDesserts : []),
+  ...(Array.isArray(panierBaseCremes) ? panierBaseCremes : []),
+  ...(Array.isArray(panierTacos) ? panierTacos : []),
+  ...(Array.isArray(panierBagels) ? panierBagels : []), // 👈 ici Bagels
+];
+
 
   if (produits.length === 0) {
     return res.status(400).json({ message: 'Votre panier est vide.' });
