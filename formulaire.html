@@ -566,6 +566,8 @@ button[type="submit"].valid {
                 const panierBurgers = panier.filter(item => item.type === 'burger');
                 const panierDesserts = panier.filter(item => item.type === 'dessert');
                 const panierBaseCremes = panier.filter(item => item.type === 'basecreme');
+                const panierTacos = panier.filter(item => item.type === 'tacos');
+
 
                 try {
                     const response = await fetch('/api/enregistrer-commande', {
