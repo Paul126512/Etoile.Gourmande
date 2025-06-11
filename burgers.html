@@ -524,7 +524,7 @@ document.getElementById('fermer-panier').addEventListener('click', function() {
 <body>
   <div class="container">
     <div class="container">
-  <a href="Card.html" class="bouton-retour">
+  <a href="index.html" class="bouton-retour">
     ← Retour à l'accueil
   </a>
   <!-- Le reste de ton contenu... -->
@@ -735,7 +735,14 @@ document.getElementById('fermer-panier').addEventListener('click', function() {
         <img src="${item.image}" alt="${item.nom}" />
         <div>
           <h4>${item.nom} × ${item.quantite}</h4>
-          <p>Type : ${item.type === 'pizza' ? 'Pizza' : item.type === 'burger' ? 'Burger' : 'Autre'}</p>
+        <p>Type : ${
+  item.type === 'pizza' ? 'Pizza' :
+  item.type === 'burger' ? 'Burger' :
+  item.type === 'bagel' ? 'Bagel' :
+  item.type === 'tacos' ? 'Tacos' :
+  'Autre'
+}</p>
+
           <p>Prix unitaire : ${item.prix.toFixed(2)} €</p>
           <p>Prix total : ${(item.prix * item.quantite).toFixed(2)} €</p>
         </div>
