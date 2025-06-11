@@ -536,7 +536,7 @@ document.getElementById('fermer-panier').addEventListener('click', function() {
     <h2 class="section-title">Nos créations</h2>
     
     <div class="liste-produits">
- <div class="produit" id="DoubleCheese">
+<div class="produit bagel" id="BG-BEEF">
   <img src="images/Bagels/BG-BEEFF.png" alt="BG-BEEF" class="image-produit" />
   <div class="produit-contenu">
     <h3>BG-BEEF</h3>
@@ -546,7 +546,7 @@ document.getElementById('fermer-panier').addEventListener('click', function() {
   </div>
 </div>
 
-<div class="produit" id="DOUBLE-BG-BEEF">
+<div class="produit bagel" id="DOUBLE-BEEF">
   <img src="images/Bagels/BG-BEEF.png" alt="DOUBLE-BG-BEEF" class="image-produit" />
   <div class="produit-contenu">
     <h3>DOUBLE BG-BEEF</h3>
@@ -557,7 +557,7 @@ document.getElementById('fermer-panier').addEventListener('click', function() {
 </div>
 
 
-      <div class="produit" id="BG-CHICKEN">
+     <div class="produit bagel" id="BG-CHICKEN">
         <img src="images/Bagels/BG-CHICKEN.png" alt="BG-CHICKEN" class="image-produit" />
         <div class="produit-contenu">
           <h3>BG-CHICKEN</h3>
@@ -567,7 +567,7 @@ document.getElementById('fermer-panier').addEventListener('click', function() {
         </div>
       </div>
 
-      <div class="produit" id="BG-POULET-MARINE">
+       <div class="produit bagel" id="BG-POULET-MARINE">
         <img src="images/Bagels/BG-POULET-MARINE.png" alt="BG-POULET-MARINE" class="image-produit" />
         <div class="produit-contenu">
           <h3>BG-POULET MARINÉ</h3>
@@ -576,7 +576,7 @@ document.getElementById('fermer-panier').addEventListener('click', function() {
           <button aria-label="Ajouter BG-POULET-MARINE au panier">Ajouter au panier</button>
         </div>
       </div>
-           <div class="produit" id="BG-SAUMON">
+      <div class="produit bagel" id="BG-SAUMON">
         <img src="images/Bagels/BG-SAUMON.png" alt="BG-SAUMON" class="image-produit" />
         <div class="produit-contenu">
           <h3>BG-SAUMON</h3>
@@ -649,13 +649,15 @@ document.getElementById('fermer-panier').addEventListener('click', function() {
     quantite: item.quantite || 1
   }));
 
-  function trouverProduitIdentique(nom, prix, supplements) {
-    return panier.find(item =>
-      item.nom === nom &&
-      item.prix === prix &&
-      JSON.stringify(item.supplements) === JSON.stringify(supplements)
-    );
-  }
+function trouverProduitIdentique(nom, prix, type, supplements) {
+  return panier.find(item =>
+    item.nom === nom &&
+    item.prix === prix &&
+    item.type === type &&
+    JSON.stringify(item.supplements) === JSON.stringify(supplements)
+  );
+}
+
 
   boutonsAjouter.forEach(bouton => {
   bouton.addEventListener('click', () => {
@@ -666,20 +668,22 @@ document.getElementById('fermer-panier').addEventListener('click', function() {
     const image = produitElement.querySelector('img').src;
 
     // Déterminer dynamiquement le type selon la classe du produit
-    let type;
-    if (produitElement.classList.contains('pizza')) {
-      type = 'pizza';
-    } else if (produitElement.classList.contains('burger')) {
-      type = 'burger';
-    } else if (produitElement.classList.contains('bagel')) {
-      type = 'bagel';
-    } else if (produitElement.classList.contains('tacos')) {
-      type = 'tacos';
-    } else {
-      type = 'autre';
-    }
+let type;
+if (produitElement.classList.contains('pizza')) {
+  type = 'pizza';
+} else if (produitElement.classList.contains('burger')) {
+  type = 'burger';
+} else if (produitElement.classList.contains('bagel')) {
+  type = 'bagel';
+} else if (produitElement.classList.contains('tacos')) {
+  type = 'tacos';
+} else {
+  type = 'autre';
+}
 
-    const produitExistant = trouverProduitIdentique(nom, prix, type, []);
+
+const produitExistant = trouverProduitIdentique(nom, prix, type, []);
+
 
     if (produitExistant) {
       produitExistant.quantite += 1;
