@@ -1,5 +1,3 @@
-// /api/contact.js
-
 import fetch from 'node-fetch';
 
 const RECAPTCHA_SECRET = process.env.RECAPTCHA_SECRET;
@@ -11,33 +9,50 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Méthode non autorisée' });
   }
 
+  if (!RECAPTCHA_SECRET || !SUPABASE_URL || !SUPABASE_API_KEY) {
+    return res.status(500).json({ error: 'Configuration serveur incorrecte.' });
+  }
+
   const { name, email, subject, message, recaptchaToken } = req.body;
 
-  // ✅ Vérifie reCAPTCHA
+  if (!name || !email || !subject || !message || !recaptchaToken) {
+    return res.status(400).json({ error: 'Champs manquants.' });
+  }
+
   const verifyURL = `https://www.google.com/recaptcha/api/siteverify?secret=${RECAPTCHA_SECRET}&response=${recaptchaToken}`;
-  const captchaRes = await fetch(verifyURL, { method: 'POST' });
-  const captchaData = await captchaRes.json();
+
+  let captchaData;
+  try {
+    const captchaRes = await fetch(verifyURL, { method: 'POST' });
+    captchaData = await captchaRes.json();
+  } catch (err) {
+    return res.status(500).json({ error: 'Erreur lors de la vérification reCAPTCHA.' });
+  }
 
   if (!captchaData.success || captchaData.score < 0.5) {
     return res.status(403).json({ error: 'Échec du reCAPTCHA (score trop bas ou échec).' });
   }
 
-  // ✅ Envoie les données à Supabase
-  const supabaseRes = await fetch(`${SUPABASE_URL}/rest/v1/contact_messages`, {
-    method: 'POST',
-    headers: {
-      'apikey': SUPABASE_API_KEY,
-      'Authorization': `Bearer ${SUPABASE_API_KEY}`,
-      'Content-Type': 'application/json',
-      'Prefer': 'return=representation'
-    },
-    body: JSON.stringify({ name, email, subject, message })
-  });
+  let supabaseData;
+  try {
+    const supabaseRes = await fetch(`${SUPABASE_URL}/rest/v1/contact_messages`, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_API_KEY,
+        'Authorization': `Bearer ${SUPABASE_API_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=representation'
+      },
+      body: JSON.stringify({ name, email, subject, message }),
+    });
 
-  const supabaseData = await supabaseRes.json();
+    supabaseData = await supabaseRes.json();
 
-  if (!supabaseRes.ok) {
-    return res.status(500).json({ error: 'Erreur Supabase', details: supabaseData });
+    if (!supabaseRes.ok) {
+      return res.status(500).json({ error: 'Erreur Supabase', details: supabaseData });
+    }
+  } catch (err) {
+    return res.status(500).json({ error: 'Erreur lors de la connexion à Supabase.' });
   }
 
   return res.status(200).json({ success: true, data: supabaseData });
