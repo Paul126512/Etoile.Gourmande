@@ -324,39 +324,63 @@
     </div>
   </footer>
 
-  <script type="module">
-    const SUPABASE_URL = 'https://hawlnecxjfdhgnbltovh.supabase.co';
-   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhhd2xuZWN4amZkaGduYmx0b3ZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk1NjQ1NTcsImV4cCI6MjA2NTE0MDU1N30.j4_ZR22bV7acZabBIduYhoLZlITwRYu6ToBF8MYvj5o';
 
+  
 
-    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+<form id="contactForm" class="space-y-4">
+  <input type="text" id="name" name="name" placeholder="Nom" required />
+  <input type="email" id="email" name="email" placeholder="Email" required />
+  <input type="text" id="subject" name="subject" placeholder="Sujet" required />
+  <textarea id="message" name="message" placeholder="Message" required></textarea>
+  <button type="submit">Envoyer</button>
+</form>
 
-    const form = document.getElementById('contactForm');
+<p id="formMessage" class="text-sm mt-2"></p>
 
-    grecaptcha.enterprise.ready(() => {
-      form.addEventListener('submit', async (e) => {
-        e.preventDefault();
+<!-- ✅ reCAPTCHA Enterprise V3 -->
+<script src="https://www.google.com/recaptcha/enterprise.js?render=6Lcr1FsrAAAAAHW8GOw-UxMD-ka4_RPYDg70uIGl"></script>
 
-        const token = await grecaptcha.enterprise.execute('6Lcr1FsrAAAAAHW8GOw-UxMD-ka4_RPYDg70uIGl', { action: 'submit' });
+<!-- ✅ Script de soumission -->
+<script type="module">
+  document.getElementById('contactForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
 
-        const name = form.name.value;
-        const email = form.email.value;
-        const subject = form.subject.value;
-        const message = form.message.value;
+    const formMessage = document.getElementById('formMessage');
+    formMessage.textContent = 'Envoi en cours...';
 
-        const { error } = await supabase
-          .from('contact_messages')
-          .insert([{ name, email, subject, message, recaptcha_token: token }]);
-
-        if (error) {
-          alert("Erreur lors de l'envoi : " + error.message);
-        } else {
-          alert("Message envoyé avec succès !");
-          form.reset();
-        }
+    try {
+      // ✅ Exécuter reCAPTCHA v3 Enterprise
+      const token = await grecaptcha.enterprise.execute('6Lcr1FsrAAAAAHW8GOw-UxMD-ka4_RPYDg70uIGl', {
+        action: 'submit',
       });
-    });
-  </script>
-</body>
-</html>
+
+      // ✅ Récupérer les valeurs du formulaire
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const subject = document.getElementById('subject').value.trim();
+      const message = document.getElementById('message').value.trim();
+
+      // ✅ Envoyer à l’API
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, subject, message, token }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        formMessage.textContent = 'Message envoyé avec succès !';
+        formMessage.className = 'text-green-500 text-sm mt-2';
+        document.getElementById('contactForm').reset();
+      } else {
+        formMessage.textContent = result.message || 'Erreur lors de l’envoi.';
+        formMessage.className = 'text-red-500 text-sm mt-2';
+      }
+    } catch (error) {
+      console.error('Erreur du formulaire :', error);
+      formMessage.textContent = 'Une erreur est survenue.';
+      formMessage.className = 'text-red-500 text-sm mt-2';
+    }
+  });
+</script>
