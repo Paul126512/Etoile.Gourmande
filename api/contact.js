@@ -3,6 +3,8 @@ const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_API_KEY = process.env.SUPABASE_API_KEY;
 
 export default async function handler(req, res) {
+  console.log('API contact appelée'); // Debug
+  
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Méthode non autorisée' });
   }
@@ -17,6 +19,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Champs manquants.' });
   }
 
+  // Vérification reCAPTCHA
   const verifyURL = `https://www.google.com/recaptcha/api/siteverify?secret=${RECAPTCHA_SECRET}&response=${recaptchaToken}`;
 
   let captchaData;
@@ -31,7 +34,7 @@ export default async function handler(req, res) {
     return res.status(403).json({ error: 'Échec du reCAPTCHA (score trop bas ou échec).' });
   }
 
-  let supabaseData;
+  // Envoi à Supabase
   try {
     const supabaseRes = await fetch(`${SUPABASE_URL}/rest/v1/contact_messages`, {
       method: 'POST',
@@ -44,14 +47,14 @@ export default async function handler(req, res) {
       body: JSON.stringify({ name, email, subject, message }),
     });
 
-    supabaseData = await supabaseRes.json();
+    const supabaseData = await supabaseRes.json();
 
     if (!supabaseRes.ok) {
       return res.status(500).json({ error: 'Erreur Supabase', details: supabaseData });
     }
+
+    return res.status(200).json({ success: true, data: supabaseData });
   } catch (err) {
     return res.status(500).json({ error: 'Erreur lors de la connexion à Supabase.' });
   }
-
-  return res.status(200).json({ success: true, data: supabaseData });
 }
