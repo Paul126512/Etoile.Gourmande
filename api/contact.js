@@ -1,6 +1,7 @@
 const RECAPTCHA_SECRET = process.env.RECAPTCHA_SECRET;
 const SUPABASE_URL = process.env.SUPABASE_URL;
-const SUPABASE_API_KEY = process.env.SUPABASE_API_KEY;
+const SUPABASE_API_KEY = process.env.SUPABASE_KEY;  // SUPABASE_KEY de vercel
+
 
 export default async function handler(req, res) {
   console.log('API contact appelée'); // Debug
