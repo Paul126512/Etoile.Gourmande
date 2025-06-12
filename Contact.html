@@ -1,1340 +1,362 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Montserrat:wght@300;400;500&family=DM+Serif+Display&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --noir: #111111;
-            --blanc: #f9f9f9;
-            --beige: #f9f9f9;
-            --doré: #d4af37;
-            --gris-moyen: #999999;
-            scroll-behavior: smooth;
-        }
-        
-        /* Reset et base */
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Montserrat', sans-serif;
-            background-color: var(--blanc);
-            color: var(--noir);
-            overflow-x: hidden;
-            line-height: 1.6;
-        }
-        
-        /* Header */
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 2rem 5%;
-            position: absolute;
-            width: 90%;
-            z-index: 100;
-        }
-        
-        .logo {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.8rem;
-            font-weight: 10px;
-            letter-spacing: 1px;
-            height: 1px;
-        }
-
-        .logo img {
-            position: relative;
-            top: -30px;
-            height: 75px;
-            transition: transform 0.3s ease;
-        }
-
-        .logo img:hover {
-            transform: scale(1.05);
-        }
-
-        nav ul {
-            display: flex;
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-        
-        nav li {
-            margin-left: 2.5rem;
-        }
-        
-        nav a {
-            text-decoration: none;
-            color: var(--noir);
-            font-weight: 500;
-            font-size: 0.9rem;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            position: relative;
-            padding: 0.5rem 0;
-        }
-        
-        nav a:after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 1px;
-            bottom: 0;
-            left: 0;
-            background-color: var(--noir);
-            transition: width 0.3s ease;
-        }
-        
-        nav a:hover:after {
-            width: 100%;
-        }
-        
-        /* Hero Section */
-        .hero {
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            position: relative;
-            background: var(--beige);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            padding: 2rem;
-            box-sizing: border-box;
-            position: relative;
-            text-align: center;  
-        }
-        
-        .hero-gallery {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: nowrap;
-            padding: 20px;
-            width: 100%;
-            height: 100%;
-            position: absolute;
-        }
-        
-        .hero-image {
-            width: 500px;
-            height: auto;
-            object-fit: cover;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            opacity: 0.95;
-            transition: opacity 0.5s ease, transform 0.5s ease;
-        }
-        
-        .hero-image:hover {
-            opacity: 1;
-            transform: scale(1.02);
-        }
-        
-        .hero-content {
-            position: relative;
-            z-index: 10;
-            padding: 3rem;
-            margin-left: 5%;
-            background-color: rgba(249, 249, 249, 0.8);
-            backdrop-filter: blur(5px);
-            border-radius: 10px;
-            max-width: 500px;
-        }
-
-        /* Titres responsive */
-        .title {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(28px, 8vw, 48px);
-            margin: 0;
-            font-weight: 700;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 5px;
-            margin-bottom: 10px;
-            white-space: normal;
-        }
-
-        .subtitle {
-            white-space: nowrap;
-        }
-
-        @media (min-width: 768px) {
-            .title {
-                flex-direction: row;
-                align-items: baseline;
-                white-space: nowrap;
-            }
-            
-            .subtitle {
-                margin: 0 0 0 15px;
-                text-align: left;
-            }
-            
-            /* Header responsive */
-            @media (max-width: 768px) {
-                header {
-                    flex-direction: column;
-                    padding: 1rem 5%;
-                }
-                
-                .logo img {
-                    height: 60px;
-                    margin-bottom: 10px;
-                }
-                
-                nav ul {
-                    flex-wrap: wrap;
-                    justify-content: center;
-                }
-                
-                nav li {
-                    margin: 0.5rem 1rem;
-                }
-            }
-
-            /* Hero section responsive */
-            @media (max-width: 768px) {
-                .hero {
-                    padding-top: 100px;
-                }
-                
-                .hero-gallery {
-                    position: relative;
-                    flex-wrap: wrap;
-                }
-                
-                .hero-image {
-                    width: 100%;
-                    max-width: 400px;
-                    margin-bottom: 15px;
-                }
-                
-                .hero-content {
-                    width: 90%;
-                    margin: 1rem auto;
-                    padding: 1.5rem;
-                }
-            }
-
-            /* Grid responsive */
-            @media (max-width: 1024px) {
-                .grid {
-                    grid-template-columns: repeat(3, 1fr);
-                }
-            }
-
-            @media (max-width: 768px) {
-                .grid {
-                    grid-template-columns: repeat(2, 1fr);
-                }
-            }
-
-            @media (max-width: 480px) {
-                .grid {
-                    grid-template-columns: 1fr;
-                }
-                
-                .image-category {
-                    height: 250px;
-                }
-            }
-
-            /* Animation de sortie */
-            @keyframes slideOutRight {
-                to { 
-                    transform: translateX(120%);
-                    opacity: 0;
-                }
-            }
-
-            .cookie-banner.hide {
-                animation: slideOutRight 0.5s ease-in forwards;
-            }
-        }
-        
-        .title span {
-            display: inline-block;
-        }
-
-        .subtitle {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 300;
-            letter-spacing: 8px;
-            margin: 15px 0 30px;
-            font-size: 14px;
-            text-transform: uppercase;
-            color: var(--noir);
-        }
-
-        .title-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-            flex-wrap: wrap;
-            text-align: center;
-        }
-
-        .decor {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            white-space: nowrap;
-        }
-
-        .decor-line {
-            width: 50px;
-            height: 1px;
-            background-color: black;
-            flex-shrink: 0;
-            margin: 0 10px;
-        }
-
-        .wheat-icon {
-            width: 28px;
-            height: auto;
-            object-fit: contain;
-            flex-shrink: 0;
-            transform: rotate(90deg) scale(1.2, 1.6);
-        }
-
-        .right-icon {
-            width: 28px;
-            height: auto;
-            object-fit: contain;
-            flex-shrink: 0;
-            transform: rotate(-90deg) scale(1.2, 1.6);
-        }
-
-        .phone-number {
-            font-family: 'Libre Baskerville', serif;
-            font-weight: 500;
-            font-size: 20px;
-            letter-spacing: 2px;
-            line-height: 28px;
-            white-space: nowrap;
-            font-variant-numeric: tabular-nums;
-        }
-        
-        /* Boutons */
-        .btn {
-            display: inline-block;
-            padding: 1rem 2rem;
-            background-color: var(--noir);
-            color: var(--blanc);
-            text-decoration: none;
-            font-weight: 500;
-            letter-spacing: 1px;
-            border: 1px solid var(--noir);
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            border-radius: 30px;
-            cursor: pointer;
-        }
-        
-        .btn:hover {
-            background-color: transparent;
-            color: var(--noir);
-        }
-        
-        .btn-blanc {
-            background-color: transparent;
-            color: var(--noir);
-            border-color: var(--noir);
-            margin-left: 1rem;
-        }
-        
-        .btn-blanc:hover {
-            background-color: var(--noir);
-            color: var(--blanc);
-        }
-        
-        /* Section Nos Créations */
-        .image-categories {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 5rem 2rem;
-        }
-        
-        .category-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.5rem;
-            font-weight: 600;
-            text-align: center;
-            margin-bottom: 3rem;
-            color: var(--noir);
-            letter-spacing: 1px;
-            position: relative;
-        }
-        
-        .category-title:after {
-            content: '';
-            display: block;
-            width: 80px;
-            height: 2px;
-            background: var(--doré);
-            margin: 1rem auto;
-        }
-        
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1.5rem;
-        }
-        
-        .image-category {
-            position: relative;
-            height: 300px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            border: 1px solid rgba(0,0,0,0.08);
-            border-radius: 8px;
-        }
-        
-        .image-category:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        }
-        
-        .image-category img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.6s ease;
-            filter: grayscale(15%) contrast(110%);
-        }
-        
-        .image-category:hover img {
-            transform: scale(1.05);
-            filter: grayscale(0%) contrast(100%);
-        }
-        
-        .image-category span {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            padding: 1.5rem;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 500;
-            font-size: 1.1rem;
-            color: var(--blanc);
-            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-        }
-        
-        .image-category:hover span {
-            padding-bottom: 2rem;
-        }
-        
-        /* Animation discrète */
-        @keyframes fadeIn {
-            from { opacity: 0.8; }
-            to { opacity: 1; }
-        }
-        
-        footer {
-            animation: fadeIn 1.5s ease-in-out;
-        }
-        
-        /* Bannière Cookies - Version responsive */
-        .cookie-banner {
-            display: none;
-            position: fixed;
-            right: 20px;
-            bottom: 20px;
-            max-width: 320px;
-            width: calc(100% - 40px);
-            background: #ffffff;
-            border-radius: 15px;
-            box-shadow: -5px 5px 25px rgba(0,0,0,0.1);
-            padding: 20px;
-            font-family: 'Playfair Display', serif;
-            z-index: 1000;
-            animation: slideIn 0.5s ease-out forwards;
-        }
-
-        .cookie-banner.hide {
-            animation: slideOutRight 0.5s ease-in forwards;
-        }
-
-        @keyframes slideIn {
-            from { 
-                transform: translateX(20px);
-                opacity: 0;
-            }
-            to { 
-                transform: translateX(0); 
-                opacity: 1;
-            }
-        }
-
-        @keyframes slideOutRight {
-            to { 
-                transform: translateX(120%);
-                opacity: 0;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .cookie-banner {
-                right: auto;
-                left: 50%;
-                transform: translateX(-50%) translateY(20px);
-                max-width: 90%;
-                bottom: 10px;
-            }
-            
-            .cookie-buttons {
-                flex-direction: column;
-                gap: 8px;
-            }
-            
-            .cookie-btn {
-                width: 100%;
-            }
-        }
-
-        .cookie-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .cookie-icon {
-            width: 40px;
-            height: 40px;
-            margin-right: 15px;
-            opacity: 0.8;
-        }
-
-        .cookie-title {
-            font-weight: 600;
-            font-size: 18px;
-            color: #000000;
-            letter-spacing: 0.5px;
-        }
-
-        .cookie-text {
-            font-size: 14px;
-            margin-bottom: 20px;
-            color: #000000;
-            line-height: 1.6;
-            font-family: 'Montserrat', sans-serif;
-            opacity: 0.8;
-        }
-
-        .cookie-buttons {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-        }
-
-        .cookie-btn {
-            padding: 10px 20px;
-            border-radius: 25px;
-            border: none;
-            cursor: pointer;
-            font-weight: 500;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 13px;
-            letter-spacing: 0.5px;
-            transition: all 0.3s ease;
-            min-width: 100px;
-            text-align: center;
-        }
-
-        .cookie-btn-accept {
-            background: #0f0f0f;
-            color: #fff9f2;
-            border: 1px solid #148f39;
-        }
-
-        .cookie-btn-reject {
-            background: transparent;
-            color: #cd2e06;
-            border: 1px solid #cd2e06;
-        }
-
-        .cookie-btn-accept:hover {
-            background: #2d5c21;  
-            color: #ffffff;
-            border-color: #2d5c21;
-        }
-
-        .cookie-btn-reject:hover {
-            background: rgba(198, 16, 16, 0.05);
-        }
-
-        .signature {
-            font-style: italic;
-            text-align: right;
-            margin-top: 15px;
-            font-size: 11px;
-            color: #cd2e06;
-            opacity: 0.5;
-            font-family: 'Playfair Display', serif;
-        }
-
-        .privacy-link {
-            font-weight: bold;
-            color: inherit;
-            text-decoration: underline;
-        }
-        
-        .privacy-link:hover {
-            color: #080808;
-        }
-        
-        .privacy-policy {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
-        }
-
-        .stars-top {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            align-items: flex-end;
-        }
-
-        .stars-top div:nth-child(2) {
-            transform: translateY(-5px);
-        }
-
-        .title-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
-            text-align: center;
-        }
-
-        /* Responsive */
-        @media (max-width: 1024px) {
-            .hero-content {
-                width: 50%;
-                padding: 2rem;
-            }
-            
-            .grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-        
-        @media (max-width: 768px) {
-            header {
-                padding: 1.5rem 5%;
-            }
-            
-            .logo img {
-                height: 80px;
-            }
-            
-            nav li {
-                margin-left: 1.5rem;
-            }
-            
-            .hero {
-                height: auto;
-                min-height: 100vh;
-                flex-direction: column;
-                padding-top: 120px;
-            }
-            
-            .hero-gallery {
-                position: relative;
-                flex-wrap: wrap;
-                padding: 20px 0;
-            }
-            
-            .hero-image {
-                width: 80%;
-                margin-bottom: 20px;
-            }
-            
-            .hero-content {
-                width: 90%;
-                margin: 2rem auto;
-                padding: 2rem;
-                background-color: rgba(249, 249, 249, 0.95);
-            }
-            
-            .grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .cookie-banner {
-                width: 90%;
-                left: 5%;
-                bottom: 10px;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .title {
-                font-size: 36px;
-            }
-            
-            .subtitle {
-                letter-spacing: 4px;
-            }
-            
-            nav ul {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            
-            nav li {
-                margin: 0.5rem;
-            }
-            
-            .grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .image-category {
-                height: 200px;
-            }
-            
-            .cookie-buttons {
-                flex-direction: column;
-            }
-            
-            /* Animation */
-            @keyframes slideOutRight {
-                to { 
-                    transform: translateX(120%);
-                    opacity: 0;
-                }
-            }
-        }
-
-        .intro-text {
-            white-space: nowrap;
-            text-align: center;
-        }
-
-        /* Animation de rebond */
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {
-                transform: translateY(0);
-            }
-            40% {
-                transform: translateY(-10px);
-            }
-            60% {
-                transform: translateY(-5px);
-            }
-        }
-
-        .scroll-down-arrow {
-            display: block;
-            text-align: center;
-            font-size: 24px;
-            color: var(--noir);
-            margin-top: 20px;
-            animation: bounce 2s infinite;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        .contact-item {
-            margin-right: 120px;
-        }
-        
-        #panier-container {
-            position: absolute;
-            right: 20px;
-            top: 20px;
-        }
-
-        /* Styles spécifiques pour la page de contact */
-        .contact-form-container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 3rem 2rem;
-        }
-
-        .contact-form {
-            font-family: 'Montserrat', sans-serif;
-        }
-
-        .contact-form label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-        }
-
-        .contact-form input,
-        .contact-form textarea,
-        .contact-form select {
-            width: 100%;
-            padding: 1rem;
-            margin-bottom: 1.5rem;
-            border: 1px solid var(--noir);
-            border-radius: 4px;
-            font-family: 'Montserrat', sans-serif;
-        }
-
-        .contact-form textarea {
-            min-height: 150px;
-        }
-
-        .contact-form button[type="submit"] {
-            background: var(--noir);
-            color: var(--blanc);
-            border: none;
-            padding: 1rem 2rem;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .contact-form button[type="submit"]:hover {
-            background: var(--doré);
-        }
-
-        .contact-info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 3rem;
-            margin-top: 3rem;
-        }
-
-        .contact-info-card {
-            text-align: center;
-            padding: 2rem;
-            background: rgba(249, 249, 249, 0.5);
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .contact-info-card:hover {
-            background: rgba(249, 249, 249, 0.9);
-            transform: translateY(-5px);
-        }
-
-        .map-container {
-            height: 400px;
-            margin: 3rem 0;
-            background: #eee;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        /* Footer Styles */
-        .grolet-footer {
-            background-color: white;
-            color: black;
-            padding: 50px 0 20px;
-            font-family: 'Montserrat', sans-serif;
-        }
-
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        .footer-signature {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .logo-main {
-            font-family: 'DM Serif Display', serif;
-            font-size: 36px;
-            letter-spacing: 1px;
-            display: block;
-        }
-
-        .logo-sub {
-            font-family: 'Playfair Display', serif;
-            font-size: 16px;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            display: block;
-            margin-top: 5px;
-        }
-
-        .footer-actions {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-bottom: 50px;
-        }
-
-        .grolet-button {
-            padding: 12px 25px;
-            border: 1px solid black;
-            background: white;
-            color: black;
-            font-family: 'Playfair Display', serif;
-            font-size: 14px;
-            letter-spacing: 1px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .grolet-button.primary {
-            background: black;
-            color: white;
-        }
-
-        .grolet-button.secondary:hover {
-            background: #f5f5f5;
-        }
-
-        .grolet-button.primary:hover {
-            background: #333;
-        }
-
-        .footer-links {
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-            margin-bottom: 40px;
-        }
-
-        .links-column {
-            min-width: 200px;
-            margin-bottom: 30px;
-        }
-
-        .links-column h3 {
-            font-family: 'Playfair Display', serif;
-            font-size: 16px;
-            font-weight: 500;
-            margin-bottom: 20px;
-            letter-spacing: 1px;
-        }
-
-        .links-column ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .links-column li {
-            margin-bottom: 12px;
-        }
-
-        .links-column a {
-            color: black;
-            text-decoration: none;
-            font-size: 14px;
-            transition: all 0.3s;
-            position: relative;
-        }
-
-        .links-column a:hover {
-            text-decoration: underline;
-        }
-
-        .footer-legal {
-            text-align: center;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
-            font-size: 11px;
-            letter-spacing: 0.5px;
-        }
-
-        .footer-legal a {
-            color: black;
-            text-decoration: none;
-        }
-
-        .footer-legal a:hover {
-            text-decoration: underline;
-        }
-
-        .footer-social {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin: 40px 0;
-        }
-
-        .social-icon {
-            width: 60px;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            transition: all 0.3s ease;
-            background: white;
-            border: 2px solid #000;
-        }
-
-        .social-icon:hover {
-            background: #000000;
-            transform: scale(1.1);
-        }
-
-        .social-image {
-            width: 30px;
-            height: 30px;
-            object-fit: contain;
-            transition: all 0.3s ease;
-        }
-
-        .social-icon:hover .social-image {
-            filter: none !important;
-        }
-
-        @media (max-width: 768px) {
-            .footer-actions {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .footer-links {
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-            }
-            
-            .links-column {
-                margin-bottom: 30px;
-            }
-            
-            .footer-social {
-                gap: 20px;
-            }
-            
-            .social-icon {
-                width: 50px;
-                height: 50px;
-            }
-            
-            .social-image {
-                width: 25px;
-                height: 25px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact | L'Etoile Gourmande</title>
+
+  <!-- Polices Google -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <!-- CSS principal -->
+  <link rel="stylesheet" href="/css/Index-main.css" />
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+  <!-- reCAPTCHA v3 Enterprise -->
+  <script src="https://www.google.com/recaptcha/enterprise.js?render=6Lcr1FsrAAAAAHW8GOw-UxMD-ka4_RPYDg70uIGl"></script>
+
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #fff;
+    }
+
+    .logo img {
+      height: 72px;
+    }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+    }
+
+    nav ul li {
+      margin-left: 30px;
+    }
+
+    nav ul li a {
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    .contact-hero {
+      background: url('images/background-contact.jpg') center/cover;
+      height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      color: rgb(0, 0, 0);
+      text-align: center;
+    }
+
+    .contact-hero-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .contact-hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+
+    .contact-container {
+      max-width: 1200px;
+      margin: 50px auto;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+
+    .contact-info, .contact-form {
+      padding: 30px;
+    }
+
+    .contact-info h2,
+    .contact-form h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      margin-bottom: 30px;
+      color: #000;
+    }
+
+    .info-item {
+      margin-bottom: 25px;
+      display: flex;
+      align-items: flex-start;
+    }
+
+    .info-item i {
+      margin-right: 15px;
+      color: #000;
+      font-size: 1.2rem;
+    }
+
+    .info-item h3 {
+      font-size: 1.1rem;
+      margin-bottom: 5px;
+    }
+
+    .info-item p {
+      margin: 0;
+      font-weight: 300;
+    }
+
+    .contact-form {
+      background: #f9f9f9;
+      border-radius: 5px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .form-group textarea {
+      height: 150px;
+      resize: vertical;
+    }
+
+    .submit-btn {
+      background: #000;
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s;
+      border-radius: 4px;
+    }
+
+    .submit-btn:hover {
+      background: #989898;
+    }
+
+    .opening-hours {
+      margin-top: 10px;
+    }
+
+    .day-row {
+      display: flex;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .day-row:last-child {
+      border-bottom: none;
+    }
+
+    .day {
+      width: 100px;
+      font-weight: 500;
+    }
+
+    .hours {
+      flex: 1;
+      text-align: right;
+      padding-right: 15px;
+    }
+
+    .status {
+      font-size: 0.85rem;
+      width: 80px;
+    }
+
+    .status.open {
+      color: #4CAF50;
+    }
+
+    .status.closed {
+      color: #F44336;
+    }
+
+    .status:before {
+      content: "●";
+      margin-right: 5px;
+      font-size: 0.7rem;
+      vertical-align: middle;
+    }
+
+    .grolet-footer {
+      background: #f5f5f5;
+      padding: 50px 20px 20px;
+      font-family: 'Montserrat', sans-serif;
+      text-align: center;
+    }
+
+    .footer-legal a {
+      color: inherit;
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .contact-container {
+        grid-template-columns: 1fr;
+      }
+
+      .contact-hero h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
 </head>
 <body>
-    <!-- Header -->
-    <header>
-        <div class="logo">
-            
-        </div>
-        <nav>
-            <ul>
-                <li><a href="index.html">Accueil</a></li>
-                <li><a href="index.html#nos-creations">Nos créations</a></li>
-                <li><a href="apropos.html">À propos</a></li>
-                <li><a href="Contact.html">Contact</a></li>
-          
-            </ul>
-        </nav>
-    </header>
-
-
-            
-<style>
- 
-
-  .arrow-down {
-    font-size: 5px;
-    animation: bounce 1.2s infinite;
-    width: 70px;
-  }
-
-  @keyframes bounce {
-    0%, 100% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(6px);
-    }
-  }
-</style>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Boulangerie | L'Etoile Gourmande</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/Index-main.css">
-
-<body>
-<header>
+  <header>
     <div class="logo">
-        <img src="images/logo/logo halal.png" alt="Logo Halal">
+      <img src="images/logo/logo halal.png" alt="Logo Halal">
     </div>
-
     <nav>
-        <ul>
-            <li><a href="index.html">Accueil</a></li>
-            <li><a href="#nos-creations">Nos Créations</a></li>
-            <li><a href="#">À propos</a></li>
-            <li><a href="Contact.html">Contact</a></li>
-            
-       
-        </ul>
+      <ul>
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="#">À propos</a></li>
+        <li><a href="Contact.html">Contact</a></li>
+      </ul>
     </nav>
-</header>
+  </header>
 
-<section class="hero">
-    <div class="hero-gallery"></div>
-    
-    <div class="hero-content">
-        <div class="stars-top">
-            <div>✻</div>
-            <div>✻</div>
-            <div>✻</div>
+  <section class="contact-hero">
+    <div class="contact-hero-content">
+      <h1>Contactez-nous</h1>
+      <p>Nous sommes à votre écoute pour toutes vos questions</p>
+    </div>
+  </section>
+
+  <div class="contact-container">
+    <div class="contact-info">
+      <h2>Informations pratiques</h2>
+
+      <div class="info-item">
+        <i class="fas fa-map-marker-alt"></i>
+        <div>
+          <h3>Adresse</h3>
+          <p>30 Rue du Four<br>94100 Saint-Maur-des-Fossés</p>
         </div>
-    
-        <h1 class="title">Contact</h1>
-        <br>
-        <div style="border: 0px solid; width: 300px; margin: auto;">
-            <div class="subtitle">Pâtisserie  I Snacking</div>
+      </div>
 
-            <div class="decor">
-                <img src="images/logo/blé.png" class="right-icon" />
-                <div class="decor-line"></div>
-                <span class="phone-number">09 84 54 48 86</span>
-                <div class="decor-line"></div>
-                <img src="images/logo/blé.png" class="wheat-icon" />
-            </div>
+      <div class="info-item">
+        <i class="fas fa-phone-alt"></i>
+        <div>
+          <h3>Téléphone</h3>
+          <p>09 84 54 48 86</p>
+        </div>
+      </div>
 
-            <p class="intro-text">
-                30 Rue du Four Saint-Maur-des-Fossés 
-            </p>
+      <div class="info-item">
+        <i class="fas fa-clock"></i>
+        <div>
+          <h3>Horaires d'ouverture</h3>
+          <div class="opening-hours">
+            <div class="day-row"><span class="day">Lundi</span><span class="hours">07:00 – 21:30</span><span class="status open">Ouvert</span></div>
+            <div class="day-row"><span class="day">Mardi</span><span class="hours">07:00 – 21:30</span><span class="status open">Ouvert</span></div>
+            <div class="day-row"><span class="day">Mercredi</span><span class="hours">07:00 – 21:30</span><span class="status open">Ouvert</span></div>
+            <div class="day-row"><span class="day">Jeudi</span><span class="hours">07:00 – 21:30</span><span class="status open">Ouvert</span></div>
+            <div class="day-row"><span class="day">Vendredi</span><span class="hours">07:00 – 21:30</span><span class="status open">Ouvert</span></div>
+            <div class="day-row"><span class="day">Samedi</span><span class="hours">07:00 – 21:30</span><span class="status open">Ouvert</span></div>
+            <div class="day-row"><span class="day">Dimanche</span><span class="hours">Fermé</span><span class="status closed">Fermé</span></div>
+          </div>
+        </div>
+      </div>
 
-            <p class="intro-texte">
-                Commande pour retrait en magasin uniquement.
-            </p>
+      <div class="info-item">
+        <i class="fas fa-info-circle"></i>
+        <div>
+          <h3>Informations importantes</h3>
+          <p>Commande pour retrait en magasin uniquement.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-form">
+      <h2>Envoyez-nous un message</h2>
+      <form id="contactForm">
+        <div class="form-group">
+          <label for="name">Nom complet</label>
+          <input type="text" id="name" name="name" required />
         </div>
 
-        <!-- Flèche animée pour scroller vers la section suivante -->
-        <a href="#nos-creations" class="scroll-down-arrow" id="scroll-down-btn">
-            ↓
-        </a>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required />
+        </div>
+
+        <div class="form-group">
+          <label for="subject">Sujet</label>
+          <input type="text" id="subject" name="subject" required />
+        </div>
+
+        <div class="form-group">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" required></textarea>
+        </div>
+
+        <button type="submit" class="submit-btn">Envoyer le message</button>
+      </form>
     </div>
-</section>
+  </div>
 
-
-
-<!-- Bannière Cookies style Cédric Grolet -->
-<div class="cookie-banner">
-    <div class="cookie-header">
-        <svg class="cookie-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3Z" stroke="#111111" stroke-width="1.5"/>
-            <path d="M9 10C9.55228 10 10 9.55228 10 9C10 8.44772 9.55228 8 9 8C8.44772 8 8 8.44772 8 9C8 9.55228 8.44772 10 9 10Z" fill="#111111"/>
-            <path d="M16 15C16.5523 15 17 14.5523 17 14C17 13.4477 16.5523 13 16 13C15.4477 13 15 13.4477 15 14C15 14.5523 15.4477 15 16 15Z" fill="#111111"/>
-            <path d="M10.5 12.5L13.5 11" stroke="#111111" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
-        <div class="cookie-title">Vie privée</div>
+  <footer class="grolet-footer">
+    <div class="footer-legal">
+      <p>© 2025 L'Etoile Gourmande | <a href="#">Mentions légales</a> | <a href="#">CGV</a></p>
     </div>
-    <div class="cookie-text">
-        Nous accordons une grande importance à votre vie privée. Nous utilisons des cookies pour personnaliser votre expérience et rendre votre visite plus douce. 
-        <a href="policy.html" class="privacy-link">Consultez notre politique de confidentialité</a>.
-    </div>
+  </footer>
 
-    <div class="cookie-buttons">
-        <button class="cookie-btn cookie-btn-accept">Accepter</button>
-        <button class="cookie-btn cookie-btn-reject">Refuser</button>  
-    </div>
-</div>
+  <script type="module">
+    const SUPABASE_URL = 'https://hawlnecxjfdhgnbltovh.supabase.co';
+   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhhd2xuZWN4amZkaGduYmx0b3ZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk1NjQ1NTcsImV4cCI6MjA2NTE0MDU1N30.j4_ZR22bV7acZabBIduYhoLZlITwRYu6ToBF8MYvj5o';
 
-<script src="index.js"></script>
 
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const form = document.getElementById('contactForm');
+
+    grecaptcha.enterprise.ready(() => {
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const token = await grecaptcha.enterprise.execute('6Lcr1FsrAAAAAHW8GOw-UxMD-ka4_RPYDg70uIGl', { action: 'submit' });
+
+        const name = form.name.value;
+        const email = form.email.value;
+        const subject = form.subject.value;
+        const message = form.message.value;
+
+        const { error } = await supabase
+          .from('contact_messages')
+          .insert([{ name, email, subject, message, recaptcha_token: token }]);
+
+        if (error) {
+          alert("Erreur lors de l'envoi : " + error.message);
+        } else {
+          alert("Message envoyé avec succès !");
+          form.reset();
+        }
+      });
+    });
+  </script>
 </body>
-</html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        </div>
-    </section>
-
-    <!-- Contact Info Section -->
-    <section style="padding: 5rem 2rem; background-color: var(--beige);">
-        <div style="max-width: 1200px; margin: 0 auto;">
-            <h2 class="category-title">Nos coordonnées</h2>
-            
-            <div class="contact-info-grid">
-                <div class="contact-info-card">
-                    <h3 style="font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 1rem;">Adresse</h3>
-                    <p style="font-family: 'Montserrat', sans-serif;">123 Rue de la Boulangerie<br>75000 Paris, France</p>
-                </div>
-                
-                <div class="contact-info-card">
-                    <h3 style="font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 1rem;">Téléphone</h3>
-                    <p class="phone-number">01 23 45 67 89</p>
-                </div>
-                
-                <div class="contact-info-card">
-                    <h3 style="font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 1rem;">Email</h3>
-                    <p style="font-family: 'Montserrat', sans-serif;">contact@boulangeriegrolet.com</p>
-                </div>
-            </div>
-            
-  <section id="horaires" style="margin-top: 4rem; text-align: center;">
-    <h3 style="font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 1.5rem;">Horaires d'ouverture</h3>
-    <div style="display: inline-block; text-align: left; font-family: 'Montserrat', sans-serif;">
-        <p>Samedi : 07h00 – 21h30</p>
-        <p>Dimanche : Fermé</p>
-        <p>Lundi (Lundi de Pentecôte) : 07h00 – 21h30 <br><small>Les horaires peuvent être différents</small></p>
-        <p>Mardi : 07h00 – 21h30</p>
-        <p>Mercredi : 07h00 – 21h30</p>
-        <p>Jeudi : 07h00 – 21h30</p>
-        <p>Vendredi : 07h00 – 21h30</p>
-    </div>
-</section>
-
-
-            </div>
-        </div>
-    </section>
-
-
-    <!-- Map Section -->
-    <section style="padding: 0 2rem 5rem;">
-        <div style="max-width: 1200px; margin: 0 auto;">
-            <h2 class="category-title">Nous trouver</h2>
-            
-            <div class="map-container">
-                <!-- Intégration de Google Maps -->
-                 <iframe 
-  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2627.4150232502757!2d2.469583876368684!3d48.81214230396002!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e60dee6a9bcab7%3A0x6a388fc36b39c293!2sL&#39;%C3%A9toile%20Gourmande!5e0!3m2!1sfr!2sfr!4v1749276583189!5m2!1sfr!2sfr" 
-  width="100%" 
-  height="450" 
-  style="border:0; display:block;" 
-  allowfullscreen="" 
-  loading="lazy" 
-  referrerpolicy="no-referrer-when-downgrade">
-</iframe>
-
-
-            </div>
-        </div>
-    </section>
-
-    
-    
-         
-            
-
-
-
-
-
-            
-<footer class="grolet-footer">
-    <div class="footer-content">
-        <div class="footer-actions">
-            <button class="grolet-button primary">L'étoile Gourmande</button>
-     <button class="grolet-button secondary" onclick="window.location.href='suivi-de-commande.html'">Suivi de commande</button>
-
-
-        </div>
-        
-        <div class="footer-links">
-            <div class="links-column">
-                <h3>Nos créations</h3>
-                <ul>
-                    <li><a href="#">Pizzas</a></li>
-                    <li><a href="#">Burgers</a></li>
-                    <li><a href="#">Paninis</a></li>
-                </ul>
-            </div>
-            
-            <div class="links-column">
-                <h3>Nos Partenaires</h3>
-                <ul>
-                    <li><a href="#">Uber Eats</a></li>
-                    <li><a href="#">Deliveroo</a></li>
-                </ul>
-            </div>
-            
-            <div class="links-column">
-                <h3>Informations</h3>
-                <ul>
-                    <li><a href="Contact.html">Contact</a></li>
-                    <li><a href="#horaires">Horaires</a></li>
-                </ul>
-            </div>
-        </div>
-        
-        <div class="footer-social">
-            <a href="#" class="social-icon">
-                <img src="images/logo/Uber-Eats.png" alt="Instagram" class="social-image">
-            </a>
-            <a href="#" class="social-icon">
-                <img src="images/logo/deliveroo.png" alt="Deliveroo" class="social-image">
-            </a>
-            <a href="#" class="social-icon">
-                <img src="images/logo/instagram.png" alt="Instagram" class="social-image">
-            </a>
-        </div>
- 
-                  
-        <div class="footer-legal">
-            <p>© 2025 L'Etoile Gourmande | <a href="#">Mentions légales</a> | <a href="#">CGV</a></p>
-        </div>
-    </div>
-</footer>
-
-
- </body>
 </html>
