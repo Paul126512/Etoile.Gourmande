@@ -1,23 +1,28 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Contact | L'Etoile Gourmande</title>
 
   <!-- Polices Google -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap"
+    rel="stylesheet" />
 
   <!-- CSS principal -->
   <link rel="stylesheet" href="/css/Index-main.css" />
 
   <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    crossorigin="anonymous" />
 
   <!-- reCAPTCHA v3 Enterprise -->
-  <script src="https://www.google.com/recaptcha/enterprise.js?render=6Lcr1FsrAAAAAHW8GOw-UxMD-ka4_RPYDg70uIGl"></script>
+  <script src="https://www.google.com/recaptcha/enterprise.js?render=6Lcr1FsrAAAAAHW8GOw-UxMD-ka4_RPYDg70uIGl" async></script>
 
   <style>
     body {
@@ -34,38 +39,59 @@
     nav ul {
       display: flex;
       list-style: none;
+      padding-left: 0;
+      margin: 0;
     }
 
     nav ul li {
       margin-left: 30px;
     }
 
+    nav ul li:first-child {
+      margin-left: 0;
+    }
+
     nav ul li a {
       text-decoration: none;
       font-weight: 500;
-      transition: color 0.3s;
+      color: #000;
+      transition: color 0.3s ease;
+    }
+
+    nav ul li a:hover,
+    nav ul li a:focus {
+      color: #989898;
+      outline: none;
     }
 
     .contact-hero {
-      background: url('images/background-contact.jpg') center/cover;
+      background: url('images/background-contact.jpg') center/cover no-repeat;
       height: 300px;
       display: flex;
       align-items: center;
       justify-content: center;
       position: relative;
-      color: rgb(0, 0, 0);
+      color: #000;
       text-align: center;
+      padding: 0 20px;
     }
 
     .contact-hero-content {
       position: relative;
       z-index: 1;
+      max-width: 600px;
     }
 
     .contact-hero h1 {
       font-family: 'Playfair Display', serif;
       font-size: 2.5rem;
-      margin-bottom: 20px;
+      margin-bottom: 0.5rem;
+    }
+
+    .contact-hero p {
+      font-weight: 300;
+      font-size: 1.1rem;
+      margin: 0;
     }
 
     .contact-container {
@@ -77,7 +103,8 @@
       gap: 40px;
     }
 
-    .contact-info, .contact-form {
+    .contact-info,
+    .contact-form {
       padding: 30px;
     }
 
@@ -98,7 +125,11 @@
     .info-item i {
       margin-right: 15px;
       color: #000;
-      font-size: 1.2rem;
+      font-size: 1.3rem;
+      min-width: 30px;
+      text-align: center;
+      line-height: 1;
+      margin-top: 4px;
     }
 
     .info-item h3 {
@@ -109,6 +140,7 @@
     .info-item p {
       margin: 0;
       font-weight: 300;
+      line-height: 1.4;
     }
 
     .contact-form {
@@ -133,11 +165,13 @@
       border: 1px solid #ddd;
       border-radius: 4px;
       font-family: 'Montserrat', sans-serif;
+      font-size: 1rem;
+      resize: vertical;
+      box-sizing: border-box;
     }
 
     .form-group textarea {
       height: 150px;
-      resize: vertical;
     }
 
     .submit-btn {
@@ -147,12 +181,15 @@
       padding: 12px 30px;
       font-size: 1rem;
       cursor: pointer;
-      transition: background 0.3s;
+      transition: background 0.3s ease;
       border-radius: 4px;
+      display: inline-block;
     }
 
-    .submit-btn:hover {
+    .submit-btn:hover,
+    .submit-btn:focus {
       background: #989898;
+      outline: none;
     }
 
     .opening-hours {
@@ -179,22 +216,24 @@
       flex: 1;
       text-align: right;
       padding-right: 15px;
+      font-weight: 300;
     }
 
     .status {
       font-size: 0.85rem;
       width: 80px;
+      font-weight: 600;
     }
 
     .status.open {
-      color: #4CAF50;
+      color: #4caf50;
     }
 
     .status.closed {
-      color: #F44336;
+      color: #f44336;
     }
 
-    .status:before {
+    .status::before {
       content: "●";
       margin-right: 5px;
       font-size: 0.7rem;
@@ -206,6 +245,8 @@
       padding: 50px 20px 20px;
       font-family: 'Montserrat', sans-serif;
       text-align: center;
+      font-size: 0.9rem;
+      color: #666;
     }
 
     .footer-legal a {
@@ -224,163 +265,188 @@
     }
   </style>
 </head>
+
 <body>
   <header>
     <div class="logo">
-      <img src="images/logo/logo halal.png" alt="Logo Halal">
+      <img src="images/logo/logo halal.png" alt="Logo L'Etoile Gourmande" />
     </div>
-    <nav>
+    <nav aria-label="Menu principal">
       <ul>
         <li><a href="index.html">Accueil</a></li>
-        <li><a href="#">À propos</a></li>
-        <li><a href="Contact.html">Contact</a></li>
+        <li><a href="#" aria-disabled="true" tabindex="-1" title="Page en construction">À propos</a></li>
+        <li><a href="Contact.html" aria-current="page">Contact</a></li>
       </ul>
     </nav>
   </header>
 
-  <section class="contact-hero">
-    <div class="contact-hero-content">
-      <h1>Contactez-nous</h1>
-      <p>Nous sommes à votre écoute pour toutes vos questions</p>
-    </div>
-  </section>
-
-  <div class="contact-container">
-    <div class="contact-info">
-      <h2>Informations pratiques</h2>
-
-      <div class="info-item">
-        <i class="fas fa-map-marker-alt"></i>
-        <div>
-          <h3>Adresse</h3>
-          <p>30 Rue du Four<br>94100 Saint-Maur-des-Fossés</p>
-        </div>
+  <main>
+    <section class="contact-hero" aria-label="Bannière contact">
+      <div class="contact-hero-content">
+        <h1>Contactez-nous</h1>
+        <p>Nous sommes à votre écoute pour toutes vos questions</p>
       </div>
+    </section>
 
-      <div class="info-item">
-        <i class="fas fa-phone-alt"></i>
-        <div>
-          <h3>Téléphone</h3>
-          <p>09 84 54 48 86</p>
-        </div>
-      </div>
+    <section class="contact-container">
+      <article class="contact-info" aria-labelledby="infos-pratiques">
+        <h2 id="infos-pratiques">Informations pratiques</h2>
 
-      <div class="info-item">
-        <i class="fas fa-clock"></i>
-        <div>
-          <h3>Horaires d'ouverture</h3>
-          <div class="opening-hours">
-            <div class="day-row"><span class="day">Lundi</span><span class="hours">07:00 – 21:30</span><span class="status open">Ouvert</span></div>
-            <div class="day-row"><span class="day">Mardi</span><span class="hours">07:00 – 21:30</span><span class="status open">Ouvert</span></div>
-            <div class="day-row"><span class="day">Mercredi</span><span class="hours">07:00 – 21:30</span><span class="status open">Ouvert</span></div>
-            <div class="day-row"><span class="day">Jeudi</span><span class="hours">07:00 – 21:30</span><span class="status open">Ouvert</span></div>
-            <div class="day-row"><span class="day">Vendredi</span><span class="hours">07:00 – 21:30</span><span class="status open">Ouvert</span></div>
-            <div class="day-row"><span class="day">Samedi</span><span class="hours">07:00 – 21:30</span><span class="status open">Ouvert</span></div>
-            <div class="day-row"><span class="day">Dimanche</span><span class="hours">Fermé</span><span class="status closed">Fermé</span></div>
+        <div class="info-item">
+          <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+          <div>
+            <h3>Adresse</h3>
+            <address>30 Rue du Four<br />94100 Saint-Maur-des-Fossés</address>
           </div>
         </div>
-      </div>
 
-      <div class="info-item">
-        <i class="fas fa-info-circle"></i>
-        <div>
-          <h3>Informations importantes</h3>
-          <p>Commande pour retrait en magasin uniquement.</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="contact-form">
-      <h2>Envoyez-nous un message</h2>
-      <form id="contactForm">
-        <div class="form-group">
-          <label for="name">Nom complet</label>
-          <input type="text" id="name" name="name" required />
+        <div class="info-item">
+          <i class="fas fa-phone-alt" aria-hidden="true"></i>
+          <div>
+            <h3>Téléphone</h3>
+            <p><a href="tel:+33984544886" aria-label="Téléphoner au 09 84 54 48 86">09 84 54 48 86</a></p>
+          </div>
         </div>
 
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input type="email" id="email" name="email" required />
+        <div class="info-item">
+          <i class="fas fa-clock" aria-hidden="true"></i>
+          <div>
+            <h3>Horaires d'ouverture</h3>
+            <div class="opening-hours">
+              <div class="day-row"><span class="day">Lundi</span><span class="hours">07:00 – 21:30</span><span
+                  class="status open">Ouvert</span></div>
+              <div class="day-row"><span class="day">Mardi</span><span class="hours">07:00 – 21:30</span><span
+                  class="status open">Ouvert</span></div>
+              <div class="day-row"><span class="day">Mercredi</span><span class="hours">07:00 – 21:30</span><span
+                  class="status open">Ouvert</span></div>
+              <div class="day-row"><span class="day">Jeudi</span><span class="hours">07:00 – 21:30</span><span
+                  class="status open">Ouvert</span></div>
+              <div class="day-row"><span class="day">Vendredi</span><span class="hours">07:00 – 21:30</span><span
+                  class="status open">Ouvert</span></div>
+              <div class="day-row"><span class="day">Samedi</span><span class="hours">07:00 – 21:30</span><span
+                  class="status open">Ouvert</span></div>
+              <div class="day-row"><span class="day">Dimanche</span><span class="hours">Fermé</span><span
+                  class="status closed">Fermé</span></div>
+            </div>
+          </div>
         </div>
 
-        <div class="form-group">
-          <label for="subject">Sujet</label>
-          <input type="text" id="subject" name="subject" required />
+        <div class="info-item">
+          <i class="fas fa-info-circle" aria-hidden="true"></i>
+          <div>
+            <h3>Informations importantes</h3>
+            <p>Commande pour retrait en magasin uniquement.</p>
+          </div>
         </div>
+      </article>
 
-        <div class="form-group">
-          <label for="message">Message</label>
-          <textarea id="message" name="message" required></textarea>
-        </div>
+      <article class="contact-form" aria-labelledby="form-contact">
+        <h2 id="form-contact">Envoyez-nous un message</h2>
+        <form id="contactForm" aria-describedby="formMessage" novalidate>
+          <div class="form-group">
+            <label for="name">Nom complet</label>
+            <input type="text" id="name" name="name" required aria-required="true" />
+          </div>
 
-        <button type="submit" class="submit-btn">Envoyer le message</button>
-      </form>
-    </div>
-  </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required aria-required="true" />
+          </div>
 
-  <footer class="grolet-footer">
+          <div class="form-group">
+            <label for="subject">Sujet</label>
+            <input type="text" id="subject" name="subject" required aria-required="true" />
+          </div>
+
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" required aria-required="true"></textarea>
+          </div>
+
+          <button type="submit" class="submit-btn">Envoyer le message</button>
+        </form>
+
+        <p id="formMessage" role="alert" aria-live="polite" style="margin-top: 10px;"></p>
+      </article>
+    </section>
+  </main>
+
+  <footer class="grolet-footer" role="contentinfo">
     <div class="footer-legal">
-      <p>© 2025 L'Etoile Gourmande | <a href="#">Mentions légales</a> | <a href="#">CGV</a></p>
+      <p>© 2025 L'Etoile Gourmande | <a href="#" aria-label="Mentions légales">Mentions légales</a> | <a href="#" aria-label="Politique de confidentialité">Politique de confidentialité</a></p>
     </div>
   </footer>
 
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('contactForm');
+      const formMessage = document.getElementById('formMessage');
 
-  
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
 
-<form id="contactForm" class="space-y-4">
-  <input type="text" id="name" name="name" placeholder="Nom" required />
-  <input type="email" id="email" name="email" placeholder="Email" required />
-  <input type="text" id="subject" name="subject" placeholder="Sujet" required />
-  <textarea id="message" name="message" placeholder="Message" required></textarea>
-  <button type="submit">Envoyer</button>
-</form>
+        // Reset message
+        formMessage.textContent = '';
+        formMessage.style.color = 'black';
 
-<p id="formMessage" class="text-sm mt-2"></p>
+        // Basic HTML5 validation fallback
+        if (!form.checkValidity()) {
+          formMessage.textContent = 'Merci de remplir tous les champs correctement.';
+          formMessage.style.color = 'red';
+          return;
+        }
 
-<!-- ✅ reCAPTCHA Enterprise V3 -->
-<script src="https://www.google.com/recaptcha/enterprise.js?render=6Lcr1FsrAAAAAHW8GOw-UxMD-ka4_RPYDg70uIGl"></script>
+        // Récupération des valeurs
+        const formData = {
+          name: form.name.value.trim(),
+          email: form.email.value.trim(),
+          subject: form.subject.value.trim(),
+          message: form.message.value.trim(),
+        };
 
-<!-- ✅ Script de soumission -->
-<script type="module">
-  document.getElementById('contactForm').addEventListener('submit', async function (e) {
-    e.preventDefault();
+        if (!formData.name || !formData.email || !formData.subject || !formData.message) {
+          formMessage.textContent = 'Tous les champs sont obligatoires.';
+          formMessage.style.color = 'red';
+          return;
+        }
 
-    const formMessage = document.getElementById('formMessage');
-    formMessage.textContent = 'Envoi en cours...';
+        // Exécute reCAPTCHA Enterprise
+        try {
+          const token = await grecaptcha.enterprise.execute('6Lcr1FsrAAAAAHW8GOw-UxMD-ka4_RPYDg70uIGl', { action: 'contact_form' });
 
-    try {
-      // ✅ Exécuter reCAPTCHA v3 Enterprise
-      const token = await grecaptcha.enterprise.execute('6Lcr1FsrAAAAAHW8GOw-UxMD-ka4_RPYDg70uIGl', {
-        action: 'submit',
+          formData['g-recaptcha-response'] = token;
+
+          // Envoi via fetch (assure-toi que l'URL est correcte)
+          const response = await fetch('https://letoilegourmande.fr/api/contact.js', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
+          });
+
+          if (!response.ok) {
+            throw new Error(`Erreur serveur: ${response.statusText}`);
+          }
+
+          const data = await response.json();
+
+          if (data.success) {
+            formMessage.textContent = 'Merci pour votre message, nous vous répondrons rapidement.';
+            formMessage.style.color = 'green';
+            form.reset();
+          } else {
+            formMessage.textContent = data.message || 'Une erreur est survenue. Veuillez réessayer.';
+            formMessage.style.color = 'red';
+          }
+        } catch (error) {
+          formMessage.textContent = 'Erreur lors de l’envoi du message. Veuillez réessayer plus tard.';
+          formMessage.style.color = 'red';
+          console.error(error);
+        }
       });
+    });
+  </script>
+</body>
 
-      // ✅ Récupérer les valeurs du formulaire
-      const name = document.getElementById('name').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const subject = document.getElementById('subject').value.trim();
-      const message = document.getElementById('message').value.trim();
-
-      // ✅ Envoyer à l’API
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, subject, message, token }),
-      });
-
-      const result = await response.json();
-
-      if (response.ok) {
-        formMessage.textContent = 'Message envoyé avec succès !';
-        formMessage.className = 'text-green-500 text-sm mt-2';
-        document.getElementById('contactForm').reset();
-      } else {
-        formMessage.textContent = result.message || 'Erreur lors de l’envoi.';
-        formMessage.className = 'text-red-500 text-sm mt-2';
-      }
-    } catch (error) {
-      console.error('Erreur du formulaire :', error);
-      formMessage.textContent = 'Une erreur est survenue.';
-      formMessage.className = 'text-red-500 text-sm mt-2';
-    }
-  });
-</script>
+</html>
