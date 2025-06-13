@@ -3,188 +3,359 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Boulangerie | L'Etoile Gourmande</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/css/Index-main.css">
-
-
+    <title>Suivi de commande — L'équipe L'étoile Gourmande</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: white;
+            color: black;
+            margin: 0;
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 600px;
+            width: 100%;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-weight: 300;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+        
+        .search-form {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .search-form input {
+            padding: 10px 15px;
+            border: 1px solid black;
+            width: 70%;
+            margin-right: 10px;
+        }
+        
+        .search-form button {
+            padding: 10px 20px;
+            background-color: black;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .order-card {
+            border: 1px solid black;
+            padding: 30px;
+            margin-bottom: 20px;
+            display: none; /* caché par défaut */
+        }
+        
+        .section {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .section-title {
+            font-weight: 500;
+            margin-bottom: 15px;
+            letter-spacing: 0.5px;
+        }
+        
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        
+        .signature {
+            text-align: right;
+            font-style: italic;
+            margin-top: 30px;
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 3px 10px;
+            background-color: black;
+            color: white;
+            font-size: 0.9em;
+        }
+        
+        .error {
+            color: red;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .loading {
+            text-align: center;
+            display: none;
+        }
+    </style>
+</head>
 <body>
-<header>
-    <div class="logo">
-        <img src="images/logo/logo halal.png" alt="Logo Halal">
+    <div class="container">
+        <div class="header">
+            <h1>SUIVI DE COMMANDE</h1>
+            <p>  — L'équipe L'étoile Gourmande —</p>
+        </div>
+        
+        <div class="search-form">
+            <input type="email" id="email-input" placeholder="Entrez votre email pour suivre votre commande">
+            <button onclick="searchOrder()">Rechercher</button>
+        </div>
+        
+        <div class="loading" id="loading">
+            Recherche en cours...
+        </div>
+        
+        <div class="error" id="error-message"></div>
+        
+        <div class="order-card" id="order-card">
+            <div class="section">
+                <div><strong>N° Commande:</strong> <span id="order-number"></span></div>
+                <div><strong>Date:</strong> <span id="order-date"></span></div>
+                <div><strong>Statut:</strong> <span class="status" id="order-status"></span></div>
+                <div><strong>Total:</strong> <span id="order-total"></span> €</div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">DÉTAILS DU CLIENT</div>
+                <div><strong>Nom:</strong> <span id="client-name"></span></div>
+                <div><strong>Prénom:</strong> <span id="client-firstname"></span></div>
+                <div><strong>Email:</strong> <span id="client-email"></span></div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">PRODUITS</div>
+                <div id="order-products"></div>
+            </div>
+            
+            <div class="signature">
+                Merci pour votre confiance.<br>
+                — L'équipe L'étoile Gourmande —
+            </div>
+        </div>
     </div>
 
-    <nav>
-        <ul>
-            <li><a href="#">Accueil</a></li>
-            <li><a href="#nos-creations">Nos Créations</a></li>
-            <li><a href="#">À propos</a></li>
-            <li><a href="Contact.html">Contact</a></li>
-            
-       
-        </ul>
-    </nav>
-</header>
 
-<section class="hero">
-    <div class="hero-gallery"></div>
+
+
+
+
+    <script>
+    // Initialisation de Supabase
+    document.addEventListener('DOMContentLoaded', function() {
+        const supabaseUrl = 'https://hawlnecxjfdhgnbltovh.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhhd2xuZWN4amZkaGduYmx0b3ZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk1NjQ1NTcsImV4cCI6MjA2NTE0MDU1N30.j4_ZR22bV7acZabBIduYhoLZlITwRYu6ToBF8MYvj5o';
+        window.supabase = supabase.createClient(supabaseUrl, supabaseKey);
+    });
+
+    async function searchOrder() {
+        // Vérification initiale
+        if (!window.supabase) {
+            showError('Erreur d\'initialisation, veuillez recharger la page');
+            return;
+        }
+
+        const email = document.getElementById('email-input').value.trim();
+        const errorElement = document.getElementById('error-message');
+        const loadingElement = document.getElementById('loading');
+        const orderCard = document.getElementById('order-card');
+        
+        // Réinitialisation UI
+        resetUI(errorElement, orderCard, loadingElement);
+        
+        if (!validateEmail(email)) {
+            showError('Veuillez entrer une adresse email valide', errorElement, loadingElement);
+            return;
+        }
+        
+        try {
+            loadingElement.style.display = 'block';
+            const { data, error } = await window.supabase
+                .from('orders')
+                .select('*')
+                .eq('email', email)
+                .order('created_at', { ascending: false });
+            
+            loadingElement.style.display = 'none';
+            
+            if (error) throw error;
+            if (!data || data.length === 0) {
+                showError('Aucune commande trouvée pour cet email', errorElement);
+                return;
+            }
+            
+            displayOrder(data[0]);
+            orderCard.style.display = 'block';
+            
+        } catch (error) {
+            console.error('Erreur:', error);
+            showError('Erreur lors de la recherche : ' + error.message, errorElement, loadingElement);
+        }
+    }
+
+    // Fonctions utilitaires
+    function resetUI(errorElement, orderCard, loadingElement) {
+        errorElement.textContent = '';
+        errorElement.style.color = 'red';
+        orderCard.style.display = 'none';
+        loadingElement.style.display = 'none';
+    }
+
+    function showError(message, errorElement, loadingElement = null) {
+        errorElement.textContent = message;
+        if (loadingElement) loadingElement.style.display = 'none';
+    }
+
+    function validateEmail(email) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    // Affichage de la commande
+    function displayOrder(order) {
+        console.log('Données de commande:', order); // Pour débogage
+
+        // Formatage
+        const formatDate = (dateString) => {
+            if (!dateString) return 'N/A';
+            return new Date(dateString).toLocaleDateString('fr-FR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
+        };
+
+        const formatPrice = (price) => {
+            return price ? `${parseFloat(price).toFixed(2)} €` : 'N/A';
+        };
+
+        // Informations de base
+        document.getElementById('order-number').textContent = order.numero_cmd || 'CMD-' + (order.id || '');
+        document.getElementById('order-date').textContent = formatDate(order.created_at);
+        document.getElementById('order-status').textContent = order.status || 'En traitement';
+        document.getElementById('order-total').textContent = formatPrice(order.total_price || order.total);
+
+        // Informations client
+        document.getElementById('client-name').textContent = order.name || 'Non spécifié';
+        document.getElementById('client-firstname').textContent = order.prenom || 'Non spécifié';
+        document.getElementById('client-email').textContent = order.email || 'Non spécifié';
+
+        // Affichage des produits
+        displayProducts(order);
+    }
+
+    function displayProducts(order) {
+        const productsElement = document.getElementById('order-products');
+        productsElement.innerHTML = '';
+
+        if (!order.produits) {
+            productsElement.innerHTML = '<div class="no-products">Aucun détail produit disponible</div>';
+            return;
+        }
+
+        try {
+            const produits = typeof order.produits === 'string' 
+                ? JSON.parse(order.produits) 
+                : order.produits;
+
+            if (Array.isArray(produits)) {
+                produits.forEach(item => addProductItem(item));
+            } 
+            else if (typeof produits === 'object') {
+                // Gestion des objets simples ou format {produit1: {}, produit2: {}}
+                if (produits.quantity || produits.name || produits.nom) {
+                    addProductItem(produits);
+                } else {
+                    Object.values(produits).forEach(item => addProductItem(item));
+                }
+            }
+
+        } catch (e) {
+            console.error("Erreur produits:", e);
+            productsElement.innerHTML = '<div class="error">Format des produits invalide</div>';
+        }
+
+        function addProductItem(item) {
+            const productDiv = document.createElement('div');
+            productDiv.className = 'product-item';
+            
+            const productName = item.nom || item.name || 'Produit';
+            const quantity = item.quantity || 1;
+            const price = item.price ? `${parseFloat(item.price).toFixed(2)} €` : '';
+            
+            productDiv.innerHTML = `
+                <div class="product-header">
+                    <span class="product-quantity">${quantity} ×</span>
+                    <span class="product-name">${productName}</span>
+                </div>
+                ${price ? `<div class="product-price">${price}</div>` : ''}
+                ${item.description ? `<div class="product-desc">${item.description}</div>` : ''}
+            `;
+            
+            productsElement.appendChild(productDiv);
+        }
+    }
+</script>
+
+<style>
+    .product-item {
+        margin-bottom: 15px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #eee;
+    }
     
-    <div class="hero-content">
-        <div class="stars-top">
-            <div>✻</div>
-            <div>✻</div>
-            <div>✻</div>
-        </div>
+    .product-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 5px;
+    }
     
-        <h1 class="title">L'Étoile Gourmande</h1>
-        <br>
-        <div style="border: 0px solid; width: 300px; margin: auto;">
-            <div class="subtitle">Pâtisserie  I Snacking</div>
-
-            <div class="decor">
-                <img src="images/logo/blé.png" class="right-icon" />
-                <div class="decor-line"></div>
-                <span class="phone-number">09 84 54 48 86</span>
-                <div class="decor-line"></div>
-                <img src="images/logo/blé.png" class="wheat-icon" />
-            </div>
-
-            <p class="intro-text">
-                30 Rue du Four Saint-Maur-des-Fossés 
-            </p>
-
-            <p class="intro-texte">
-                Commande pour retrait en magasin uniquement.
-            </p>
-        </div>
-
-        <!-- Flèche animée pour scroller vers la section suivante -->
-        <a href="#nos-creations" class="scroll-down-arrow" id="scroll-down-btn">
-            ↓
-        </a>
-    </div>
-</section>
-
-
-<section class="image-categories" id="nos-creations">
-    <h2 class="category-title">Nos Créations</h2>
-    <div class="grid">
-        <div class="image-category" onclick="location.href='pizza.html'">
-            <img src="images/Pizzas/pizza_margherita.jpg" alt="Pizza Margherita" />
-            <span>Pizzas</span>
-        </div>
-        <div class="image-category" onclick="location.href='tacos.html'">
-            <img src="images/Tacos/Tacos.png" alt="Tacos" />
-            <span>Tacos</span>
-        </div>
-        <div class="image-category" onclick="location.href='burgers.html'">
-            <img src="images/Burgers/Beef&Chicken-Burger.png" alt="Burgers" />
-            <span>Burgers</span>
-        </div>
-        <div class="image-category" onclick="location.href='bagels.html'">
-            <img src="images/Bagels/Bagels.png" alt="Bagels" />
-            <span>Bagels</span>
-        </div>
-        <div class="image-category" onclick="location.href='Sandwitch-chaud.html'">
-            <img src="images/Sandwitchs/Sandwitch.png" alt="Sandwitch Chaud" />
-            <span>Sandwitchs Chauds</span>
-        </div>
-        <div class="image-category" onclick="location.href='Sandwitch-froids.html'">
-            <img src="images/Sandwitchs/Sandwitchs-chauds.png" alt="Sandwitch-froids" />
-            <span>Sandwitchs Froids</span>
-        </div>
-        <div class="image-category" onclick="location.href='Salade.html'">
-            <img src="images/Salades/Salades.png" alt="Salade" />
-            <span>Salades</span>
-        </div>
-          <div class="image-category" onclick="location.href='Pates.html'">
-            <img src="images/Pates/Pates.png" alt="Pates" />
-            <span>Pates</span>
-        </div>
-    </div> <!-- fermeture correcte ici -->
-</section>
+    .product-quantity {
+        font-weight: bold;
+    }
+    
+    .product-name {
+        font-weight: 500;
+    }
+    
+    .product-price {
+        color: #555;
+    }
+    
+    .product-desc {
+        color: #777;
+        font-size: 0.9em;
+        margin-top: 5px;
+    }
+    
+    .no-products {
+        color: #666;
+        font-style: italic;
+    }
+    
+    .error {
+        color: #d32f2f;
+    }
+</style>
 
 
-
-<!-- Bannière Cookies style Cédric Grolet -->
-<div class="cookie-banner">
-    <div class="cookie-header">
-        <svg class="cookie-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3Z" stroke="#111111" stroke-width="1.5"/>
-            <path d="M9 10C9.55228 10 10 9.55228 10 9C10 8.44772 9.55228 8 9 8C8.44772 8 8 8.44772 8 9C8 9.55228 8.44772 10 9 10Z" fill="#111111"/>
-            <path d="M16 15C16.5523 15 17 14.5523 17 14C17 13.4477 16.5523 13 16 13C15.4477 13 15 13.4477 15 14C15 14.5523 15.4477 15 16 15Z" fill="#111111"/>
-            <path d="M10.5 12.5L13.5 11" stroke="#111111" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
-        <div class="cookie-title">Vie privée</div>
-    </div>
-    <div class="cookie-text">
-        Nous accordons une grande importance à votre vie privée. Nous utilisons des cookies pour personnaliser votre expérience et rendre votre visite plus douce. 
-        <a href="policy.html" class="privacy-link">Consultez notre politique de confidentialité</a>.
-    </div>
-
-    <div class="cookie-buttons">
-        <button class="cookie-btn cookie-btn-accept">Accepter</button>
-        <button class="cookie-btn cookie-btn-reject">Refuser</button>  
-    </div>
-</div>
-
-<script src="index.js"></script>
-
-<footer class="grolet-footer">
-    <div class="footer-content">
-        <div class="footer-actions">
-            <button class="grolet-button primary">L'étoile Gourmande</button>
-            <button class="grolet-button secondary">Suivi de commande</button>
-        </div>
-        
-        <div class="footer-links">
-            <div class="links-column">
-                <h3>Nos créations</h3>
-                <ul>
-                    <li><a href="#">Pains signature</a></li>
-                    <li><a href="#">Viennoiseries</a></li>
-                    <li><a href="#">Pâtisseries</a></li>
-                    <li><a href="#">Collections saisonnières</a></li>
-                </ul>
-            </div>
-            
-            <div class="links-column">
-                <h3>Nos Partenaires</h3>
-                <ul>
-                    <li><a href="#">Uber Eats</a></li>
-                    <li><a href="#">Deliveroo</a></li>
-                </ul>
-            </div>
-            
-            <div class="links-column">
-                <h3>Informations</h3>
-                <ul>
-                    <li><a href="Contact.html">Contact</a></li>
-                    <li><a href="#">Horaires</a></li>
-                    <li><a href="#">Recrutement</a></li>
-                </ul>
-            </div>
-        </div>
-        
-        <div class="footer-social">
-            <a href="#" class="social-icon">
-                <img src="images/logo/Uber-Eats.png" alt="Instagram" class="social-image">
-            </a>
-            <a href="#" class="social-icon">
-                <img src="images/logo/deliveroo.png" alt="Deliveroo" class="social-image">
-            </a>
-            <a href="#" class="social-icon">
-                <img src="images/logo/instagram.png" alt="Instagram" class="social-image">
-            </a>
-        </div>
-        
-        <div class="footer-legal">
-            <p>© 2025 L'Etoile Gourmande | <a href="#">Mentions légales</a> | <a href="#">CGV</a></p>
-        </div>
-    </div>
- </footer>
-     <script>(function(){var t=document.createElement("script");t.src="https://va.vercel-insights.com/v1/script.js";t.defer=!0,document.body.appendChild(t)})()</script>
- </body>
-</html>
