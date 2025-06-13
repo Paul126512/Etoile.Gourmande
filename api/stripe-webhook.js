@@ -1,4 +1,3 @@
-import { buffer } from 'micro';
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 
@@ -10,6 +9,15 @@ export const config = {
     bodyParser: false, // nécessaire pour récupérer le buffer brut de la requête
   },
 };
+
+// Fonction pour récupérer le buffer brut sans dépendance externe
+async function getRawBody(req) {
+  const chunks = [];
+  for await (const chunk of req) {
+    chunks.push(chunk);
+  }
+  return Buffer.concat(chunks);
+}
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -25,7 +33,7 @@ export default async function handler(req, res) {
 
   let buf;
   try {
-    buf = await buffer(req);
+    buf = await getRawBody(req);
   } catch (err) {
     console.error('Erreur lecture buffer:', err);
     return res.status(400).send('Invalid request body');
@@ -50,7 +58,6 @@ export default async function handler(req, res) {
     }
 
     try {
-      // Vérifier que la commande existe avec ce stripe_session_id
       const { data: order, error: fetchError } = await supabase
         .from('orders')
         .select('*')
@@ -59,13 +66,11 @@ export default async function handler(req, res) {
 
       if (fetchError) {
         console.error('Erreur récupération commande avant update:', fetchError);
-        // Peut-être que la commande n'existe pas, on renvoie une 404 ou 200 selon ton besoin
         return res.status(404).send('Commande non trouvée pour cette session Stripe');
       }
 
       console.log('Commande trouvée:', order);
 
-      // Mettre à jour la commande en "completed"
       const { error: updateError } = await supabase
         .from('orders')
         .update({ status: 'completed' })
