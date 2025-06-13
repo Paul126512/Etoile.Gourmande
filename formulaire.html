@@ -511,7 +511,7 @@ document.addEventListener('DOMContentLoaded', () => {
             };
 
             // Envoi au serveur
-            const response = await fetch('api/enregistrer-commande', {
+            const response = await fetch('/api/commande', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(commandeData)
