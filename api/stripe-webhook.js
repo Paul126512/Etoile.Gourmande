@@ -19,83 +19,84 @@ async function getRawBody(req) {
 }
 
 export default async function handler(req, res) {
+  if (req.method !== 'POST') {
+    console.warn('⚠️ Méthode non autorisée:', req.method);
+    return res.status(405).end('Method Not Allowed');
+  }
+
+  const sig = req.headers['stripe-signature'];
+  if (!sig) {
+    console.error('⚠️ Pas de signature Stripe dans les headers');
+    return res.status(400).end('Missing Stripe signature');
+  }
+
+  let buf;
   try {
-    if (req.method !== 'POST') {
-      console.log('⚠️ Méthode non autorisée:', req.method);
-      return res.status(405).send('Method Not Allowed');
+    buf = await getRawBody(req);
+    console.log('Buffer brut reçu, taille:', buf.length);
+  } catch (err) {
+    console.error('Erreur lecture buffer:', err);
+    return res.status(400).end('Invalid request body');
+  }
+
+  let event;
+  try {
+    event = stripe.webhooks.constructEvent(buf, sig, process.env.STRIPE_WEBHOOK_SECRET.trim());
+    console.log('Webhook Stripe reçu:', event.type);
+  } catch (err) {
+    console.error('⚠️ Signature webhook invalide:', err.message);
+    return res.status(400).end(`Webhook Error: ${err.message}`);
+  }
+
+  if (event.type === 'checkout.session.completed') {
+    const session = event.data.object;
+    console.log('Session Stripe ID:', session.id);
+
+    if (session.payment_status !== 'paid') {
+      console.log(`Paiement non finalisé pour session ${session.id}, status: ${session.payment_status}`);
+      return res.status(200).end('Paiement non finalisé');
     }
 
-    const sig = req.headers['stripe-signature'];
-    if (!sig) {
-      console.error('⚠️ Pas de signature Stripe dans les headers');
-      return res.status(400).send('Missing Stripe signature');
-    }
-
-    let buf;
+    let order;
     try {
-      buf = await getRawBody(req);
-      console.log('Buffer brut reçu, taille:', buf.length);
-    } catch (err) {
-      console.error('Erreur lecture buffer:', err);
-      return res.status(400).send('Invalid request body');
-    }
-
-    let event;
-    try {
-      event = stripe.webhooks.constructEvent(buf, sig, process.env.STRIPE_WEBHOOK_SECRET);
-      console.log('Webhook Stripe reçu:', event.type);
-    } catch (err) {
-      console.error('⚠️ Signature webhook invalide:', err.message);
-      return res.status(400).send(`Webhook Error: ${err.message}`);
-    }
-
-    if (event.type === 'checkout.session.completed') {
-      const session = event.data.object;
-      console.log('Session Stripe ID:', session.id);
-
-      if (session.payment_status !== 'paid') {
-        console.log(`Paiement non finalisé pour session ${session.id}, status: ${session.payment_status}`);
-        return res.status(200).send('Paiement non finalisé');
-      }
-
-      // Utiliser maybeSingle() pour éviter erreur si pas trouvé
-      const { data: order, error: fetchError } = await supabase
+      const { data, error } = await supabase
         .from('orders')
         .select('*')
         .eq('stripe_session_id', session.id)
         .maybeSingle();
 
-      if (fetchError) {
-        console.error('Erreur récupération commande:', fetchError);
-        return res.status(500).send('Erreur récupération commande');
+      if (error) {
+        console.error('Erreur récupération commande:', error);
+        return res.status(500).end('Erreur récupération commande');
       }
 
-      if (!order) {
-        console.warn(`Commande non trouvée pour session Stripe ${session.id}`);
-        // Ici tu peux choisir de créer la commande, ou juste retourner 404
-        return res.status(404).send('Commande non trouvée pour cette session Stripe');
-      }
-
-      console.log('Commande trouvée:', order);
-
-      const { error: updateError } = await supabase
-        .from('orders')
-        .update({ status: 'completed' })
-        .eq('stripe_session_id', session.id);
-
-      if (updateError) {
-        console.error('Erreur mise à jour commande Supabase:', updateError);
-        return res.status(500).send('Erreur mise à jour commande');
-      }
-
-      console.log(`Commande Stripe session ${session.id} mise à jour en "completed" ✅`);
-      return res.status(200).send('Commande mise à jour');
-    } else {
-      console.log('Événement Stripe ignoré:', event.type);
-      return res.status(200).send('Événement ignoré');
+      order = data;
+    } catch (e) {
+      console.error('Erreur dans la récupération de la commande:', e);
+      return res.status(500).end('Erreur serveur');
     }
-  } catch (err) {
-    console.error('Erreur globale inattendue:', err);
-    return res.status(500).send('Erreur serveur inattendue');
+
+    if (!order) {
+      console.warn(`Commande non trouvée pour session Stripe ${session.id}`);
+      return res.status(404).end('Commande non trouvée pour cette session Stripe');
+    }
+
+    console.log('Commande trouvée:', order);
+
+    const { error: updateError } = await supabase
+      .from('orders')
+      .update({ status: 'completed' })
+      .eq('stripe_session_id', session.id);
+
+    if (updateError) {
+      console.error('Erreur mise à jour commande Supabase:', updateError);
+      return res.status(500).end('Erreur mise à jour commande');
+    }
+
+    console.log(`Commande Stripe session ${session.id} mise à jour en "completed" ✅`);
+    return res.status(200).end('Commande mise à jour');
+  } else {
+    console.log('Événement Stripe ignoré:', event.type);
+    return res.status(200).end('Événement ignoré');
   }
 }
