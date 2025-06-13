@@ -18,14 +18,18 @@ export default async function handler(req, res) {
   const { name, email } = client;
 
   // Fusionner tous les produits en un seul tableau
-  const produits = [
-    ...(Array.isArray(pizzas) ? pizzas : []),
-    ...(Array.isArray(boissons) ? boissons : []),
-    ...(Array.isArray(burgers) ? burgers : []),
-    ...(Array.isArray(desserts) ? desserts : []),
-    ...(Array.isArray(supplements) ? supplements : []),
-    ...(Array.isArray(menus) ? menus : [])
-  ];
+const commandeData = {
+    client: { name, email },
+    pizzas: Array.isArray(pizzas) ? pizzas : [],
+    burgers: Array.isArray(burgers) ? burgers : [],
+    bagels: Array.isArray(bagels) ? bagels : [], // <-- ici pour les bagels
+    menus: Array.isArray(menus) ? menus : [],
+    boissons: Array.isArray(boissons) ? boissons : [],
+    desserts: Array.isArray(desserts) ? desserts : [],
+    supplements: panier.flatMap(item => item.supplements || []),
+    total: panier.reduce((sum, item) => sum + (item.prix * item.quantite), 0)
+};
+
 
   if (produits.length === 0) {
     return res.status(400).json({ message: 'Votre panier est vide.' });
