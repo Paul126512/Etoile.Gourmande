@@ -496,28 +496,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             // Préparation des données par catégorie, avec bagels inclus
- const commandeData = {
-    client: { name, email },
-    pizzas: panier.filter(item => item.type === 'pizza'),
-    burgers: panier.filter(item => item.type === 'burger'),
-    bagels: panier.filter(item => item.type === 'bagel'),
-    tacos: panier.filter(item => item.type === 'tacos'), // 👈  ici tacos
-    menus: panier.filter(item => item.type === 'menu'),  // 👈  ici en menu pas encore foncionelle
-    boissons: panier.filter(item => item.type === 'boisson'),
-    desserts: panier.filter(item => item.type === 'dessert'),
-    supplements: panier.flatMap(item => item.supplements || []),
-    total: panier.reduce((sum, item) => sum + (item.prix * item.quantite), 0)
+const commandeData = {
+  client: { name, email },
+  pizzas: panier.filter(item => item.type === 'pizza'),
+  burgers: panier.filter(item => item.type === 'burger'),
+  bagels: panier.filter(item => item.type === 'bagel'),
+  tacos: panier.filter(item => item.type === 'tacos'),
+  menus: panier.filter(item => item.type === 'menu'),
+  boissons: panier.filter(item => item.type === 'boisson'),
+  desserts: panier.filter(item => item.type === 'dessert'),
+  supplements: panier.filter(item => item.type === 'supplement'),  // <-- change ici
+  total: panier.reduce((sum, item) => sum + (item.prix * item.quantite), 0)
 };
 
 
             // Envoi au serveur
-            const response = await fetch('/api/enregistrer-commande', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(commandeData)
-            });
+const response = await fetch('/api/enregistrer-commande', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(commandeData)
+});
 
-            if (!response.ok) throw new Error('Erreur serveur');
+if (!response.ok) {
+    const errorBody = await response.json();
+    throw new Error(errorBody.message || 'Erreur serveur');
+}
+
+const result = await response.json();
+
+          
 
             const result = await response.json();
 
