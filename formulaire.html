@@ -381,10 +381,7 @@ button[type="submit"].valid {
 
 
 
-
-
-
-<script>
+  <script>
 document.addEventListener('DOMContentLoaded', () => {
     const listePanier = document.getElementById('liste-panier');
     const commandeTotal = document.getElementById('commande-total');
@@ -498,12 +495,13 @@ document.addEventListener('DOMContentLoaded', () => {
         message.style.color = 'green';
 
         try {
-            // Préparation des données par catégorie
+            // Préparation des données par catégorie, avec bagels inclus
             const commandeData = {
                 client: { name, email },
                 pizzas: panier.filter(item => item.type === 'pizza'),
                 burgers: panier.filter(item => item.type === 'burger'),
-                menus: panier.filter(item => item.type === 'menu'), // Menus spécifiques
+                bagels: panier.filter(item => item.type === 'bagel'),  // Ajout bagels ici
+                menus: panier.filter(item => item.type === 'menu'), 
                 boissons: panier.filter(item => item.type === 'boisson'),
                 desserts: panier.filter(item => item.type === 'dessert'),
                 supplements: panier.flatMap(item => item.supplements || []),
@@ -540,3 +538,7 @@ document.addEventListener('DOMContentLoaded', () => {
     afficherPanier();
 });
 </script>
+
+
+ </body>
+</html>
