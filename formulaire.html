@@ -511,7 +511,7 @@ document.addEventListener('DOMContentLoaded', () => {
             };
 
             // Envoi au serveur
-            const response = await fetch('/api/commande', {
+            const response = await fetch('/api/enregistrer-commande', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(commandeData)
@@ -527,7 +527,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 message.textContent = 'Commande enregistrée avec succès!';
                 localStorage.removeItem('panier');
-                setTimeout(() => window.location.href = '/merci.html', 2000);
+                setTimeout(() => window.location.href = '/success.html', 2000);
             }
         } catch (error) {
             console.error('Erreur:', error);
