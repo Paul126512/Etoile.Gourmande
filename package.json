@@ -15,10 +15,11 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
+    "@supabase/supabase-js": "^2.42.5",
+    "@vercel/speed-insights": "^1.2.0",
     "cors": "^2.8.5",
     "express": "^5.1.0",
-    "stripe": "^18.1.1",
-    "@supabase/supabase-js": "^2.42.5",
-    "@vercel/speed-insights": "^1.2.0"
+    "micro": "^10.0.1",
+    "stripe": "^18.1.1"
   }
 }
