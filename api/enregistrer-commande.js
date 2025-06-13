@@ -9,24 +9,23 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Méthode non autorisée. Utilisez POST.' });
   }
 
-  const { name, email, panierPizzas, panierBoissons, panierBurgers, panierDesserts, panierBaseCremes, panierTacos, panierBagels } = req.body;
-
+  const { name, email, panierPizzas, panierBoissons, panierBurgers, panierDesserts, panierBaseCremes, panierTacos, panierBagels, panierMenus } = req.body;
 
   if (!name || !email) {
     return res.status(400).json({ message: 'Nom et email obligatoires.' });
   }
 
-  // Récupérer tous les paniers, s'assurer que ce sont des tableaux
-const produits = [
-  ...(Array.isArray(panierPizzas) ? panierPizzas : []),
-  ...(Array.isArray(panierBoissons) ? panierBoissons : []),
-  ...(Array.isArray(panierBurgers) ? panierBurgers : []),
-  ...(Array.isArray(panierDesserts) ? panierDesserts : []),
-  ...(Array.isArray(panierBaseCremes) ? panierBaseCremes : []),
-  ...(Array.isArray(panierTacos) ? panierTacos : []),
-  ...(Array.isArray(panierBagels) ? panierBagels : []), // 👈 ici Bagels
-];
-
+  // Récupérer tous les paniers
+  const produits = [
+    ...(Array.isArray(panierPizzas) ? panierPizzas : []),
+    ...(Array.isArray(panierBoissons) ? panierBoissons : []),
+    ...(Array.isArray(panierBurgers) ? panierBurgers : []),
+    ...(Array.isArray(panierDesserts) ? panierDesserts : []),
+    ...(Array.isArray(panierBaseCremes) ? panierBaseCremes : []),
+    ...(Array.isArray(panierTacos) ? panierTacos : []),
+    ...(Array.isArray(panierBagels) ? panierBagels : []),
+    ...(Array.isArray(panierMenus) ? panierMenus : []) // Ajout des menus
+  ];
 
   if (produits.length === 0) {
     return res.status(400).json({ message: 'Votre panier est vide.' });
@@ -70,26 +69,45 @@ const produits = [
       client = newClient;
     }
 
-    // Préparer les items Stripe
- const lineItems = produits.map(item => {
-  const productData = {
-    name: `${item.nom} ${item.taille ? `(${item.taille})` : ''}`,
-    images: item.image ? [item.image] : ['https://via.placeholder.com/150?text=Produit'],
-  };
-  if (item.description && item.description.trim() !== '') {
-    productData.description = item.description;
-  }
+    // Préparer les items Stripe avec gestion des menus
+    const lineItems = produits.map(item => {
+      // Gestion spéciale pour les menus
+      if (item.type === 'menu') {
+        const productData = {
+          name: `Menu ${item.nom}`,
+          description: `Contenu: ${item.options.burger} + ${item.options.accompagnement === 'frites' ? 'Frites' : `Dessert (${item.options.dessert})`} + ${item.options.boisson}`,
+          images: item.image ? [item.image] : ['https://via.placeholder.com/150?text=Menu']
+        };
 
-  return {
-    price_data: {
-      currency: 'eur',
-      product_data: productData,
-      unit_amount: Math.round(parseFloat(item.prix) * 100),
-    },
-    quantity: parseInt(item.quantite || 1, 10),
-  };
-});
+        return {
+          price_data: {
+            currency: 'eur',
+            product_data: productData,
+            unit_amount: Math.round(parseFloat(item.prix) * 100),
+          },
+          quantity: parseInt(item.quantite || 1, 10),
+        };
+      }
 
+      // Pour les autres produits
+      const productData = {
+        name: `${item.nom} ${item.taille ? `(${item.taille})` : ''}`,
+        images: item.image ? [item.image] : ['https://via.placeholder.com/150?text=Produit'],
+      };
+
+      if (item.description && item.description.trim() !== '') {
+        productData.description = item.description;
+      }
+
+      return {
+        price_data: {
+          currency: 'eur',
+          product_data: productData,
+          unit_amount: Math.round(parseFloat(item.prix) * 100),
+        },
+        quantity: parseInt(item.quantite || 1, 10),
+      };
+    });
 
     // Créer session Stripe
     const session = await stripe.checkout.sessions.create({
@@ -99,16 +117,30 @@ const produits = [
       success_url: `${process.env.SITE_URL}/success.html?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.SITE_URL}/cancel.html`,
       customer_email: email,
-      metadata: { client_id: client.id },
+      metadata: { 
+        client_id: client.id,
+        menu_details: JSON.stringify(produits.filter(p => p.type === 'menu').map(m => ({
+          burger: m.options.burger,
+          accompagnement: m.options.accompagnement,
+          dessert: m.options.dessert,
+          boisson: m.options.boisson
+        })))
+      },
     });
 
-    // Enregistrer la commande dans Supabase
+    // Enregistrer la commande dans Supabase avec les détails des menus
     const { error: orderError } = await supabase
       .from('orders')
       .insert([{
         client_id: client.id,
         email,
         produits,
+        menu_details: produits.filter(p => p.type === 'menu').map(m => ({
+          burger: m.options.burger,
+          accompagnement: m.options.accompagnement,
+          dessert: m.options.dessert,
+          boisson: m.options.boisson
+        })),
         total_price: totalCents / 100,
         status: 'awaiting_payment',
         stripe_session_id: session.id,
@@ -121,6 +153,9 @@ const produits = [
 
   } catch (err) {
     console.error('Erreur:', err);
-    return res.status(500).json({ message: 'Erreur serveur lors du traitement de la commande.' });
+    return res.status(500).json({ 
+      message: 'Erreur serveur lors du traitement de la commande.',
+      details: process.env.NODE_ENV === 'development' ? err.message : undefined
+    });
   }
 }
