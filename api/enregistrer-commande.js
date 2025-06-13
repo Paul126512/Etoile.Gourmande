@@ -9,7 +9,8 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Méthode non autorisée. Utilisez POST.' });
   }
 
-  const { client, pizzas, boissons, burgers, desserts, supplements, menus, total } = req.body;
+  // Récupération des données envoyées
+  const { client, pizzas, boissons, burgers, desserts, supplements, menus, bagels } = req.body;
 
   if (!client || !client.name || !client.email) {
     return res.status(400).json({ message: 'Nom et email obligatoires.' });
@@ -18,18 +19,14 @@ export default async function handler(req, res) {
   const { name, email } = client;
 
   // Fusionner tous les produits en un seul tableau
-const commandeData = {
-    client: { name, email },
-    pizzas: Array.isArray(pizzas) ? pizzas : [],
-    burgers: Array.isArray(burgers) ? burgers : [],
-    bagels: Array.isArray(bagels) ? bagels : [], // <-- ici pour les bagels
-    menus: Array.isArray(menus) ? menus : [],
-    boissons: Array.isArray(boissons) ? boissons : [],
-    desserts: Array.isArray(desserts) ? desserts : [],
-    supplements: panier.flatMap(item => item.supplements || []),
-    total: panier.reduce((sum, item) => sum + (item.prix * item.quantite), 0)
-};
-
+  const produits = [
+    ...(Array.isArray(pizzas) ? pizzas : []),
+    ...(Array.isArray(burgers) ? burgers : []),
+    ...(Array.isArray(bagels) ? bagels : []),
+    ...(Array.isArray(menus) ? menus : []),
+    ...(Array.isArray(boissons) ? boissons : []),
+    ...(Array.isArray(desserts) ? desserts : [])
+  ];
 
   if (produits.length === 0) {
     return res.status(400).json({ message: 'Votre panier est vide.' });
@@ -73,18 +70,16 @@ const commandeData = {
       existingClient = newClient;
     }
 
-    // Préparer les items Stripe (menus seront traités plus tard)
+    // Préparer les items Stripe
     const lineItems = produits.map(item => {
-      const productData = {
-        name: `${item.nom} ${item.taille ? `(${item.taille})` : ''}`,
-        images: item.image ? [item.image] : ['https://via.placeholder.com/150?text=Produit'],
-        description: item.description || undefined,
-      };
-
       return {
         price_data: {
           currency: 'eur',
-          product_data: productData,
+          product_data: {
+            name: `${item.nom} ${item.taille ? `(${item.taille})` : ''}`,
+            images: item.image ? [item.image] : ['https://via.placeholder.com/150?text=Produit'],
+            description: item.description || undefined,
+          },
           unit_amount: Math.round(parseFloat(item.prix) * 100),
         },
         quantity: parseInt(item.quantite || 1, 10),
@@ -92,18 +87,17 @@ const commandeData = {
     });
 
     // Créer la session Stripe
-const session = await stripe.checkout.sessions.create({
-  payment_method_types: ['card'],
-  line_items: lineItems,
-  mode: 'payment',
-  success_url: `${process.env.SITE_URL}/success.html?session_id={CHECKOUT_SESSION_ID}`,
-  cancel_url: `${process.env.SITE_URL}/cancel.html`,
-  customer_email: email,
-  metadata: {
-    client_id: existingClient.id
-  }
-});
-
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: lineItems,
+      mode: 'payment',
+      success_url: `${process.env.SITE_URL}/success.html?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.SITE_URL}/cancel.html`,
+      customer_email: email,
+      metadata: {
+        client_id: existingClient.id
+      }
+    });
 
     // Enregistrer la commande dans Supabase
     const { error: orderError } = await supabase
@@ -120,8 +114,7 @@ const session = await stripe.checkout.sessions.create({
 
     if (orderError) throw orderError;
 
-   return res.status(200).json({ paymentUrl: session.url });
-
+    return res.status(200).json({ paymentUrl: session.url });
 
   } catch (err) {
     console.error('Erreur:', err);
