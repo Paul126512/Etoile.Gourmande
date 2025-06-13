@@ -1,5 +1,6 @@
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
+import { buffer } from 'micro';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: '2023-10-16' });
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
@@ -9,14 +10,6 @@ export const config = {
     bodyParser: false,
   },
 };
-
-async function getRawBody(req) {
-  const chunks = [];
-  for await (const chunk of req) {
-    chunks.push(chunk);
-  }
-  return Buffer.concat(chunks);
-}
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -32,7 +25,7 @@ export default async function handler(req, res) {
 
   let buf;
   try {
-    buf = await getRawBody(req);
+    buf = await buffer(req);  // <-- utilisation de micro.buffer ici
     console.log('Buffer brut reçu, taille:', buf.length);
   } catch (err) {
     console.error('Erreur lecture buffer:', err);
