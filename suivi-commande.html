@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suivi de commande — L'équipe L'étoile Gourmande</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: white;
+            color: black;
+            margin: 0;
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 600px;
+            width: 100%;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-weight: 300;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+        
+        .search-form {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .search-form input {
+            padding: 10px 15px;
+            border: 1px solid black;
+            width: 70%;
+            margin-right: 10px;
+        }
+        
+        .search-form button {
+            padding: 10px 20px;
+            background-color: black;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .order-card {
+            border: 1px solid black;
+            padding: 30px;
+            margin-bottom: 20px;
+            display: none; /* caché par défaut */
+        }
+        
+        .section {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .section-title {
+            font-weight: 500;
+            margin-bottom: 15px;
+            letter-spacing: 0.5px;
+        }
+        
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        
+        .signature {
+            text-align: right;
+            font-style: italic;
+            margin-top: 30px;
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 3px 10px;
+            background-color: black;
+            color: white;
+            font-size: 0.9em;
+        }
+        
+        .error {
+            color: red;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .loading {
+            text-align: center;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>SUIVI DE COMMANDE</h1>
+            <p>  — L'équipe L'étoile Gourmande —</p>
+        </div>
+        
+        <div class="search-form">
+            <input type="email" id="email-input" placeholder="Entrez votre email pour suivre votre commande">
+            <button onclick="searchOrder()">Rechercher</button>
+        </div>
+        
+        <div class="loading" id="loading">
+            Recherche en cours...
+        </div>
+        
+        <div class="error" id="error-message"></div>
+        
+        <div class="order-card" id="order-card">
+            <div class="section">
+                <div><strong>N° Commande:</strong> <span id="order-number"></span></div>
+                <div><strong>Date:</strong> <span id="order-date"></span></div>
+                <div><strong>Statut:</strong> <span class="status" id="order-status"></span></div>
+                <div><strong>Total:</strong> <span id="order-total"></span> €</div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">DÉTAILS DU CLIENT</div>
+                <div><strong>Nom:</strong> <span id="client-name"></span></div>
+                <div><strong>Prénom:</strong> <span id="client-firstname"></span></div>
+                <div><strong>Email:</strong> <span id="client-email"></span></div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">PRODUITS</div>
+                <div id="order-products"></div>
+            </div>
+            
+            <div class="signature">
+                Merci pour votre confiance.<br>
+                — L'équipe L'étoile Gourmande —
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+    <script>
+    // Initialisation de Supabase
+    document.addEventListener('DOMContentLoaded', function() {
+        const supabaseUrl = 'https://hawlnecxjfdhgnbltovh.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhhd2xuZWN4amZkaGduYmx0b3ZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk1NjQ1NTcsImV4cCI6MjA2NTE0MDU1N30.j4_ZR22bV7acZabBIduYhoLZlITwRYu6ToBF8MYvj5o';
+        window.supabase = supabase.createClient(supabaseUrl, supabaseKey);
+    });
+
+    async function searchOrder() {
+        // Vérification initiale
+        if (!window.supabase) {
+            showError('Erreur d\'initialisation, veuillez recharger la page');
+            return;
+        }
+
+        const email = document.getElementById('email-input').value.trim();
+        const errorElement = document.getElementById('error-message');
+        const loadingElement = document.getElementById('loading');
+        const orderCard = document.getElementById('order-card');
+        
+        // Réinitialisation UI
+        resetUI(errorElement, orderCard, loadingElement);
+        
+        if (!validateEmail(email)) {
+            showError('Veuillez entrer une adresse email valide', errorElement, loadingElement);
+            return;
+        }
+        
+        try {
+            loadingElement.style.display = 'block';
+            const { data, error } = await window.supabase
+                .from('orders')
+                .select('*')
+                .eq('email', email)
+                .order('created_at', { ascending: false });
+            
+            loadingElement.style.display = 'none';
+            
+            if (error) throw error;
+            if (!data || data.length === 0) {
+                showError('Aucune commande trouvée pour cet email', errorElement);
+                return;
+            }
+            
+            displayOrder(data[0]);
+            orderCard.style.display = 'block';
+            
+        } catch (error) {
+            console.error('Erreur:', error);
+            showError('Erreur lors de la recherche : ' + error.message, errorElement, loadingElement);
+        }
+    }
+
+    // Fonctions utilitaires
+    function resetUI(errorElement, orderCard, loadingElement) {
+        errorElement.textContent = '';
+        errorElement.style.color = 'red';
+        orderCard.style.display = 'none';
+        loadingElement.style.display = 'none';
+    }
+
+    function showError(message, errorElement, loadingElement = null) {
+        errorElement.textContent = message;
+        if (loadingElement) loadingElement.style.display = 'none';
+    }
+
+    function validateEmail(email) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    // Affichage de la commande
+    function displayOrder(order) {
+        console.log('Données de commande:', order); // Pour débogage
+
+        // Formatage
+        const formatDate = (dateString) => {
+            if (!dateString) return 'N/A';
+            return new Date(dateString).toLocaleDateString('fr-FR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
+        };
+
+        const formatPrice = (price) => {
+            return price ? `${parseFloat(price).toFixed(2)} €` : 'N/A';
+        };
+
+        // Informations de base
+        document.getElementById('order-number').textContent = order.numero_cmd || 'CMD-' + (order.id || '');
+        document.getElementById('order-date').textContent = formatDate(order.created_at);
+        document.getElementById('order-status').textContent = order.status || 'En traitement';
+        document.getElementById('order-total').textContent = formatPrice(order.total_price || order.total);
+
+        // Informations client
+        document.getElementById('client-name').textContent = order.name || 'Non spécifié';
+        document.getElementById('client-firstname').textContent = order.prenom || 'Non spécifié';
+        document.getElementById('client-email').textContent = order.email || 'Non spécifié';
+
+        // Affichage des produits
+        displayProducts(order);
+    }
+
+    function displayProducts(order) {
+        const productsElement = document.getElementById('order-products');
+        productsElement.innerHTML = '';
+
+        if (!order.produits) {
+            productsElement.innerHTML = '<div class="no-products">Aucun détail produit disponible</div>';
+            return;
+        }
+
+        try {
+            const produits = typeof order.produits === 'string' 
+                ? JSON.parse(order.produits) 
+                : order.produits;
+
+            if (Array.isArray(produits)) {
+                produits.forEach(item => addProductItem(item));
+            } 
+            else if (typeof produits === 'object') {
+                // Gestion des objets simples ou format {produit1: {}, produit2: {}}
+                if (produits.quantity || produits.name || produits.nom) {
+                    addProductItem(produits);
+                } else {
+                    Object.values(produits).forEach(item => addProductItem(item));
+                }
+            }
+
+        } catch (e) {
+            console.error("Erreur produits:", e);
+            productsElement.innerHTML = '<div class="error">Format des produits invalide</div>';
+        }
+
+        function addProductItem(item) {
+            const productDiv = document.createElement('div');
+            productDiv.className = 'product-item';
+            
+            const productName = item.nom || item.name || 'Produit';
+            const quantity = item.quantity || 1;
+            const price = item.price ? `${parseFloat(item.price).toFixed(2)} €` : '';
+            
+            productDiv.innerHTML = `
+                <div class="product-header">
+                    <span class="product-quantity">${quantity} ×</span>
+                    <span class="product-name">${productName}</span>
+                </div>
+                ${price ? `<div class="product-price">${price}</div>` : ''}
+                ${item.description ? `<div class="product-desc">${item.description}</div>` : ''}
+            `;
+            
+            productsElement.appendChild(productDiv);
+        }
+    }
+</script>
+
+<style>
+    .product-item {
+        margin-bottom: 15px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .product-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 5px;
+    }
+    
+    .product-quantity {
+        font-weight: bold;
+    }
+    
+    .product-name {
+        font-weight: 500;
+    }
+    
+    .product-price {
+        color: #555;
+    }
+    
+    .product-desc {
+        color: #777;
+        font-size: 0.9em;
+        margin-top: 5px;
+    }
+    
+    .no-products {
+        color: #666;
+        font-style: italic;
+    }
+    
+    .error {
+        color: #d32f2f;
+    }
+</style>
+
+
