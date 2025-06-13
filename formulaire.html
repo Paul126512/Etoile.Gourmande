@@ -496,17 +496,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             // Préparation des données par catégorie, avec bagels inclus
-            const commandeData = {
-                client: { name, email },
-                pizzas: panier.filter(item => item.type === 'pizza'),
-                burgers: panier.filter(item => item.type === 'burger'),
-                bagels: panier.filter(item => item.type === 'bagel'),  // Ajout bagels ici
-                menus: panier.filter(item => item.type === 'menu'), 
-                boissons: panier.filter(item => item.type === 'boisson'),
-                desserts: panier.filter(item => item.type === 'dessert'),
-                supplements: panier.flatMap(item => item.supplements || []),
-                total: panier.reduce((sum, item) => sum + (item.prix * item.quantite), 0)
-            };
+ const commandeData = {
+    client: { name, email },
+    pizzas: panier.filter(item => item.type === 'pizza'),
+    burgers: panier.filter(item => item.type === 'burger'),
+    bagels: panier.filter(item => item.type === 'bagel'),
+    tacos: panier.filter(item => item.type === 'tacos'), // 👈  ici tacos
+    menus: panier.filter(item => item.type === 'menu'),  // 👈  ici en menu pas encore foncionelle
+    boissons: panier.filter(item => item.type === 'boisson'),
+    desserts: panier.filter(item => item.type === 'dessert'),
+    supplements: panier.flatMap(item => item.supplements || []),
+    total: panier.reduce((sum, item) => sum + (item.prix * item.quantite), 0)
+};
+
 
             // Envoi au serveur
             const response = await fetch('/api/enregistrer-commande', {
