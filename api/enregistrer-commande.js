@@ -4,14 +4,17 @@ import Stripe from 'stripe';
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
+function isValidEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Méthode non autorisée. Utilisez POST.' });
   }
 
   // Récupération des données envoyées
-const { client, pizzas, boissons, burgers, desserts, supplements, menus, bagels, tacos } = req.body;
-
+  const { client, pizzas, boissons, burgers, desserts, supplements, menus, bagels, tacos } = req.body;
 
   if (!client || !client.name || !client.email) {
     return res.status(400).json({ message: 'Nom et email obligatoires.' });
@@ -19,17 +22,21 @@ const { client, pizzas, boissons, burgers, desserts, supplements, menus, bagels,
 
   const { name, email } = client;
 
-  // Fusionner tous les produits en un seul tableau
-const produits = [
-  ...(Array.isArray(pizzas) ? pizzas : []),
-  ...(Array.isArray(burgers) ? burgers : []),
-  ...(Array.isArray(bagels) ? bagels : []),
-  ...(Array.isArray(menus) ? menus : []),
-  ...(Array.isArray(boissons) ? boissons : []),
-  ...(Array.isArray(desserts) ? desserts : []),
-  ...(Array.isArray(tacos) ? tacos : [])
-];
+  // Vérification email
+  if (!isValidEmail(email)) {
+    return res.status(400).json({ message: 'Adresse email invalide.' });
+  }
 
+  // Fusionner tous les produits en un seul tableau
+  const produits = [
+    ...(Array.isArray(pizzas) ? pizzas : []),
+    ...(Array.isArray(burgers) ? burgers : []),
+    ...(Array.isArray(bagels) ? bagels : []),
+    ...(Array.isArray(menus) ? menus : []),
+    ...(Array.isArray(boissons) ? boissons : []),
+    ...(Array.isArray(desserts) ? desserts : []),
+    ...(Array.isArray(tacos) ? tacos : [])
+  ];
 
   if (produits.length === 0) {
     return res.status(400).json({ message: 'Votre panier est vide.' });
@@ -74,20 +81,18 @@ const produits = [
     }
 
     // Préparer les items Stripe
-    const lineItems = produits.map(item => {
-      return {
-        price_data: {
-          currency: 'eur',
-          product_data: {
-            name: `${item.nom} ${item.taille ? `(${item.taille})` : ''}`,
-            images: item.image ? [item.image] : ['https://via.placeholder.com/150?text=Produit'],
-            description: item.description || undefined,
-          },
-          unit_amount: Math.round(parseFloat(item.prix) * 100),
+    const lineItems = produits.map(item => ({
+      price_data: {
+        currency: 'eur',
+        product_data: {
+          name: `${item.nom} ${item.taille ? `(${item.taille})` : ''}`,
+          images: item.image ? [item.image] : ['https://via.placeholder.com/150?text=Produit'],
+          description: item.description || undefined,
         },
-        quantity: parseInt(item.quantite || 1, 10),
-      };
-    });
+        unit_amount: Math.round(parseFloat(item.prix) * 100),
+      },
+      quantity: parseInt(item.quantite || 1, 10),
+    }));
 
     // Créer la session Stripe
     const session = await stripe.checkout.sessions.create({
