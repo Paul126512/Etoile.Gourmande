@@ -920,6 +920,108 @@
         filter: none !important;
     }
 
+
+
+/* =============== BURGER MENU =============== */
+.burger-container {
+    display: none;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 1002;
+}
+
+.burger-menu {
+    width: 30px;
+    height: 22px;
+    display: none; /* Caché par défaut */
+    flex-direction: column;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.burger-menu span {
+    display: block;
+    height: 3px;
+    background-color: #111;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+}
+
+/* Animation croix (X) */
+.burger-menu.active span:nth-child(1) {
+    transform: translateY(9px) rotate(45deg);
+}
+
+.burger-menu.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.burger-menu.active span:nth-child(3) {
+    transform: translateY(-9px) rotate(-45deg);
+}
+
+/* =============== RESPONSIVE NAV =============== */
+@media screen and (max-width: 768px) {
+    .burger-container {
+        display: block;
+    }
+    
+    .burger-menu {
+        display: flex; /* Visible uniquement sur mobile */
+    }
+
+    nav ul {
+        display: flex;
+        flex-direction: column;
+        gap: 25px; /* Espacement augmenté entre les liens */
+        position: absolute;
+        top: 80px; /* Position ajustée */
+        right: 20px;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        padding: 30px; /* Padding augmenté pour plus d'espace */
+        width: 250px; /* Largeur fixe pour le menu */
+        opacity: 0;
+        transform: translateY(-20px);
+        pointer-events: none;
+        transition: all 0.3s ease;
+        z-index: 1001;
+    }
+
+    nav ul.active {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+    }
+
+    nav ul li a {
+        padding: 10px 0; /* Espacement vertical pour les liens */
+        font-size: 1.1em; /* Taille de police légèrement augmentée */
+    }
+
+    /* Suppression des traits de soulignement */
+    nav ul li a:hover,
+    nav ul li a:focus,
+    nav ul li a:active {
+        text-decoration: none;
+    }
+
+    nav {
+        justify-content: flex-end;
+        position: relative;
+    }
+}
+
+
+
+
+
+
+
+
     @media (max-width: 768px) {
         .footer-actions {
             flex-direction: column;
