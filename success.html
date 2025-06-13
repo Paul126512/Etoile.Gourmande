@@ -164,23 +164,27 @@
       
       try {
         // Enregistrement dans Supabase
-        const response = await fetch('https://dtkcxmmedsinbdacrbmt.supabase.co', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR0a2N4bW1lZHNpbmJkYWNyYm10Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1OTU5MjcsImV4cCI6MjA2NDE3MTkyN30.hy9gUQwqk-f5D7VVqwoHMaSYQhZEaoflz69Wf6WbNXc',
-            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR0a2N4bW1lZHNpbmJkYWNyYm10Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1OTU5MjcsImV4cCI6MjA2NDE3MTkyN30.hy9gUQwqk-f5D7VVqwoHMaSYQhZEaoflz69Wf6WbNXc'
-          },
-          body: JSON.stringify({
-            numero_cmd: orderNum,
-            client_prenom: prenom,
-            client_email: email,
-            montant_total: total,
-            details: commandeDetails,
-            statut: 'en_attente',
-            date_commande: now.toISOString()
-          })
-        });
+const response = await fetch('https://dtkcxmmedsinbdacrbmt.supabase.co/rest/v1/commandes', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhhd2xuZWN4amZkaGduYmx0b3ZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk1NjQ1NTcsImV4cCI6MjA2NTE0MDU1N30.j4_ZR22bV7acZabBIduYhoLZlITwRYu6ToBF8MYvj5o',
+    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhhd2xuZWN4amZkaGduYmx0b3ZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk1NjQ1NTcsImV4cCI6MjA2NTE0MDU1N30.j4_ZR22bV7acZabBIduYhoLZlITwRYu6ToBF8MYvj5o',
+    'Prefer': 'return=representation'  // optionnel, pour récupérer la ligne insérée
+  },
+  body: JSON.stringify({
+    numero_cmd: orderNum,
+    client_prenom: prenom,
+    client_email: email,
+    montant_total: total,
+    details: commandeDetails,
+    statut: 'en_attente',
+    date_commande: now.toISOString()
+  })
+});
+
+
+        
         
         if (!response.ok) {
           throw new Error("Erreur lors de l'enregistrement");
