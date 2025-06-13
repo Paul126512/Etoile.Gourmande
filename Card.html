@@ -207,22 +207,15 @@ h1 {
 
 
 
-<script>
+
+  <script>
 const listePanier = document.getElementById('liste-panier');
 const totalElement = document.getElementById('total');
 const compteurPanier = document.getElementById('compteur-panier');
 
-// On récupère le panier « brut » du localStorage
+// Récupération du panier depuis le localStorage
 let panier = JSON.parse(localStorage.getItem('panier')) || [];
 
-// Normaliser la quantité pour chaque produit (sans écraser supplements)
-panier = panier.map(item => ({
-    ...item,
-    quantite: item.quantite || 1,
-    supplements: item.supplements || []  // on conserve les suppléments
-}));
-
-// Fonction principale : afficher le panier avec gestion des suppléments
 function afficherPanier() {
     listePanier.innerHTML = '';
     let total = 0;
@@ -234,129 +227,57 @@ function afficherPanier() {
         return;
     }
 
-    // 1) Création d'une version affichage éclatée quantités > 1
-    const displayItems = [];
     panier.forEach(item => {
-        for(let i = 0; i < item.quantite; i++) {
-            displayItems.push({ ...item, quantite: 1 });
-        }
-    });
-
-    // 2) Regrouper par id + supplements (pour différencier les combos)
-    const groupedItems = groupItemsWithSupplements(displayItems);
-
-    // 3) Générer le HTML par groupe
-    groupedItems.forEach(group => {
-        const item0 = group.items[0];
-        const totalGroupPrice = group.items.reduce((sum, it) => sum + calculerPrixTotalItem(it), 0);
-        const totalGroupQuantity = group.items.length;
-
         const li = document.createElement('li');
         li.classList.add('article-panier');
 
-        // Affichage des suppléments en liste sous le produit
-        const supplementsHtml = item0.supplements.length > 0
-            ? '<ul class="liste-supplements">' + item0.supplements.map(s => `<li>${s.nom} (+${s.prix.toFixed(2)} €)</li>`).join('') + '</ul>'
-            : '';
+        // Affichage spécifique pour les menus
+        let detailsMenu = '';
+        if (item.type === 'menu') {
+            detailsMenu = `
+                <div class="details-menu">
+                    <p><strong>Burger :</strong> ${item.options.burger}</p>
+                    <p><strong>Accompagnement :</strong> 
+                        ${item.options.accompagnement === 'frites' 
+                            ? 'Frites' 
+                            : 'Dessert (' + item.options.dessert + ')'}
+                    </p>
+                    <p><strong>Boisson :</strong> ${item.options.boisson}</p>
+                </div>
+            `;
+        }
 
-        const details = document.createElement('div');
-        details.classList.add('details-panier');
-        details.innerHTML = `
-            <img src="${item0.image || 'https://via.placeholder.com/100?text=Produit'}" alt="${item0.nom}" />
-            <div>
-                <h4>${item0.nom}</h4>
-                <p><strong>Taille :</strong> ${item0.taille || 'Standard'}</p>
-                <p>${item0.description || ''}</p>
-                ${supplementsHtml}
-                <p>Quantité : ${totalGroupQuantity}</p>
-                <p class="prix-total">${totalGroupPrice.toFixed(2)} €</p>
+        li.innerHTML = `
+            <div class="details-panier">
+                <img src="${item.image}" alt="${item.nom}" />
+                <div>
+                    <h4>${item.nom} × ${item.quantite}</h4>
+                    ${detailsMenu}
+                    <p><strong>Prix unitaire :</strong> ${item.prix.toFixed(2)} €</p>
+                    <p class="prix-total"><strong>Total :</strong> ${(item.prix * item.quantite).toFixed(2)} €</p>
+                </div>
             </div>
+            <button class="supprimer">×</button>
         `;
 
-        // Bouton supprimer : suppression d’une unité du groupe précis (id + supplements)
-        const boutonSupprimer = document.createElement('button');
-        boutonSupprimer.textContent = '×';
-        boutonSupprimer.classList.add('supprimer');
-        boutonSupprimer.addEventListener('click', () => {
-            li.style.transform = 'translateX(100%)';
-            li.style.opacity = '0';
-            setTimeout(() => {
-                // Trouver dans panier un item avec même id et mêmes suppléments
-                const idx = panier.findIndex(p => p.id === item0.id && supplementsEquals(p.supplements, item0.supplements));
-                if (idx !== -1) {
-                    if (panier[idx].quantite > 1) {
-                        panier[idx].quantite--;
-                    } else {
-                        panier.splice(idx, 1);
-                    }
-                }
-                localStorage.setItem('panier', JSON.stringify(panier));
-                afficherPanier();
-            }, 300);
+        // Bouton supprimer
+        li.querySelector('.supprimer').addEventListener('click', () => {
+            panier = panier.filter(p => p.id !== item.id);
+            localStorage.setItem('panier', JSON.stringify(panier));
+            afficherPanier();
         });
 
-        li.appendChild(details);
-        li.appendChild(boutonSupprimer);
         listePanier.appendChild(li);
-
-        total += totalGroupPrice;
+        total += item.prix * item.quantite;
     });
 
-    // Mise à jour compteur global et total
-    compteurPanier.textContent = panier.reduce((acc, it) => acc + it.quantite, 0);
-    totalElement.textContent = isNaN(total) ? '0.00' : total.toFixed(2);
+    // Mise à jour du compteur et du total
+    compteurPanier.textContent = panier.reduce((acc, item) => acc + item.quantite, 0);
+    totalElement.textContent = total.toFixed(2);
 }
-
-// Fonction de regroupement par id + supplements (pour distinguer produits avec suppléments différents)
-function groupItemsWithSupplements(items) {
-    const groups = [];
-    const map = new Map();
-
-    items.forEach(item => {
-        const key = item.id + '|' + JSON.stringify(item.supplements || []);
-        if (!map.has(key)) {
-            map.set(key, []);
-        }
-        map.get(key).push(item);
-    });
-
-    map.forEach((itemsGroup, key) => {
-        groups.push({ key, items: itemsGroup });
-    });
-
-    return groups;
-}
-
-// Comparaison basique des suppléments (tableaux d’objets avec nom et prix)
-function supplementsEquals(sup1 = [], sup2 = []) {
-    if (sup1.length !== sup2.length) return false;
-    // Trier par nom pour comparaison simple
-    const sorted1 = sup1.slice().sort((a,b) => a.nom.localeCompare(b.nom));
-    const sorted2 = sup2.slice().sort((a,b) => a.nom.localeCompare(b.nom));
-    return sorted1.every((s, i) => s.nom === sorted2[i].nom && s.prix === sorted2[i].prix);
-}
-
-// Calcul prix total = prix de base + somme des suppléments (par item)
-function calculerPrixTotalItem(item) {
-    let totalSupplements = 0;
-    if (item.supplements && item.supplements.length > 0) {
-        totalSupplements = item.supplements.reduce((acc, s) => acc + (s.prix || 0), 0);
-    }
-    // Prix de base + suppléments, multiplié par quantité (ici 1)
-     return item.prix || 0;
-}
-
 
 // Initialisation
 afficherPanier();
-
-
-
 </script>
 
 
-
-
-
-  </body>
-</html>
