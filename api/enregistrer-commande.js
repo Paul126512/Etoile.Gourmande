@@ -88,18 +88,18 @@ export default async function handler(req, res) {
     });
 
     // Créer la session Stripe
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      line_items: lineItems,
-      mode: 'payment',
-      success_url: `${process.env.SITE_URL}/success.html?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.SITE_URL}/cancel.html`,
-      customer_email: email,
-      metadata: {
-        client_id: existingClient.id
-        // Ajout menu_details plus tard si besoin
-      },
-    });
+const session = await stripe.checkout.sessions.create({
+  payment_method_types: ['card'],
+  line_items: lineItems,
+  mode: 'payment',
+  success_url: `${process.env.SITE_URL}/success.html?session_id={CHECKOUT_SESSION_ID}`,
+  cancel_url: `${process.env.SITE_URL}/cancel.html`,
+  customer_email: email,
+  metadata: {
+    client_id: existingClient.id
+  }
+});
+
 
     // Enregistrer la commande dans Supabase
     const { error: orderError } = await supabase
@@ -116,7 +116,8 @@ export default async function handler(req, res) {
 
     if (orderError) throw orderError;
 
-    return res.status(200).json({ sessionId: session.id });
+   return res.status(200).json({ paymentUrl: session.url });
+
 
   } catch (err) {
     console.error('Erreur:', err);
