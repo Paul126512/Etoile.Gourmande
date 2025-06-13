@@ -10,7 +10,8 @@ export default async function handler(req, res) {
   }
 
   // Récupération des données envoyées
-  const { client, pizzas, boissons, burgers, desserts, supplements, menus, bagels } = req.body;
+const { client, pizzas, boissons, burgers, desserts, supplements, menus, bagels, tacos } = req.body;
+
 
   if (!client || !client.name || !client.email) {
     return res.status(400).json({ message: 'Nom et email obligatoires.' });
@@ -19,14 +20,16 @@ export default async function handler(req, res) {
   const { name, email } = client;
 
   // Fusionner tous les produits en un seul tableau
-  const produits = [
-    ...(Array.isArray(pizzas) ? pizzas : []),
-    ...(Array.isArray(burgers) ? burgers : []),
-    ...(Array.isArray(bagels) ? bagels : []),
-    ...(Array.isArray(menus) ? menus : []),
-    ...(Array.isArray(boissons) ? boissons : []),
-    ...(Array.isArray(desserts) ? desserts : [])
-  ];
+const produits = [
+  ...(Array.isArray(pizzas) ? pizzas : []),
+  ...(Array.isArray(burgers) ? burgers : []),
+  ...(Array.isArray(bagels) ? bagels : []),
+  ...(Array.isArray(menus) ? menus : []),
+  ...(Array.isArray(boissons) ? boissons : []),
+  ...(Array.isArray(desserts) ? desserts : []),
+  ...(Array.isArray(tacos) ? tacos : [])
+];
+
 
   if (produits.length === 0) {
     return res.status(400).json({ message: 'Votre panier est vide.' });
