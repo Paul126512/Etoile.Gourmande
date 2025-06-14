@@ -19,7 +19,9 @@ export default async function handler(req, res) {
     return res.status(400).json({ message: 'Nom et email obligatoires.' });
   }
 
-  const { name, prenom, email } = client;
+
+  const { name, email } = client;
+
 
   if (!isValidEmail(email)) {
     return res.status(400).json({ message: 'Adresse email invalide.' });
@@ -67,11 +69,11 @@ if (error && existingClient !== null) throw error;
 
 
 if (!existingClient) {
-  const { data: newClient, error: insertError } = await supabase
-    .from('clients')
-    .insert([{ name: prenom, email }])  // on enregistre le prénom dans la colonne 'name'
-    .select('id')
-    .single();
+const { data: newClient, error: insertError } = await supabase
+  .from('clients')
+  .insert([{ name, email }])
+  .select('id')
+  .single();
 
   if (insertError) throw insertError;
 
