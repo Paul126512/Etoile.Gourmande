@@ -63,18 +63,21 @@ export default async function handler(req, res) {
       .eq('email', email)
       .single();
 
-    if (error && error.code !== 'PGRST116') throw error;
+if (error && existingClient !== null) throw error;
 
-    if (!existingClient) {
-      const { data: newClient, error: errInsert } = await supabase
-        .from('clients')
-        .insert([{ name, prenom, email }])
-        .select('id')
-        .single();
 
-      if (errInsert) throw errInsert;
-      existingClient = newClient;
-    }
+if (!existingClient) {
+  const { data: newClient, error: insertError } = await supabase
+    .from('clients')
+    .insert([{ name: prenom, email }])  // on enregistre le prénom dans la colonne 'name'
+    .select('id')
+    .single();
+
+  if (insertError) throw insertError;
+
+  existingClient = newClient;
+}
+
 
     const lineItems = produits.map(item => ({
       price_data: {
@@ -101,19 +104,19 @@ export default async function handler(req, res) {
       }
     });
 
-    const { error: orderError } = await supabase
-      .from('orders')
-      .insert([{
-        client_id: existingClient.id,
-        email,
-        name,
-        prenom,
-        produits,
-        total_price: totalCents / 100,
-        status: 'awaiting_payment',
-        stripe_session_id: session.id,
-        quantity: produits.reduce((acc, i) => acc + (parseInt(i.quantite || 1, 10)), 0),
-      }]);
+const { error: orderError } = await supabase
+  .from('orders')
+  .insert([{
+    client_id: existingClient.id,
+    email,
+    name: prenom, // Ici on stocke le prénom dans la colonne 'name'
+    produits,
+    total_price: totalCents / 100,
+    status: 'awaiting_payment',
+    stripe_session_id: session.id,
+    quantity: produits.reduce((acc, i) => acc + (parseInt(i.quantite || 1, 10)), 0),
+  }]);
+
 
     if (orderError) throw orderError;
 
