@@ -13,21 +13,18 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Méthode non autorisée. Utilisez POST.' });
   }
 
-  // Récupération des données envoyées
   const { client, pizzas, boissons, burgers, desserts, supplements, menus, bagels, tacos } = req.body;
 
   if (!client || !client.name || !client.email) {
     return res.status(400).json({ message: 'Nom et email obligatoires.' });
   }
 
-  const { name, email } = client;
+  const { name, prenom, email } = client;
 
-  // Vérification email
   if (!isValidEmail(email)) {
     return res.status(400).json({ message: 'Adresse email invalide.' });
   }
 
-  // Fusionner tous les produits en un seul tableau
   const produits = [
     ...(Array.isArray(pizzas) ? pizzas : []),
     ...(Array.isArray(burgers) ? burgers : []),
@@ -42,7 +39,6 @@ export default async function handler(req, res) {
     return res.status(400).json({ message: 'Votre panier est vide.' });
   }
 
-  // Calcul du total en centimes
   let totalCents = 0;
   for (const item of produits) {
     const prix = parseFloat(item.prix);
@@ -60,7 +56,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Rechercher ou créer le client dans Supabase
+    // Vérifie si le client existe déjà
     let { data: existingClient, error } = await supabase
       .from('clients')
       .select('id')
@@ -72,7 +68,7 @@ export default async function handler(req, res) {
     if (!existingClient) {
       const { data: newClient, error: errInsert } = await supabase
         .from('clients')
-        .insert([{ name, email }])
+        .insert([{ name, prenom, email }])
         .select('id')
         .single();
 
@@ -80,7 +76,6 @@ export default async function handler(req, res) {
       existingClient = newClient;
     }
 
-    // Préparer les items Stripe
     const lineItems = produits.map(item => ({
       price_data: {
         currency: 'eur',
@@ -94,7 +89,6 @@ export default async function handler(req, res) {
       quantity: parseInt(item.quantite || 1, 10),
     }));
 
-    // Créer la session Stripe
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: lineItems,
@@ -107,12 +101,13 @@ export default async function handler(req, res) {
       }
     });
 
-    // Enregistrer la commande dans Supabase
     const { error: orderError } = await supabase
       .from('orders')
       .insert([{
         client_id: existingClient.id,
         email,
+        name,
+        prenom,
         produits,
         total_price: totalCents / 100,
         status: 'awaiting_payment',
