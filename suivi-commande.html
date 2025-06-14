@@ -3,67 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Suivi de commande — L'équipe L'étoile Gourmande</title>
+    <title>Suivi de commande — L'étoile Gourmande</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --blanc: #FFFFFF;
+            --noir: #000000;
+            --gris-clair: #F8F8F8;
+            --gris-moyen: #E0E0E0;
+            --border: 1px solid rgba(0, 0, 0, 0.08);
+        }
+        
         body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            background-color: white;
-            color: black;
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--blanc);
+            color: var(--noir);
             margin: 0;
-            padding: 40px;
+            padding: 0;
             display: flex;
             justify-content: center;
+            min-height: 100vh;
             line-height: 1.6;
         }
         
         .container {
-            max-width: 600px;
+            max-width: 800px;
             width: 100%;
+            padding: 60px 40px;
+            position: relative;
         }
         
         .header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 50px;
+            position: relative;
+        }
+        
+        .back-button {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            color: var(--noir);
+            border: var(--border);
+            padding: 10px 15px;
+            border-radius: 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            font-size: 0.9em;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+        
+        .back-button:hover {
+            background: rgba(0, 0, 0, 0.02);
+            border-color: var(--noir);
         }
         
         .header h1 {
-            font-weight: 300;
+            font-family: 'Playfair Display', serif;
+            font-weight: 400;
+            font-size: 2.5rem;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            color: var(--noir);
+        }
+        
+        .header p {
+            color: var(--noir);
+            opacity: 0.7;
             letter-spacing: 1px;
-            margin-bottom: 5px;
+            font-size: 0.9rem;
         }
         
         .search-form {
-            margin-bottom: 30px;
+            margin-bottom: 40px;
             text-align: center;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
         }
         
         .search-form input {
-            padding: 10px 15px;
-            border: 1px solid black;
+            padding: 15px 20px;
+            background: var(--gris-clair);
+            border: var(--border);
             width: 70%;
-            margin-right: 10px;
+            max-width: 450px;
+            border-radius: 0;
+            font-size: 0.9em;
+            color: var(--noir);
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+        
+        .search-form input::placeholder {
+            color: rgba(0, 0, 0, 0.4);
+            letter-spacing: 1px;
+        }
+        
+        .search-form input:focus {
+            outline: none;
+            border-color: var(--noir);
+            background: var(--blanc);
         }
         
         .search-form button {
-            padding: 10px 20px;
-            background-color: black;
-            color: white;
-            border: none;
+            padding: 15px 25px;
+            background: var(--noir);
+            color: var(--blanc);
+            border: 1px solid var(--noir);
+            border-radius: 0;
             cursor: pointer;
+            font-size: 0.9em;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .search-form button:hover {
+            background: var(--blanc);
+            color: var(--noir);
         }
         
         .order-card {
-            border: 1px solid black;
-            padding: 30px;
-            margin-bottom: 20px;
-            display: none; /* caché par défaut */
+            border: var(--border);
+            padding: 40px;
+            margin-bottom: 30px;
+            display: none;
+            background: var(--blanc);
+            position: relative;
         }
         
         .section {
-            margin-bottom: 25px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #eee;
+            margin-bottom: 30px;
+            padding-bottom: 25px;
+            border-bottom: var(--border);
         }
         
         .section:last-child {
@@ -73,78 +156,234 @@
         }
         
         .section-title {
+            font-family: 'Playfair Display', serif;
             font-weight: 500;
-            margin-bottom: 15px;
-            letter-spacing: 0.5px;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+            color: var(--noir);
+            font-size: 1.2rem;
         }
         
         .order-item {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+        }
+        
+        .order-item strong {
+            font-weight: 500;
         }
         
         .signature {
             text-align: right;
             font-style: italic;
-            margin-top: 30px;
+            margin-top: 40px;
+            color: var(--noir);
+            opacity: 0.7;
+            letter-spacing: 1px;
         }
         
         .status {
             display: inline-block;
-            padding: 3px 10px;
-            background-color: black;
-            color: white;
-            font-size: 0.9em;
+            padding: 6px 15px;
+            background: transparent;
+            color: var(--noir);
+            font-size: 0.8em;
+            border-radius: 0;
+            text-transform: uppercase;
+            font-weight: 500;
+            letter-spacing: 2px;
+            border: 1px solid var(--noir);
         }
         
         .error {
-            color: red;
+            color: #D32F2F;
             text-align: center;
             margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(211, 47, 47, 0.05);
+            border: 1px solid rgba(211, 47, 47, 0.2);
+            display: none;
+            letter-spacing: 0.5px;
         }
         
         .loading {
             text-align: center;
             display: none;
+            padding: 20px;
+            color: var(--noir);
+            letter-spacing: 1px;
+        }
+        
+        .loading i {
+            margin-right: 12px;
+            animation: spin 1.5s linear infinite;
+            color: var(--noir);
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .product-item {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: var(--border);
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .product-info {
+            flex: 1;
+        }
+        
+        .product-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+        
+        .product-quantity {
+            font-weight: bold;
+            color: var(--noir);
+        }
+        
+        .product-name {
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+        
+        .product-price {
+            color: var(--noir);
+            font-weight: 500;
+            text-align: right;
+            min-width: 80px;
+        }
+        
+        .product-desc {
+            color: rgba(0, 0, 0, 0.6);
+            font-size: 0.85em;
+            margin-top: 5px;
+            letter-spacing: 0.5px;
+            font-style: italic;
+        }
+        
+        .no-products {
+            color: rgba(0, 0, 0, 0.5);
+            font-style: italic;
+            letter-spacing: 0.5px;
+        }
+        
+        .order-total {
+            font-weight: bold;
+            font-size: 1.1em;
+            color: var(--noir);
+            letter-spacing: 1px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 40px 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+                margin-top: 20px;
+            }
+            
+            .back-button {
+                position: relative;
+                margin: 0 auto 20px;
+                display: inline-flex;
+                left: auto;
+                top: auto;
+                transform: none;
+            }
+            
+            .header {
+                text-align: center;
+            }
+            
+            .search-form {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .search-form input {
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+            
+            .order-card {
+                padding: 30px 20px;
+            }
+            
+            .product-item {
+                flex-direction: column;
+            }
+            
+            .product-price {
+                text-align: left;
+                margin-top: 5px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>SUIVI DE COMMANDE</h1>
-            <p>  — L'équipe L'étoile Gourmande —</p>
+            <a href="index.html" class="back-button">
+                <i class="fas fa-arrow-left"></i> Retour
+            </a>
+            <h1>Suivi de Commande</h1>
+            <p>L'étoile Gourmande</p>
         </div>
         
         <div class="search-form">
-            <input type="email" id="email-input" placeholder="Entrez votre email pour suivre votre commande">
-            <button onclick="searchOrder()">Rechercher</button>
+            <input type="email" id="email-input" placeholder="Votre adresse email">
+            <button onclick="searchOrder()">
+                <i class="fas fa-search"></i> Rechercher
+            </button>
         </div>
         
         <div class="loading" id="loading">
-            Recherche en cours...
+            <i class="fas fa-spinner"></i> Recherche en cours...
         </div>
         
         <div class="error" id="error-message"></div>
         
         <div class="order-card" id="order-card">
             <div class="section">
-                <div><strong>N° Commande:</strong> <span id="order-number"></span></div>
-                <div><strong>Date:</strong> <span id="order-date"></span></div>
-                <div><strong>Statut:</strong> <span class="status" id="order-status"></span></div>
-                <div><strong>Total:</strong> <span id="order-total"></span> €</div>
+                <div class="order-item">
+                    <strong>N° Commande:</strong> <span id="order-number"></span>
+                </div>
+                <div class="order-item">
+                    <strong>Date:</strong> <span id="order-date"></span>
+                </div>
+                <div class="order-item">
+                    <strong>Statut:</strong> <span class="status" id="order-status"></span>
+                </div>
+                <div class="order-item order-total">
+                    <strong>Total:</strong> <span id="order-total"></span>
+                </div>
             </div>
             
             <div class="section">
-                <div class="section-title">DÉTAILS DU CLIENT</div>
-                <div><strong>Nom:</strong> <span id="client-name"></span></div>
-                <div><strong>Prénom:</strong> <span id="client-firstname"></span></div>
-                <div><strong>Email:</strong> <span id="client-email"></span></div>
+                <div class="section-title">Client</div>
+                <div class="order-item">
+                    <strong>Prénom:</strong> <span id="client-firstname"></span>
+                </div>
+                <div class="order-item">
+                    <strong>Email:</strong> <span id="client-email"></span>
+                </div>
             </div>
             
             <div class="section">
-                <div class="section-title">PRODUITS</div>
+                <div class="section-title">Détails</div>
                 <div id="order-products"></div>
             </div>
             
@@ -155,23 +394,22 @@
         </div>
     </div>
 
-
-
-
-
-
     <script>
-    // Initialisation de Supabase
     document.addEventListener('DOMContentLoaded', function() {
         const supabaseUrl = 'https://hawlnecxjfdhgnbltovh.supabase.co';
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhhd2xuZWN4amZkaGduYmx0b3ZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk1NjQ1NTcsImV4cCI6MjA2NTE0MDU1N30.j4_ZR22bV7acZabBIduYhoLZlITwRYu6ToBF8MYvj5o';
         window.supabase = supabase.createClient(supabaseUrl, supabaseKey);
+        
+        document.getElementById('email-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchOrder();
+            }
+        });
     });
 
     async function searchOrder() {
-        // Vérification initiale
         if (!window.supabase) {
-            showError('Erreur d\'initialisation, veuillez recharger la page');
+            showError('Erreur technique, veuillez recharger la page');
             return;
         }
 
@@ -180,11 +418,15 @@
         const loadingElement = document.getElementById('loading');
         const orderCard = document.getElementById('order-card');
         
-        // Réinitialisation UI
         resetUI(errorElement, orderCard, loadingElement);
         
+        if (!email) {
+            showError('Veuillez entrer une adresse email');
+            return;
+        }
+        
         if (!validateEmail(email)) {
-            showError('Veuillez entrer une adresse email valide', errorElement, loadingElement);
+            showError('Adresse email invalide');
             return;
         }
         
@@ -200,7 +442,7 @@
             
             if (error) throw error;
             if (!data || data.length === 0) {
-                showError('Aucune commande trouvée pour cet email', errorElement);
+                showError('Aucune commande trouvée pour cet email');
                 return;
             }
             
@@ -209,57 +451,59 @@
             
         } catch (error) {
             console.error('Erreur:', error);
-            showError('Erreur lors de la recherche : ' + error.message, errorElement, loadingElement);
+            showError('Erreur lors de la recherche de votre commande');
+            loadingElement.style.display = 'none';
         }
     }
 
-    // Fonctions utilitaires
     function resetUI(errorElement, orderCard, loadingElement) {
         errorElement.textContent = '';
-        errorElement.style.color = 'red';
+        errorElement.style.display = 'none';
         orderCard.style.display = 'none';
         loadingElement.style.display = 'none';
     }
 
-    function showError(message, errorElement, loadingElement = null) {
+    function showError(message, errorElement = document.getElementById('error-message')) {
         errorElement.textContent = message;
-        if (loadingElement) loadingElement.style.display = 'none';
+        errorElement.style.display = 'block';
     }
 
     function validateEmail(email) {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     }
 
-    // Affichage de la commande
     function displayOrder(order) {
-        console.log('Données de commande:', order); // Pour débogage
+        console.log('Données de commande:', order);
 
-        // Formatage
         const formatDate = (dateString) => {
             if (!dateString) return 'N/A';
-            return new Date(dateString).toLocaleDateString('fr-FR', {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('fr-FR', {
                 day: '2-digit',
                 month: '2-digit',
-                year: 'numeric'
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
             });
         };
 
         const formatPrice = (price) => {
-            return price ? `${parseFloat(price).toFixed(2)} €` : 'N/A';
+            return price ? `${parseFloat(price).toFixed(2).replace('.', ',')} €` : 'N/A';
         };
 
-        // Informations de base
         document.getElementById('order-number').textContent = order.numero_cmd || 'CMD-' + (order.id || '');
         document.getElementById('order-date').textContent = formatDate(order.created_at);
-        document.getElementById('order-status').textContent = order.status || 'En traitement';
+        
+        const statusElement = document.getElementById('order-status');
+        statusElement.textContent = order.status || 'En préparation';
+        statusElement.className = 'status';
+        
         document.getElementById('order-total').textContent = formatPrice(order.total_price || order.total);
 
-        // Informations client
-        document.getElementById('client-name').textContent = order.name || 'Non spécifié';
-        document.getElementById('client-firstname').textContent = order.prenom || 'Non spécifié';
+        // Afficher le prénom à la place du nom
+        document.getElementById('client-firstname').textContent = order.prenom || order.name || 'Non spécifié';
         document.getElementById('client-email').textContent = order.email || 'Non spécifié';
 
-        // Affichage des produits
         displayProducts(order);
     }
 
@@ -281,7 +525,6 @@
                 produits.forEach(item => addProductItem(item));
             } 
             else if (typeof produits === 'object') {
-                // Gestion des objets simples ou format {produit1: {}, produit2: {}}
                 if (produits.quantity || produits.name || produits.nom) {
                     addProductItem(produits);
                 } else {
@@ -291,7 +534,7 @@
 
         } catch (e) {
             console.error("Erreur produits:", e);
-            productsElement.innerHTML = '<div class="error">Format des produits invalide</div>';
+            productsElement.innerHTML = '<div class="error">Erreur d\'affichage des produits</div>';
         }
 
         function addProductItem(item) {
@@ -300,62 +543,23 @@
             
             const productName = item.nom || item.name || 'Produit';
             const quantity = item.quantity || 1;
-            const price = item.price ? `${parseFloat(item.price).toFixed(2)} €` : '';
+            const price = item.price ? `${parseFloat(item.price).toFixed(2).replace('.', ',')} €` : '';
+            const description = item.description || item.desc || '';
             
             productDiv.innerHTML = `
-                <div class="product-header">
-                    <span class="product-quantity">${quantity} ×</span>
-                    <span class="product-name">${productName}</span>
+                <div class="product-info">
+                    <div class="product-header">
+                        <span class="product-quantity">${quantity} ×</span>
+                        <span class="product-name">${productName}</span>
+                    </div>
+                    ${description ? `<div class="product-desc">${description}</div>` : ''}
                 </div>
-                ${price ? `<div class="product-price">${price}</div>` : ''}
-                ${item.description ? `<div class="product-desc">${item.description}</div>` : ''}
+                <div class="product-price">${price}</div>
             `;
             
             productsElement.appendChild(productDiv);
         }
     }
-</script>
-
-<style>
-    .product-item {
-        margin-bottom: 15px;
-        padding-bottom: 15px;
-        border-bottom: 1px solid #eee;
-    }
-    
-    .product-header {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin-bottom: 5px;
-    }
-    
-    .product-quantity {
-        font-weight: bold;
-    }
-    
-    .product-name {
-        font-weight: 500;
-    }
-    
-    .product-price {
-        color: #555;
-    }
-    
-    .product-desc {
-        color: #777;
-        font-size: 0.9em;
-        margin-top: 5px;
-    }
-    
-    .no-products {
-        color: #666;
-        font-style: italic;
-    }
-    
-    .error {
-        color: #d32f2f;
-    }
-</style>
-
-
+  </script>
+ </body>
+</html>
