@@ -111,7 +111,7 @@ const { error: orderError } = await supabase
   .insert([{
     client_id: existingClient.id,
     email,
-    name: prenom, // Ici on stocke le prénom dans la colonne 'name'
+    name: name,  // <-- Remplacer 'prenom' par 'name'
     produits,
     total_price: totalCents / 100,
     status: 'awaiting_payment',
