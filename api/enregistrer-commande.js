@@ -80,38 +80,59 @@ const { data: newClient, error: insertError } = await supabase
   existingClient = newClient;
 }
 
+const lineItems = [];
 
-    const lineItems = produits.map(item => ({
-      price_data: {
-        currency: 'eur',
-        product_data: {
-          name: `${item.nom} ${item.taille ? `(${item.taille})` : ''}`,
-          images: item.image ? [item.image] : ['https://via.placeholder.com/150?text=Produit'],
-          description: item.description || undefined,
-        },
-        unit_amount: Math.round(parseFloat(item.prix) * 100),
+for (const item of produits) {
+  // Ligne principale du produit
+  lineItems.push({
+    price_data: {
+      currency: 'eur',
+      product_data: {
+        name: `${item.nom} ${item.taille ? `(${item.taille})` : ''}`,
+        images: item.image ? [item.image] : ['https://via.placeholder.com/150?text=Produit'],
+        description: item.description || undefined,
       },
-      quantity: parseInt(item.quantite || 1, 10),
-    }));
+      unit_amount: Math.round(parseFloat(item.prix) * 100),
+    },
+    quantity: parseInt(item.quantite || 1, 10),
+  });
 
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      line_items: lineItems,
-      mode: 'payment',
-      success_url: `${process.env.SITE_URL}/success.html?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.SITE_URL}/cancel.html`,
-      customer_email: email,
-      metadata: {
-        client_id: existingClient.id
-      }
-    });
+  // Lignes pour les suppléments du produit
+  if (Array.isArray(item.supplements) && item.supplements.length > 0) {
+    for (const supp of item.supplements) {
+      lineItems.push({
+        price_data: {
+          currency: 'eur',
+          product_data: {
+            name: `Supplément : ${supp.nom || 'supplément'}`,
+            // Pas d'image ni description pour les suppléments, mais tu peux en ajouter si tu veux
+          },
+          unit_amount: Math.round(parseFloat(supp.prix || 0) * 100),
+        },
+        quantity: parseInt(supp.quantite || 1, 10),
+      });
+    }
+  }
+}
+
+const session = await stripe.checkout.sessions.create({
+  payment_method_types: ['card'],
+  line_items: lineItems,
+  mode: 'payment',
+  success_url: `${process.env.SITE_URL}/success.html?session_id={CHECKOUT_SESSION_ID}`,
+  cancel_url: `${process.env.SITE_URL}/cancel.html`,
+  customer_email: email,
+  metadata: {
+    client_id: existingClient.id
+  }
+});
 
 const { error: orderError } = await supabase
   .from('orders')
   .insert([{
     client_id: existingClient.id,
     email,
-    name: name,  // <-- Remplacer 'prenom' par 'name'
+    name: name,
     produits,
     total_price: totalCents / 100,
     status: 'awaiting_payment',
@@ -119,16 +140,7 @@ const { error: orderError } = await supabase
     quantity: produits.reduce((acc, i) => acc + (parseInt(i.quantite || 1, 10)), 0),
   }]);
 
+if (orderError) throw orderError;
 
-    if (orderError) throw orderError;
+return res.status(200).json({ paymentUrl: session.url });
 
-    return res.status(200).json({ paymentUrl: session.url });
-
-  } catch (err) {
-    console.error('Erreur:', err);
-    return res.status(500).json({
-      message: 'Erreur serveur lors du traitement de la commande.',
-      details: process.env.NODE_ENV === 'development' ? err.message : undefined
-    });
-  }
-}
