@@ -203,18 +203,18 @@
     </div>
  </footer>
 
-
 <script>
   (function() {
-    const t = document.createElement('script');
-    t.src = 'https://vitals.vercel-insights.com/v1/script.js';
-    t.setAttribute('data-vercel-dsn', 'https://vitals.vercel-insights.com/v1/vitals');
-    t.crossOrigin = 'anonymous';  // Solution clé pour CORS
-    t.defer = true;
-    t.onerror = () => console.error('Vercel Speed Insights failed to load');
-    document.body.appendChild(t);
+    const script = document.createElement('script');
+    script.src = 'https://vitals.vercel-insights.com/v1/script.js';
+    script.setAttribute('data-vercel-dsn', 'https://vitals.vercel-insights.com/v1/vitals');
+    script.setAttribute('data-vercel-origin', window.location.origin);
+    script.crossOrigin = 'use-credentials';
+    script.defer = true;
+    document.body.appendChild(script);
   })();
 </script>
+    
     
     
  </body>
