@@ -1,12 +1,15 @@
-import { SpeedInsights } from '@vercel/speed-insights/next'
+// Polyfill pour les imports ES Modules
+import('isomorphic-fetch'); // npm install isomorphic-fetch
 
-function MyApp({ Component, pageProps }) {
+const { Analytics } = require('@vercel/analytics/react');
+const { SpeedInsights } = require('@vercel/speed-insights');
+
+module.exports = function App({ Component, pageProps }) {
   return (
     <>
       <Component {...pageProps} />
+      <Analytics />
       <SpeedInsights />
     </>
-  )
+  );
 }
-
-export default MyApp
