@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Vercel Analytics -->
+    <script>
+      window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+    </script>
+    <script defer src="https://va.vercel-scripts.com/v1/script.js"></script>
+  </head>
+  <body>
+    {% block content %}{% endblock %}
+    
+    <!-- Speed Insights -->
+    <script>
+      (function(){var t=document.createElement("script"); 
+      t.src="https://vitals.vercel-insights.com/v1/script.js";
+      t.defer=!0,document.body.appendChild(t)})()
+    </script>
+  </body>
+</html>
