@@ -57,13 +57,14 @@ export default async function handler(req, res) {
 
   try {
     // Vérifie si le client existe déjà
-    let { data: existingClient, error } = await supabase
-      .from('clients')
-      .select('id')
-      .eq('email', email)
-      .single();
+let { data: existingClient, error } = await supabase
+  .from('clients')
+  .select('id')
+  .eq('email', email)
+  .maybeSingle();
 
-    if (error) throw error;
+if (error) throw error;
+
 
     if (!existingClient) {
       const { data: newClient, error: insertError } = await supabase
