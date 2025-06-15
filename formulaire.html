@@ -291,194 +291,148 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      const listePanier = document.getElementById('liste-panier');
-      const commandeTotal = document.getElementById('commande-total');
-      const form = document.getElementById('form');
-      const message = document.getElementById('message');
-      const nameInput = document.getElementById('name');
-      const emailInput = document.getElementById('email');
-      const nameError = document.getElementById('name-error');
-      const emailError = document.getElementById('email-error');
-      const submitBtn = document.getElementById('submit-btn');
+    const form = document.getElementById('form');
+    const message = document.getElementById('message');
+    const nameInput = document.getElementById('name');
+    const emailInput = document.getElementById('email');
+    const nameError = document.getElementById('name-error');
+    const emailError = document.getElementById('email-error');
+    const submitBtn = document.getElementById('submit-btn');
 
-      // Récupération du panier
-      let panier = JSON.parse(localStorage.getItem('panier')) || [];
+    // Validation en temps réel
+    nameInput.addEventListener('input', validateName);
+    emailInput.addEventListener('input', validateEmail);
 
-      // Fonction pour afficher le panier
-      function afficherPanier() {
-        listePanier.innerHTML = '';
-        let total = 0;
-
-        if (panier.length === 0) {
-          listePanier.innerHTML = '<div class="empty-cart">Votre panier est vide.</div>';
-          commandeTotal.textContent = '0.00 €';
-          submitBtn.disabled = true;
-          return;
-        }
-
-        panier.forEach(item => {
-          const div = document.createElement('div');
-          div.classList.add('article-panier');
-
-          // Affichage spécifique pour les menus
-          let detailsMenu = '';
-          if (item.type === 'menu') {
-            detailsMenu = `
-              <div class="details-menu">
-                <p><strong>• Burger :</strong> ${item.options.burger || 'Non spécifié'}</p>
-                <p><strong>• Accompagnement :</strong> 
-                  ${item.options.accompagnement === 'frites' 
-                    ? 'Frites' 
-                    : item.options.dessert ? 'Dessert (' + item.options.dessert + ')' : 'Non spécifié'}
-                </p>
-                <p><strong>• Boisson :</strong> ${item.options.boisson || 'Non spécifié'}</p>
-              </div>
-            `;
-          }
-
-          // Affichage des suppléments si existants
-          let supplementsHtml = '';
-          if (item.supplements && item.supplements.length > 0) {
-            supplementsHtml = `
-              <div class="supplements">
-                <p><strong>Suppléments :</strong></p>
-                <ul>
-                  ${item.supplements.map(sup => `<li>${sup.nom} (+${sup.prix.toFixed(2)} €)</li>`).join('')}
-                </ul>
-              </div>
-            `;
-          }
-
-          const prixTotal = item.prix * item.quantite;
-          total += prixTotal;
-
-          div.innerHTML = `
-            <div class="details-panier">
-              <img src="${item.image || 'https://via.placeholder.com/80?text=Produit'}" alt="${item.nom}" />
-              <div class="infos">
-                <h4>${item.nom} × ${item.quantite}</h4>
-                ${item.description ? `<p class="description">${item.description}</p>` : ''}
-                ${detailsMenu}
-                ${supplementsHtml}
-                <p class="prix-total"><strong>Total :</strong> ${prixTotal.toFixed(2)} €</p>
-              </div>
-            </div>
-            <button class="supprimer" title="Supprimer cet article">×</button>
-          `;
-
-          div.querySelector('.supprimer').addEventListener('click', () => {
-            panier = panier.filter(p => p.id !== item.id);
-            localStorage.setItem('panier', JSON.stringify(panier));
-            afficherPanier();
-          });
-
-          listePanier.appendChild(div);
-        });
-
-        commandeTotal.innerHTML = `<strong>Total de la commande :</strong> ${total.toFixed(2)} €`;
-        submitBtn.disabled = false;
-      }
-
-      // Validation du formulaire
-      function validateForm() {
-        let isValid = true;
+    // Validation du prénom
+    function validateName() {
         const name = nameInput.value.trim();
-        const email = emailInput.value.trim();
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-        // Validation du prénom
         if (name === '') {
-          nameError.style.display = 'block';
-          isValid = false;
+            nameError.textContent = 'Veuillez entrer votre prénom';
+            nameError.style.display = 'block';
+            return false;
+        } else if (name.length < 2) {
+            nameError.textContent = 'Le prénom doit contenir au moins 2 caractères';
+            nameError.style.display = 'block';
+            return false;
         } else {
-          nameError.style.display = 'none';
+            nameError.style.display = 'none';
+            return true;
         }
+    }
 
-        // Validation de l'email
-        if (email === '') {
-          emailError.textContent = 'Veuillez entrer votre email';
-          emailError.style.display = 'block';
-          isValid = false;
-        } else if (!emailRegex.test(email)) {
-          emailError.textContent = 'Veuillez entrer une adresse email valide';
-          emailError.style.display = 'block';
-          isValid = false;
-        } else {
-          emailError.style.display = 'none';
-        }
-
-        return isValid;
-      }
-
-      // Gestion de la soumission du formulaire
-      form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        if (!validateForm()) return;
-
-        const name = nameInput.value.trim();
+    // Validation de l'email
+    function validateEmail() {
         const email = emailInput.value.trim();
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+        
+        if (email === '') {
+            emailError.textContent = 'Veuillez entrer votre email';
+            emailError.style.display = 'block';
+            return false;
+        } else if (!emailRegex.test(email)) {
+            emailError.textContent = 'Veuillez entrer une adresse email valide (ex: exemple@domaine.com)';
+            emailError.style.display = 'block';
+            return false;
+        } else {
+            emailError.style.display = 'none';
+            return true;
+        }
+    }
 
-        if (panier.length === 0) {
-          message.textContent = 'Votre panier est vide';
-          message.style.color = 'red';
-          return;
+    // Validation globale du formulaire
+    function validateForm() {
+        const isNameValid = validateName();
+        const isEmailValid = validateEmail();
+        return isNameValid && isEmailValid;
+    }
+
+    // Gestion de la soumission
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        // Validation finale
+        if (!validateForm()) {
+            message.textContent = 'Veuillez corriger les erreurs dans le formulaire';
+            message.style.color = 'red';
+            return;
         }
 
-        message.textContent = 'Traitement de votre commande...';
-        message.style.color = 'green';
+        // Désactiver le bouton pendant le traitement
         submitBtn.disabled = true;
+        message.textContent = 'Traitement de votre commande en cours...';
+        message.style.color = 'green';
 
         try {
-          // Préparation des données
-          const commandeData = {
-            client: { name, email },
-            produits: panier,
-            total: panier.reduce((sum, item) => sum + (item.prix * item.quantite), 0)
-          };
+            // Préparation des données
+            const formData = {
+                name: nameInput.value.trim(),
+                email: emailInput.value.trim(),
+                // Ajoutez ici d'autres données si nécessaire
+            };
 
-          // Simulation d'envoi (à remplacer par votre appel API réel)
-          const response = await fetch('/api/enregistrer-commande', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(commandeData)
-          });
+            // Envoi des données
+            const response = await fetch('/api/enregistrer-commande', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            });
 
-          if (!response.ok) throw new Error('Erreur lors de la commande');
+            // Vérification de la réponse
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || `Erreur HTTP: ${response.status}`);
+            }
 
-          const result = await response.json();
-
-          if (result.success) {
+            const data = await response.json();
+            
+            // Succès
             message.textContent = 'Commande enregistrée avec succès!';
             message.style.color = 'green';
-            localStorage.removeItem('panier');
-            setTimeout(() => window.location.href = '/success.html', 2000);
-          }
+            
+            // Redirection ou autre action
+            if (data.redirectUrl) {
+                window.location.href = data.redirectUrl;
+            }
+
         } catch (error) {
-          console.error('Erreur:', error);
-          message.textContent = 'Erreur lors du traitement: ' + error.message;
-          message.style.color = 'red';
-          submitBtn.disabled = false;
+            console.error('Erreur:', error);
+            
+            // Messages d'erreur spécifiques
+            let errorMessage = 'Erreur lors de la commande';
+            if (error.message.includes('400')) {
+                errorMessage = 'Données invalides - veuillez vérifier vos informations';
+            } else if (error.message.includes('NetworkError')) {
+                errorMessage = 'Problème de connexion - veuillez réessayer';
+            } else {
+                errorMessage = error.message;
+            }
+            
+            message.textContent = errorMessage;
+            message.style.color = 'red';
+            
+        } finally {
+            submitBtn.disabled = false;
         }
-      });
-
-      // Validation en temps réel
-      nameInput.addEventListener('input', () => {
-        if (nameInput.value.trim() !== '') {
-          nameError.style.display = 'none';
-        }
-      });
-
-      emailInput.addEventListener('input', () => {
-        const email = emailInput.value.trim();
-        if (email !== '') {
-          emailError.style.display = 'none';
-        }
-      });
-
-      // Initialisation
-      afficherPanier();
     });
+
+    // Fonction pour afficher les erreurs de l'API
+    function displayApiError(error) {
+        const errorContainer = document.createElement('div');
+        errorContainer.className = 'api-error';
+        errorContainer.style.color = 'red';
+        errorContainer.style.marginTop = '1rem';
+        errorContainer.textContent = error;
+        
+        const existingError = form.querySelector('.api-error');
+        if (existingError) {
+            existingError.remove();
+        }
+        
+        form.appendChild(errorContainer);
+    }
+});
   </script>
 </body>
 </html>
