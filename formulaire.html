@@ -475,13 +475,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Validation d'email améliorée
 function validateEmail(email) {
-    // Regex plus stricte :
-    // - Domaine TLD d'au moins 2 caractères alphabétiques
-    // - Sous-domaines optionnels
-    const re = /^[^\s@]+@([^\s@]+\.)+[a-zA-Z]{2,}$/;
-    return re.test(email);
+    // Version finale qui bloque les extensions suspectes comme .ez ou .c2
+    return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,6}(\.[a-zA-Z]{2,3})?$/.test(email) && 
+           !/\.(ez|c2|xyz|tk|gq)$/i.test(email); // Liste noire d'extensions
 }
-
     // Gestion du formulaire
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
