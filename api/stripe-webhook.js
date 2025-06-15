@@ -7,40 +7,53 @@ const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY
 
 export const config = {
   api: {
-    bodyParser: false,
+    bodyParser: false,  // IMPORTANT pour récupérer le raw body
   },
 };
 
 export default async function handler(req, res) {
+  console.log('Webhook handler démarré');
+
+  // 1. Méthode POST uniquement
   if (req.method !== 'POST') {
     console.warn('⚠️ Méthode non autorisée:', req.method);
     return res.status(405).end('Method Not Allowed');
   }
 
+  // 2. Récupérer la signature Stripe dans le header
   const sig = req.headers['stripe-signature'];
   if (!sig) {
     console.error('⚠️ Pas de signature Stripe dans les headers');
     return res.status(400).end('Missing Stripe signature');
   }
+  console.log('Signature Stripe reçue:', sig);
 
+  // 3. Lire le corps brut (raw body)
   let buf;
   try {
-    buf = await buffer(req);  // <-- utilisation de micro.buffer ici
+    buf = await buffer(req);
     console.log('Buffer brut reçu, taille:', buf.length);
+    if (buf.length === 0) {
+      console.warn('⚠️ Buffer vide reçu !');
+      return res.status(400).end('Empty request body');
+    }
   } catch (err) {
     console.error('Erreur lecture buffer:', err);
     return res.status(400).end('Invalid request body');
   }
 
+  // 4. Vérifier signature webhook Stripe
   let event;
   try {
     event = stripe.webhooks.constructEvent(buf, sig, process.env.STRIPE_WEBHOOK_SECRET.trim());
-    console.log('Webhook Stripe reçu:', event.type);
+    console.log('Webhook Stripe validé:', event.type);
   } catch (err) {
     console.error('⚠️ Signature webhook invalide:', err.message);
+    console.log('Payload brut:', buf.toString('utf8'));
     return res.status(400).end(`Webhook Error: ${err.message}`);
   }
 
+  // 5. Gérer l'événement
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object;
     console.log('Session Stripe ID:', session.id);
@@ -50,6 +63,7 @@ export default async function handler(req, res) {
       return res.status(200).end('Paiement non finalisé');
     }
 
+    // 6. Récupérer la commande dans Supabase
     let order;
     try {
       const { data, error } = await supabase
@@ -76,6 +90,7 @@ export default async function handler(req, res) {
 
     console.log('Commande trouvée:', order);
 
+    // 7. Mettre à jour la commande en statut "completed"
     const { error: updateError } = await supabase
       .from('orders')
       .update({ status: 'completed' })
