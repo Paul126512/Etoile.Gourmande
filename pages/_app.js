@@ -1,7 +1,8 @@
 // pages/_app.js
 import React from "react";
 import { Analytics } from "@vercel/analytics/react"; // Pour Vercel Analytics (statistiques de visiteurs)
-import { SpeedInsights } from "@vercel/speed-insights/react"; // Pour Vercel Speed Insights (métriques de performance)
+import { SpeedInsights } from "@vercel/speed-insights/next";
+
 
 export default function MyApp({ Component, pageProps }) {
   return (
