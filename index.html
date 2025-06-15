@@ -206,11 +206,12 @@
 
 <script>
   (function() {
-    var t = document.createElement('script');
+    const t = document.createElement('script');
     t.src = 'https://vitals.vercel-insights.com/v1/script.js';
     t.setAttribute('data-vercel-dsn', 'https://vitals.vercel-insights.com/v1/vitals');
-    t.setAttribute('crossorigin', 'anonymous');
+    t.crossOrigin = 'anonymous';  // Solution clé pour CORS
     t.defer = true;
+    t.onerror = () => console.error('Vercel Speed Insights failed to load');
     document.body.appendChild(t);
   })();
 </script>
