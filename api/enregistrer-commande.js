@@ -19,9 +19,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ message: 'Nom et email obligatoires.' });
   }
 
-
   const { name, email } = client;
-
 
   if (!isValidEmail(email)) {
     return res.status(400).json({ message: 'Adresse email invalide.' });
@@ -65,82 +63,86 @@ export default async function handler(req, res) {
       .eq('email', email)
       .single();
 
-if (error && existingClient !== null) throw error;
+    if (error) throw error;
 
+    if (!existingClient) {
+      const { data: newClient, error: insertError } = await supabase
+        .from('clients')
+        .insert([{ name, email }])
+        .select('id')
+        .single();
 
-if (!existingClient) {
-const { data: newClient, error: insertError } = await supabase
-  .from('clients')
-  .insert([{ name, email }])
-  .select('id')
-  .single();
+      if (insertError) throw insertError;
 
-  if (insertError) throw insertError;
+      existingClient = newClient;
+    }
 
-  existingClient = newClient;
-}
+    const lineItems = [];
 
-const lineItems = [];
-
-for (const item of produits) {
-  // Ligne principale du produit
-  lineItems.push({
-    price_data: {
-      currency: 'eur',
-      product_data: {
-        name: `${item.nom} ${item.taille ? `(${item.taille})` : ''}`,
-        images: item.image ? [item.image] : ['https://via.placeholder.com/150?text=Produit'],
-        description: item.description || undefined,
-      },
-      unit_amount: Math.round(parseFloat(item.prix) * 100),
-    },
-    quantity: parseInt(item.quantite || 1, 10),
-  });
-
-  // Lignes pour les suppléments du produit
-  if (Array.isArray(item.supplements) && item.supplements.length > 0) {
-    for (const supp of item.supplements) {
+    for (const item of produits) {
       lineItems.push({
         price_data: {
           currency: 'eur',
           product_data: {
-            name: `Supplément : ${supp.nom || 'supplément'}`,
-            // Pas d'image ni description pour les suppléments, mais tu peux en ajouter si tu veux
+            name: `${item.nom} ${item.taille ? `(${item.taille})` : ''}`,
+            images: item.image ? [item.image] : ['https://via.placeholder.com/150?text=Produit'],
+            description: item.description || undefined,
           },
-          unit_amount: Math.round(parseFloat(supp.prix || 0) * 100),
+          unit_amount: Math.round(parseFloat(item.prix) * 100),
         },
-        quantity: parseInt(supp.quantite || 1, 10),
+        quantity: parseInt(item.quantite || 1, 10),
       });
+
+      if (Array.isArray(item.supplements) && item.supplements.length > 0) {
+        for (const supp of item.supplements) {
+          lineItems.push({
+            price_data: {
+              currency: 'eur',
+              product_data: {
+                name: `Supplément : ${supp.nom || 'supplément'}`,
+              },
+              unit_amount: Math.round(parseFloat(supp.prix || 0) * 100),
+            },
+            quantity: parseInt(supp.quantite || 1, 10),
+          });
+        }
+      }
     }
+
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: lineItems,
+      mode: 'payment',
+      success_url: `${process.env.SITE_URL}/success.html?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.SITE_URL}/cancel.html`,
+      customer_email: email,
+      metadata: {
+        client_id: existingClient.id
+      }
+    });
+
+    const { error: orderError } = await supabase
+      .from('orders')
+      .insert([{
+        client_id: existingClient.id,
+        email,
+        name: name,
+        produits,
+        total_price: totalCents / 100,
+        status: 'awaiting_payment',
+        stripe_session_id: session.id,
+        quantity: produits.reduce((acc, i) => acc + (parseInt(i.quantite || 1, 10)), 0),
+      }]);
+
+    if (orderError) throw orderError;
+
+    return res.status(200).json({ paymentUrl: session.url });
+
+  } catch (err) {
+    console.error('Erreur:', err);
+    return res.status(500).json({
+      message: 'Erreur serveur lors du traitement de la commande.',
+      details: process.env.NODE_ENV === 'development' ? err.message : undefined
+    });
   }
 }
-
-const session = await stripe.checkout.sessions.create({
-  payment_method_types: ['card'],
-  line_items: lineItems,
-  mode: 'payment',
-  success_url: `${process.env.SITE_URL}/success.html?session_id={CHECKOUT_SESSION_ID}`,
-  cancel_url: `${process.env.SITE_URL}/cancel.html`,
-  customer_email: email,
-  metadata: {
-    client_id: existingClient.id
-  }
-});
-
-const { error: orderError } = await supabase
-  .from('orders')
-  .insert([{
-    client_id: existingClient.id,
-    email,
-    name: name,
-    produits,
-    total_price: totalCents / 100,
-    status: 'awaiting_payment',
-    stripe_session_id: session.id,
-    quantity: produits.reduce((acc, i) => acc + (parseInt(i.quantite || 1, 10)), 0),
-  }]);
-
-if (orderError) throw orderError;
-
-return res.status(200).json({ paymentUrl: session.url });
-
