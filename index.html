@@ -203,18 +203,19 @@
     </div>
  </footer>
 
+    
+
 <script>
   (function() {
-    const script = document.createElement('script');
-    script.src = 'https://vitals.vercel-insights.com/v1/script.js';
-    script.setAttribute('data-vercel-dsn', 'https://vitals.vercel-insights.com/v1/vitals');
-    script.setAttribute('data-vercel-origin', window.location.origin);
-    script.crossOrigin = 'use-credentials';
-    script.defer = true;
-    document.body.appendChild(script);
+    const t = document.createElement('script');
+    t.src = 'https://vitals.vercel-insights.com/v1/script.js?' + Date.now();
+    t.dataset.vercelDsn = 'https://vitals.vercel-insights.com/v1/vitals';
+    t.dataset.vercelOrigin = window.location.origin;
+    t.crossOrigin = 'anonymous';
+    t.defer = true;
+    document.body.appendChild(t);
   })();
 </script>
-    
     
     
  </body>
