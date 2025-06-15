@@ -474,13 +474,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Validation d'email améliorée
-    function validateEmail(email) {
-        // Vérifie qu'il y a au moins un caractère avant @
-        // Au moins 2 caractères après @
-        // Et au moins 2 caractères après le point
-        const re = /^[^\s@]+@[^\s@]{2,}\.[^\s@]{2,}$/;
-        return re.test(email);
-    }
+function validateEmail(email) {
+    // Regex plus stricte :
+    // - Domaine TLD d'au moins 2 caractères alphabétiques
+    // - Sous-domaines optionnels
+    const re = /^[^\s@]+@([^\s@]+\.)+[a-zA-Z]{2,}$/;
+    return re.test(email);
+}
 
     // Gestion du formulaire
     form.addEventListener('submit', async (e) => {
