@@ -4,7 +4,7 @@ import { Pool } from 'pg';
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
-    rejectUnauthorized: false, // requis pour Railway, Supabase, etc.
+    rejectUnauthorized: false,
   },
 });
 
@@ -16,25 +16,18 @@ export default async function handler(req, res) {
   }
 
   try {
-    const clientRes = await pool.query(
-      'SELECT stripe_session_id FROM clients WHERE email = $1 LIMIT 1',
+    const ordersRes = await pool.query(
+      'SELECT * FROM orders WHERE email = $1 ORDER BY created_at DESC',
       [email]
     );
 
-    if (clientRes.rows.length === 0) {
-      return res.status(404).json({ error: 'Client non trouvé' });
+    if (ordersRes.rows.length === 0) {
+      return res.status(404).json({ error: 'Aucune commande trouvée pour cet email.' });
     }
-
-    const sessionId = clientRes.rows[0].stripe_session_id;
-
-    const ordersRes = await pool.query(
-      'SELECT * FROM commandes WHERE stripe_session_id = $1',
-      [sessionId]
-    );
 
     res.status(200).json(ordersRes.rows);
   } catch (error) {
-    console.error(error);
+    console.error('Erreur lors de la récupération des commandes :', error);
     res.status(500).json({ error: 'Erreur serveur' });
   }
 }
