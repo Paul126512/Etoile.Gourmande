@@ -77,38 +77,45 @@ if (error) throw error;
 
       existingClient = newClient;
     }
+// ...
 
-    const lineItems = [];
+const lineItems = [];
 
-    for (const item of produits) {
+for (const item of produits) {
+  const quantiteProduit = parseInt(item.quantite || 1, 10);
+
+  lineItems.push({
+    price_data: {
+      currency: 'eur',
+      product_data: {
+        name: `${item.nom} ${item.taille ? `(${item.taille})` : ''}`,
+        images: item.image ? [item.image] : ['https://via.placeholder.com/150?text=Produit'],
+        description: item.description || undefined,
+      },
+      unit_amount: Math.round(parseFloat(item.prix) * 100),
+    },
+    quantity: quantiteProduit,
+  });
+
+  if (Array.isArray(item.supplements) && item.supplements.length > 0) {
+    for (const supp of item.supplements) {
+      const quantiteSupp = supp.quantite ? parseInt(supp.quantite, 10) : quantiteProduit;
       lineItems.push({
         price_data: {
           currency: 'eur',
           product_data: {
-            name: `${item.nom} ${item.taille ? `(${item.taille})` : ''}`,
-            images: item.image ? [item.image] : ['https://via.placeholder.com/150?text=Produit'],
-            description: item.description || undefined,
+            name: `Supplément : ${supp.nom || 'supplément'}`,
           },
-          unit_amount: Math.round(parseFloat(item.prix) * 100),
+          unit_amount: Math.round(parseFloat(supp.prix || 0) * 100),
         },
-        quantity: parseInt(item.quantite || 1, 10),
+        quantity: quantiteSupp,
       });
-
-      if (Array.isArray(item.supplements) && item.supplements.length > 0) {
-        for (const supp of item.supplements) {
-          lineItems.push({
-            price_data: {
-              currency: 'eur',
-              product_data: {
-                name: `Supplément : ${supp.nom || 'supplément'}`,
-              },
-              unit_amount: Math.round(parseFloat(supp.prix || 0) * 100),
-            },
-            quantity: parseInt(supp.quantite || 1, 10),
-          });
-        }
-      }
     }
+  }
+}
+
+
+
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
