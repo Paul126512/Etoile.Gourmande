@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY; // clé serveur
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY; // clé serveur sécurisée
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 export default async function handler(req, res) {
@@ -17,12 +17,10 @@ export default async function handler(req, res) {
 
     const datePrefix = `${dd}${mm}${yyyy}`; // ex: 16062025
 
-    // Récupérer le numéro max des commandes du jour
-    // Exemple : CMD-16062025-005 -> on veut récupérer le 5
-
-    // Filtrer tous les numero_cmd qui commencent par 'CMD-DDMMYYYY-'
+    // Pattern pour filtrer les commandes du jour
     const likePattern = `CMD-${datePrefix}-%`;
 
+    // Récupérer toutes les commandes du jour avec ce pattern
     const { data, error } = await supabase
       .from('orders')
       .select('numero_cmd')
@@ -32,19 +30,20 @@ export default async function handler(req, res) {
       throw error;
     }
 
-    // Extraire les numéros de commandes et récupérer la plus grande valeur du suffixe
+    // Si aucune commande trouvée, on démarre à 0
     let maxCount = 0;
-    data.forEach(order => {
-      const numero = order.numero_cmd;
-      // Extrait la partie après le dernier tiret
-      const parts = numero.split('-');
-      const lastPart = parts[parts.length - 1];
-      const count = parseInt(lastPart, 10);
-      if (!isNaN(count) && count > maxCount) maxCount = count;
-    });
+    if (data && data.length > 0) {
+      data.forEach(order => {
+        const numero = order.numero_cmd;
+        const parts = numero.split('-');
+        const lastPart = parts[parts.length - 1];
+        const count = parseInt(lastPart, 10);
+        if (!isNaN(count) && count > maxCount) maxCount = count;
+      });
+    }
 
     const newCount = maxCount + 1;
-    const formattedCount = String(newCount).padStart(3, '0'); // 3 chiffres
+    const formattedCount = String(newCount).padStart(3, '0');
 
     const newOrderId = `CMD-${datePrefix}-${formattedCount}`;
 
