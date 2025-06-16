@@ -123,10 +123,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   let total = 0;
   let itemsHtml = '';
-  let commandeDetails = {
-    pizzas: [],
-    boissons: []
-  };
+  const commandeDetails = { pizzas: [], boissons: [] };
 
   panierPizzas.forEach(pizza => {
     let prix = pizza.prix;
@@ -141,10 +138,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     total += prix;
+
+    // Affichage des suppléments dans la commande
+    const supplementsHtml = supplements.length > 0
+      ? `<ul>${supplements.map(s => `<li>+ ${s.nom} (${s.prix.toFixed(2)}€)</li>`).join('')}</ul>`
+      : '';
+
     itemsHtml += `
       <div class="order-item">
         <span>${pizza.nom} (${pizza.taille || 'standard'})</span>
         <span>${prix.toFixed(2)}€</span>
+        ${supplementsHtml}
       </div>
     `;
 
@@ -152,7 +156,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       nom: pizza.nom,
       taille: pizza.taille,
       prix: pizza.prix,
-      supplements: supplements,
+      supplements,
       prix_total: prix
     });
   });
@@ -175,44 +179,34 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   });
 
-  // Fonction pour générer un numéro de commande unique avec compteur quotidien
+  // Fonction pour générer un numéro de commande unique quotidien
   async function genererNumeroCommande() {
     const now = new Date();
-
     const day = String(now.getDate()).padStart(2, '0');
     const month = String(now.getMonth() + 1).padStart(2, '0');
     const year = now.getFullYear();
-
     const dateDebut = `${year}-${month}-${day}T00:00:00Z`;
     const dateFin = `${year}-${month}-${day}T23:59:59Z`;
 
-    // Appel Supabase pour compter les commandes du jour
-    const response = await fetch('https://dtkcxmmedsinbdacrbmt.supabase.co/rest/v1/orders?select=numero_cmd', {
+    const response = await fetch(`https://dtkcxmmedsinbdacrbmt.supabase.co/rest/v1/orders?select=numero_cmd&created_at=gte.${dateDebut}&created_at=lte.${dateFin}`, {
       method: 'GET',
       headers: {
         'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhhd2xuZWN4amZkaGduYmx0b3ZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk1NjQ1NTcsImV4cCI6MjA2NTE0MDU1N30.j4_ZR22bV7acZabBIduYhoLZlITwRYu6ToBF8MYvj5o',
         'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhhd2xuZWN4amZkaGduYmx0b3ZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk1NjQ1NTcsImV4cCI6MjA2NTE0MDU1N30.j4_ZR22bV7acZabBIduYhoLZlITwRYu6ToBF8MYvj5o',
         'Prefer': 'count=exact',
-      },
-      // Filtrer entre dateDebut et dateFin avec `created_at`
-      // Supabase REST : filter via query string 
-      // Syntaxe : ?created_at=gte.DATE&created_at=lte.DATE (à confirmer)
+      }
     });
 
     if (!response.ok) {
-      console.warn("Erreur récupération commandes du jour, fallback numéro local");
-      // fallback numéro local si erreur
-      return `CMD-${day}${month}${year}-000`;
+      throw new Error(`Erreur HTTP ${response.status} lors du comptage des commandes`);
     }
 
     const commandes = await response.json();
-    const count = commandes.length || 0;
-
-    const compteur = String(count + 1).padStart(3, '0');
+    const compteur = String(commandes.length + 1).padStart(3, '0');
     return `CMD-${day}${month}${year}-${compteur}`;
   }
 
-  // Appel de la fonction async pour générer le numéro de commande
+  // Appel pour générer le numéro de commande
   let orderNum = await genererNumeroCommande();
 
   try {
@@ -220,14 +214,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhhd2xuZWN4amZkaGduYmx0b3ZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk1NjQ1NTcsImV4cCI6MjA2NTE0MDU1N30.j4_ZR22bV7acZabBIduYhoLZlITwRYu6ToBF8MYvj5o',
-        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhhd2xuZWN4amZkaGduYmx0b3ZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk1NjQ1NTcsImV4cCI6MjA2NTE0MDU1N30.j4_ZR22bV7acZabBIduYhoLZlITwRYu6ToBF8MYvj5o',
+        'apikey': 'VOTRE_API_KEY',
+        'Authorization': 'Bearer VOTRE_API_KEY',
         'Prefer': 'return=representation'
       },
       body: JSON.stringify({
         numero_cmd: orderNum,
-        prenom: prenom,
-        email: email,
+        prenom,
+        email,
         total_price: total,
         details: commandeDetails,
         statut: 'en_attente',
@@ -235,33 +229,30 @@ document.addEventListener('DOMContentLoaded', async () => {
       })
     });
 
-    if (!response.ok) {
-      throw new Error("Erreur lors de l'enregistrement dans Supabase");
-    }
+    if (!response.ok) throw new Error("Erreur lors de l'enregistrement dans Supabase");
 
     card.innerHTML = `
       <h1>CONFIRMATION</h1>
       ${prenom ? `<p>Client: <strong>${prenom}</strong></p>` : ''}
       ${email ? `<p>${email}</p>` : ''}
-      <div class="order-number">${orderNum}</div>
+      <div class="order-number">Commande n° <strong>${orderNum}</strong></div>
       <div class="order-details">
         <h2>VOTRE COMMANDE</h2>
         ${itemsHtml}
         <div class="total">TOTAL: ${total.toFixed(2)}€</div>
       </div>
       <div class="thank-you">
-        Merci pour votre commande. Votre numéro de suivi est <strong>${orderNum}</strong>.
+        Merci pour votre commande. Conservez ce numéro pour le suivi : <strong>${orderNum}</strong>.
       </div>
       <button class="btn" onclick="window.location.href='index.html'">RETOUR À L'ACCUEIL</button>
     `;
-
   } catch (error) {
     console.error("Erreur Supabase:", error);
     card.innerHTML = `
       <h1>CONFIRMATION PARTIELLE</h1>
       <div class="error-message">
-        Votre commande a été enregistrée (n°${orderNum})<br>
-        Conservez ce numéro de commande: <strong>${orderNum}</strong>.
+        Votre commande a été enregistrée partiellement.<br>
+        Conservez ce numéro de commande : <strong>${orderNum}</strong>.
       </div>
       <div class="order-details">
         <h2>RÉCAPITULATIF</h2>
