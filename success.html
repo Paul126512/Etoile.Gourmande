@@ -140,17 +140,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     total += prix;
 
     // Affichage des suppléments dans la commande
-    const supplementsHtml = supplements.length > 0
-      ? `<ul>${supplements.map(s => `<li>+ ${s.nom} (${s.prix.toFixed(2)}€)</li>`).join('')}</ul>`
-      : '';
+const supplementsHtml = supplements.length > 0
+  ? `<ul class="order-supplements">${supplements.map(s => `<li>+ ${s.nom} (${s.prix.toFixed(2)}€)</li>`).join('')}</ul>`
+  : '';
 
-    itemsHtml += `
-      <div class="order-item">
-        <span>${pizza.nom} (${pizza.taille || 'standard'})</span>
-        <span>${prix.toFixed(2)}€</span>
-        ${supplementsHtml}
-      </div>
-    `;
+
+ itemsHtml += `
+  <div class="order-item">
+    <span>${pizza.nom} (${pizza.taille || 'standard'})</span>
+    <span>${prix.toFixed(2)}€</span>
+  </div>
+  ${supplementsHtml}
+`;
+
 
     commandeDetails.pizzas.push({
       nom: pizza.nom,
