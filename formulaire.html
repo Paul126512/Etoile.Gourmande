@@ -524,7 +524,7 @@ function validateEmail(email) {
                 menus: panier.filter(item => item.type === 'menu'),
                 boissons: panier.filter(item => item.type === 'boisson'),
                 desserts: panier.filter(item => item.type === 'dessert'),
-                tacos: panier.filter(item => item.type === 'taco'),
+                tacos: panier.filter(item => item.type === 'tacos'),
                 supplements: panier.flatMap(item => item.supplements || []),
                 total: panier.reduce((sum, item) => sum + (item.prix * item.quantite), 0)
             };
