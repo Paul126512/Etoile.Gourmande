@@ -57,14 +57,13 @@ export default async function handler(req, res) {
 
   try {
     // Vérifie si le client existe déjà
-let { data: existingClient, error } = await supabase
-  .from('clients')
-  .select('id')
-  .eq('email', email)
-  .maybeSingle();
+    let { data: existingClient, error } = await supabase
+      .from('clients')
+      .select('id')
+      .eq('email', email)
+      .maybeSingle();
 
-if (error) throw error;
-
+    if (error) throw error;
 
     if (!existingClient) {
       const { data: newClient, error: insertError } = await supabase
@@ -77,46 +76,48 @@ if (error) throw error;
 
       existingClient = newClient;
     }
-// ...
 
-const lineItems = [];
+    // Génération du numéro de commande unique
+    const now = new Date();
+    const numero_cmd = `CMD-${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}-${now.getHours()}${now.getMinutes()}${now.getSeconds()}-${Math.floor(Math.random() * 1000)}`;
 
-for (const item of produits) {
-  const quantiteProduit = parseInt(item.quantite || 1, 10);
+    // Préparation des articles pour Stripe
+    const lineItems = [];
 
-  lineItems.push({
-    price_data: {
-      currency: 'eur',
-      product_data: {
-        name: `${item.nom} ${item.taille ? `(${item.taille})` : ''}`,
-        images: item.image ? [item.image] : ['https://via.placeholder.com/150?text=Produit'],
-        description: item.description || undefined,
-      },
-      unit_amount: Math.round(parseFloat(item.prix) * 100),
-    },
-    quantity: quantiteProduit,
-  });
+    for (const item of produits) {
+      const quantiteProduit = parseInt(item.quantite || 1, 10);
 
-  if (Array.isArray(item.supplements) && item.supplements.length > 0) {
-    for (const supp of item.supplements) {
-      const quantiteSupp = supp.quantite ? parseInt(supp.quantite, 10) : quantiteProduit;
       lineItems.push({
         price_data: {
           currency: 'eur',
           product_data: {
-            name: `Supplément : ${supp.nom || 'supplément'}`,
+            name: `${item.nom} ${item.taille ? `(${item.taille})` : ''}`,
+            images: item.image ? [item.image] : ['https://via.placeholder.com/150?text=Produit'],
+            description: item.description || undefined,
           },
-          unit_amount: Math.round(parseFloat(supp.prix || 0) * 100),
+          unit_amount: Math.round(parseFloat(item.prix) * 100),
         },
-        quantity: quantiteSupp,
+        quantity: quantiteProduit,
       });
+
+      if (Array.isArray(item.supplements) && item.supplements.length > 0) {
+        for (const supp of item.supplements) {
+          const quantiteSupp = supp.quantite ? parseInt(supp.quantite, 10) : quantiteProduit;
+          lineItems.push({
+            price_data: {
+              currency: 'eur',
+              product_data: {
+                name: `Supplément : ${supp.nom || 'supplément'}`,
+              },
+              unit_amount: Math.round(parseFloat(supp.prix || 0) * 100),
+            },
+            quantity: quantiteSupp,
+          });
+        }
+      }
     }
-  }
-}
 
-
-
-
+    // Création de la session Stripe Checkout
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: lineItems,
@@ -125,16 +126,19 @@ for (const item of produits) {
       cancel_url: `${process.env.SITE_URL}/cancel.html`,
       customer_email: email,
       metadata: {
-        client_id: existingClient.id
+        client_id: existingClient.id,
+        numero_cmd
       }
     });
 
+    // Enregistrement de la commande dans Supabase
     const { error: orderError } = await supabase
       .from('orders')
       .insert([{
+        numero_cmd,
         client_id: existingClient.id,
         email,
-        name: name,
+        name,
         produits,
         total_price: totalCents / 100,
         status: 'awaiting_payment',
@@ -144,7 +148,7 @@ for (const item of produits) {
 
     if (orderError) throw orderError;
 
-    return res.status(200).json({ paymentUrl: session.url });
+    return res.status(200).json({ paymentUrl: session.url, numero_cmd });
 
   } catch (err) {
     console.error('Erreur:', err);
