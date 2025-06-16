@@ -101,11 +101,14 @@ export default async function handler(req, res) {
     const compteur = String((count || 0) + 1).padStart(3, '0');
 
     // Format numéro de commande : JJ/MM/YYYY-XXX
-  const numero_cmd = `${day}${month}${year}-${compteur}`;
+const numero_cmd = `CMD-${day}${month}${year}-${compteur}`;
+
 // ou avec tirets
 // const numero_cmd = `${day}-${month}-${year}-${compteur}`;
 
 
+
+    
     console.log('Numéro de commande généré :', numero_cmd);
 
     // Préparation des articles pour Stripe
