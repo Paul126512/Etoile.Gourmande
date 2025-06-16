@@ -514,26 +514,31 @@ function validateEmail(email) {
         message.textContent = 'Traitement de votre commande...';
         message.style.color = 'green';
 
-        try {
-            // Préparation des données par catégorie
-            const commandeData = {
-                client: { name, email },
-                pizzas: panier.filter(item => item.type === 'pizza'),
-                burgers: panier.filter(item => item.type === 'burger'),
-                bagels: panier.filter(item => item.type === 'bagel'),
-                menus: panier.filter(item => item.type === 'menu'),
-                boissons: panier.filter(item => item.type === 'boisson'),
-                desserts: panier.filter(item => item.type === 'dessert'),
-                tacos: panier.filter(item => item.type === 'tacos'),
-                supplements: panier.flatMap(item => item.supplements || []),
-                total: panier.reduce((sum, item) => sum + (item.prix * item.quantite), 0)
-            };
+ try {
+        // Génération du numéro de commande
+        const now = new Date();
+        const orderNum = `CMD-${String(now.getDate()).padStart(2,'0')}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}`;
 
-            const response = await fetch('/api/enregistrer-commande', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(commandeData)
-            });
+        // Préparation des données par catégorie (ajout du numero_cmd ici)
+        const commandeData = {
+            numero_cmd: orderNum,   // <-- ici
+            client: { name, email },
+            pizzas: panier.filter(item => item.type === 'pizza'),
+            burgers: panier.filter(item => item.type === 'burger'),
+            bagels: panier.filter(item => item.type === 'bagel'),
+            menus: panier.filter(item => item.type === 'menu'),
+            boissons: panier.filter(item => item.type === 'boisson'),
+            desserts: panier.filter(item => item.type === 'dessert'),
+            tacos: panier.filter(item => item.type === 'tacos'),
+            supplements: panier.flatMap(item => item.supplements || []),
+            total: panier.reduce((sum, item) => sum + (item.prix * item.quantite), 0)
+        };
+
+        const response = await fetch('/api/enregistrer-commande', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(commandeData)
+        });
 
             if (!response.ok) {
                 const errorData = await response.json();
