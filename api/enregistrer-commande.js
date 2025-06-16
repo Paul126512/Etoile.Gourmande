@@ -77,9 +77,33 @@ export default async function handler(req, res) {
       existingClient = newClient;
     }
 
-    // Génération du numéro de commande unique
+    // Génération du numéro de commande unique avec compteur incrémental par jour
     const now = new Date();
-    const numero_cmd = `CMD-${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}-${now.getHours()}${now.getMinutes()}${now.getSeconds()}-${Math.floor(Math.random() * 1000)}`;
+
+    const day = String(now.getDate()).padStart(2, '0');
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const year = now.getFullYear();
+
+    // Format date ISO pour comparaison dans Supabase
+    const dateDebut = `${year}-${month}-${day}T00:00:00Z`;
+    const dateFin = `${year}-${month}-${day}T23:59:59Z`;
+
+    // Récupérer le nombre de commandes passées aujourd'hui (juste le count)
+    const { count, error: countError } = await supabase
+      .from('orders')
+      .select('numero_cmd', { count: 'exact', head: true })
+      .gte('created_at', dateDebut)
+      .lte('created_at', dateFin);
+
+    if (countError) throw countError;
+
+    // Le compteur = nombre de commandes + 1
+    const compteur = String((count || 0) + 1).padStart(3, '0');
+
+    // Format numéro de commande : JJ/MM/YYYY-XXX
+    const numero_cmd = `${day}/${month}/${year}-${compteur}`;
+
+    console.log('Numéro de commande généré :', numero_cmd);
 
     // Préparation des articles pour Stripe
     const lineItems = [];
@@ -91,7 +115,7 @@ export default async function handler(req, res) {
         price_data: {
           currency: 'eur',
           product_data: {
-            name: `${item.nom} ${item.taille ? `(${item.taille})` : ''}`,
+            name: `${item.nom} ${item.taille ? `(${item.taille})` : ''}`.trim(),
             images: item.image ? [item.image] : ['https://via.placeholder.com/150?text=Produit'],
             description: item.description || undefined,
           },
