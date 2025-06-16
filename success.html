@@ -5,149 +5,90 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Confirmation</title>
   <style>
-    @font-face {
-      font-family: 'Neue Haas';
-      src: url('https://fonts.cdnfonts.com/css/neue-haas-grotesk-display-pro') format('woff2');
-    }
-    
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
+      from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.02); }
-      100% { transform: scale(1); }
-    }
-    
     body {
-      font-family: 'Neue Haas', sans-serif;
-      background: #fff;
-      color: #000;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      background: white;
+      color: black;
       margin: 0;
-      padding: 0;
+      padding: 20px;
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      line-height: 1.6;
+      animation: fadeIn 0.6s ease-out;
     }
-    
     .confirmation-card {
-      width: 90%;
+      width: 100%;
       max-width: 500px;
-      padding: 2rem;
+      border: 2px solid black;
+      padding: 30px;
       text-align: center;
-      animation: fadeIn 0.8s ease-out;
     }
-    
-    .confirmation-header {
-      margin-bottom: 2rem;
-    }
-    
     h1 {
-      font-weight: 500;
-      font-size: 1.8rem;
-      margin: 0 0 0.5rem;
-      letter-spacing: -0.5px;
+      font-weight: 300;
+      letter-spacing: 2px;
+      margin-bottom: 20px;
     }
-    
+    .empty-message {
+      padding: 40px 0;
+      font-style: italic;
+    }
     .order-number {
-      font-size: 0.9rem;
-      letter-spacing: 1px;
-      color: #666;
-      margin-bottom: 2rem;
+      font-family: monospace;
+      font-size: 1.2rem;
+      margin: 20px 0;
+      padding: 10px;
+      border: 1px dashed black;
     }
-    
-    .divider {
-      height: 1px;
-      background: #eee;
-      margin: 2rem 0;
-    }
-    
-    .order-items {
-      margin: 2rem 0;
+    .order-details {
+      margin: 30px 0;
       text-align: left;
     }
-    
     .order-item {
       display: flex;
       justify-content: space-between;
-      padding: 0.8rem 0;
-      border-bottom: 1px solid #f5f5f5;
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
     }
-    
-    .order-item:last-child {
-      border-bottom: none;
-    }
-    
     .total {
-      font-weight: 500;
-      font-size: 1.1rem;
-      margin-top: 1.5rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid #000;
+      font-weight: bold;
+      text-align: right;
+      margin-top: 20px;
+      padding-top: 10px;
+      border-top: 1px solid black;
     }
-    
-    .client-info {
-      background: #f9f9f9;
-      padding: 1.2rem;
-      margin: 2rem 0;
-      border-radius: 4px;
-      font-size: 0.9rem;
-    }
-    
-    .thank-you {
-      margin: 2rem 0;
-      font-size: 0.9rem;
-      color: #666;
-    }
-    
     .btn {
-      background: #000;
-      color: #fff;
+      background: black;
+      color: white;
       border: none;
-      padding: 1rem 2rem;
-      margin-top: 1rem;
+      padding: 12px 25px;
+      margin-top: 30px;
       cursor: pointer;
-      font-family: 'Neue Haas', sans-serif;
-      font-size: 0.9rem;
-      letter-spacing: 0.5px;
-      transition: all 0.3s ease;
-      width: 100%;
-      max-width: 200px;
     }
-    
-    .btn:hover {
-      background: #333;
-      animation: pulse 0.5s ease;
-    }
-    
-    .empty-message {
-      padding: 2rem 0;
-      color: #666;
-    }
-    
-    @media (max-width: 600px) {
-      .confirmation-card {
-        padding: 1.5rem;
-      }
-      
-      h1 {
-        font-size: 1.5rem;
-      }
-      
-      .btn {
-        max-width: 100%;
-      }
+    .thank-you {
+      margin-top: 30px;
+      font-style: italic;
     }
   </style>
 </head>
 <body>
+
+
   <div class="confirmation-card" id="confirmation-card">
     <!-- Contenu généré par JavaScript -->
   </div>
+
+
+
+
+
+
+
+
 
   <script>
 document.addEventListener('DOMContentLoaded', async () => {
@@ -160,14 +101,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Vérifier si le panier est vide
   if (panierPizzas.length === 0 && panierBoissons.length === 0) {
     card.innerHTML = `
-      <div class="confirmation-header">
-        <h1>Commande Vide</h1>
-      </div>
+      <h1>ERREUR</h1>
       <div class="empty-message">
-        Votre panier est actuellement vide.
+        Aucune commande trouvée.<br>
+        Votre panier était vide.
       </div>
-      <div class="divider"></div>
-      <button class="btn" onclick="window.location.href='index.html'">Retour à l'accueil</button>
+      <button class="btn" onclick="window.location.href='index.html'">RETOUR À L'ACCUEIL</button>
     `;
     return;
   }
@@ -196,7 +135,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     total += prix;
     itemsHtml += `
       <div class="order-item">
-        <span>${pizza.nom} <small>${pizza.taille ? `(${pizza.taille})` : ''}</small></span>
+        <span>${pizza.nom} (${pizza.taille || 'standard'})</span>
         <span>${prix.toFixed(2)}€</span>
       </div>
     `;
@@ -216,7 +155,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     total += prixTotal;
     itemsHtml += `
       <div class="order-item">
-        <span>${boisson.nom} <small>(×${boisson.quantite})</small></span>
+        <span>${boisson.nom} × ${boisson.quantite}</span>
         <span>${prixTotal.toFixed(2)}€</span>
       </div>
     `;
@@ -229,9 +168,24 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   });
 
-  // Générer le numéro de commande
+  // Générer le numéro de commande (format: CMD-JJMMHHMM)
   const now = new Date();
+
+  // Option : récupérer un numéro unique depuis API externe
+  // let orderNum = `CMD-${String(now.getDate()).padStart(2,'0')}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}`;
   let orderNum = `CMD-${String(now.getDate()).padStart(2,'0')}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}`;
+
+  /*
+  try {
+    const idResponse = await fetch('/api/orderManager');
+    const idData = await idResponse.json();
+    if (idData.orderId) {
+      orderNum = idData.orderId;
+    }
+  } catch (e) {
+    console.warn('Impossible de récupérer un numéro de commande unique via API:', e);
+  }
+  */
 
   try {
     // Enregistrement dans Supabase
@@ -255,61 +209,48 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     if (!response.ok) {
-      throw new Error("Erreur lors de l'enregistrement");
+      throw new Error("Erreur lors de l'enregistrement dans Supabase");
     }
 
     // Afficher la confirmation
     card.innerHTML = `
-      <div class="confirmation-header">
-        <h1>Commande confirmée</h1>
-        <div class="order-number">Référence: ${orderNum}</div>
-      </div>
-      
-      ${prenom || email ? `
-        <div class="client-info">
-          ${prenom ? `<div><strong>Prénom:</strong> ${prenom}</div>` : ''}
-          ${email ? `<div><strong>Email:</strong> ${email}</div>` : ''}
-        </div>
-      ` : ''}
-      
-      <div class="divider"></div>
-      
-      <div class="order-items">
+      <h1>CONFIRMATION</h1>
+
+      ${prenom ? `<p>Client: <strong>${prenom}</strong></p>` : ''}
+      ${email ? `<p>${email}</p>` : ''}
+
+      <div class="order-number">${orderNum}</div>
+
+      <div class="order-details">
+        <h2>VOTRE COMMANDE</h2>
         ${itemsHtml}
-        <div class="total">Total: ${total.toFixed(2)}€</div>
+        <div class="total">TOTAL: ${total.toFixed(2)}€</div>
       </div>
-      
+
       <div class="thank-you">
-        Merci pour votre commande. Vous recevrez un email de confirmation sous peu.
+        Merci pour votre commande. Votre numéro de suivi est <strong>${orderNum}</strong>.
       </div>
-      
-      <button class="btn" onclick="window.location.href='index.html'">Retour</button>
+
+      <button class="btn" onclick="window.location.href='index.html'">RETOUR À L'ACCUEIL</button>
     `;
 
   } catch (error) {
-    console.error("Erreur:", error);
+    console.error("Erreur Supabase:", error);
     card.innerHTML = `
-      <div class="confirmation-header">
-        <h1>Confirmation partielle</h1>
-        <div class="order-number">Référence: ${orderNum}</div>
+      <h1>CONFIRMATION PARTIELLE</h1>
+      <div class="error-message">
+        Votre commande a été enregistrée (n°${orderNum})<br>
+        Conservez ce numéro de commande: <strong>${orderNum}</strong>.
       </div>
-      
-      <div class="client-info">
-        <p>Votre commande a été enregistrée mais une erreur est survenue lors de la confirmation.</p>
-        <p>Veuillez conserver cette référence.</p>
-      </div>
-      
-      <div class="divider"></div>
-      
-      <div class="order-items">
+      <div class="order-details">
+        <h2>RÉCAPITULATIF</h2>
         ${itemsHtml}
-        <div class="total">Total: ${total.toFixed(2)}€</div>
+        <div class="total">TOTAL: ${total.toFixed(2)}€</div>
       </div>
-      
-      <button class="btn" onclick="window.location.href='index.html'">Retour</button>
+      <button class="btn" onclick="window.location.href='index.html'">RETOUR À L'ACCUEIL</button>
     `;
   } finally {
-    // Vider le localStorage
+    // Vider le localStorage dans tous les cas
     localStorage.removeItem('panier');
     localStorage.removeItem('boissons');
     localStorage.removeItem('prenomCommande');
@@ -317,5 +258,3 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 });
 </script>
-</body>
-</html>
