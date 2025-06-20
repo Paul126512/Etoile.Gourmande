@@ -8,7 +8,27 @@ function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
+const allowedOrigins = [
+  'http://127.0.0.1:5500',
+  'http://localhost:5500',
+  'https://etoile-gourmande-one.vercel.app'
+];
+
 export default async function handler(req, res) {
+  // Gestion CORS
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  // Réponse à la requête prévol OPTIONS
+  if (req.method === 'OPTIONS') {
+    return res.status(204).end();
+  }
+
+  // On accepte uniquement POST
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Méthode non autorisée. Utilisez POST.' });
   }
@@ -84,11 +104,9 @@ export default async function handler(req, res) {
     const month = String(now.getMonth() + 1).padStart(2, '0');
     const year = now.getFullYear();
 
-    // Format date ISO pour comparaison dans Supabase
     const dateDebut = `${year}-${month}-${day}T00:00:00Z`;
     const dateFin = `${year}-${month}-${day}T23:59:59Z`;
 
-    // Récupérer le nombre de commandes passées aujourd'hui (juste le count)
     const { count, error: countError } = await supabase
       .from('orders')
       .select('numero_cmd', { count: 'exact', head: true })
@@ -97,21 +115,11 @@ export default async function handler(req, res) {
 
     if (countError) throw countError;
 
-    // Le compteur = nombre de commandes + 1
     const compteur = String((count || 0) + 1).padStart(3, '0');
+    const numero_cmd = `CMD-${day}${month}${year}-${compteur}`;
 
-    // Format numéro de commande : JJ/MM/YYYY-XXX
-const numero_cmd = `CMD-${day}${month}${year}-${compteur}`;
-
-// ou avec tirets
-// const numero_cmd = `${day}-${month}-${year}-${compteur}`;
-
-
-
-    
     console.log('Numéro de commande généré :', numero_cmd);
 
-    // Préparation des articles pour Stripe
     const lineItems = [];
 
     for (const item of produits) {
@@ -147,7 +155,6 @@ const numero_cmd = `CMD-${day}${month}${year}-${compteur}`;
       }
     }
 
-    // Création de la session Stripe Checkout
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: lineItems,
@@ -161,7 +168,6 @@ const numero_cmd = `CMD-${day}${month}${year}-${compteur}`;
       }
     });
 
-    // Enregistrement de la commande dans Supabase
     const { error: orderError } = await supabase
       .from('orders')
       .insert([{
