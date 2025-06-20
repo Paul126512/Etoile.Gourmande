@@ -8,7 +8,7 @@ function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-const allowedOrigins = [
+const ALLOWED_ORIGINS = [
   'http://127.0.0.1:5500',
   'http://localhost:5500',
   'https://etoile-gourmande-one.vercel.app'
