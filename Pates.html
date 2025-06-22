@@ -23,6 +23,29 @@ body {
   line-height: 1.6;
 }
 
+.toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #000000;
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 16px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 1000;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+
+
 /* === Structure globale === */
 .container {
   max-width: 1200px;
@@ -587,6 +610,9 @@ document.getElementById('fermer-panier').addEventListener('click', function() {
   </div>
 </div>
 
+<div id="toast-notification" class="toast">Produit ajouté au panier</div>
+
+
 
 
 
@@ -633,105 +659,102 @@ document.getElementById('fermer-panier').addEventListener('click', function() {
 
 
 
-
-
-
-
-
-
-
 <script>
+
+
   const boutonsAjouter = document.querySelectorAll('.produit button');
-  const compteurPanier = document.getElementById('compteur-panier');
-  const listePanier = document.getElementById('liste-panier');
-  const totalElement = document.getElementById('total');
-  const panierFlottant = document.getElementById('panier-flottant');
-  const togglePanier = document.querySelector('.toggle');
-  const fermerPanier = document.getElementById('fermer-panier');
+const compteurPanier = document.getElementById('compteur-panier');
+const listePanier = document.getElementById('liste-panier');
+const totalElement = document.getElementById('total');
+const panierFlottant = document.getElementById('panier-flottant');
+const togglePanier = document.querySelector('.toggle');
+const fermerPanier = document.getElementById('fermer-panier');
 
-  let panier = JSON.parse(localStorage.getItem('panier')) || [];
+let panier = JSON.parse(localStorage.getItem('panier')) || [];
 
-  // Normaliser la quantité pour chaque produit
-  panier = panier.map(item => ({
-    ...item,
-    quantite: item.quantite || 1
-  }));
+// Normaliser la quantité pour chaque produit
+panier = panier.map(item => ({
+  ...item,
+  quantite: item.quantite || 1
+}));
 
-  // Fonction pour trouver un produit identique dans le panier
-  function trouverProduitIdentique(nom, prix, type, supplements) {
-    return panier.find(item => 
-      item.nom === nom && 
-      item.prix === prix && 
-      item.type === type && 
-      JSON.stringify(item.supplements) === JSON.stringify(supplements)
-    );
-  }
+// Fonction pour trouver un produit identique dans le panier
+function trouverProduitIdentique(nom, prix, type, supplements) {
+  return panier.find(item => 
+    item.nom === nom && 
+    item.prix === prix && 
+    item.type === type && 
+    JSON.stringify(item.supplements) === JSON.stringify(supplements)
+  );
+}
 
-  // Ajouter au panier
-  boutonsAjouter.forEach(bouton => {
-    bouton.addEventListener('click', () => {
-      const produitElement = bouton.closest('.produit');
-      const nom = produitElement.querySelector('h3').textContent.trim();
-      const typeProduit = produitElement.getAttribute('data-type'); // Récupère le type depuis l'élément
+// Ajouter au panier
+boutonsAjouter.forEach(bouton => {
+  bouton.addEventListener('click', () => {
+    const produitElement = bouton.closest('.produit');
+    const nom = produitElement.querySelector('h3').textContent.trim();
+    const typeProduit = produitElement.getAttribute('data-type'); // Récupère le type depuis l'élément
 
-      const selectTaille = produitElement.querySelector('select.taille-select');
-      let prix;
-      let type;
+    const selectTaille = produitElement.querySelector('select.taille-select');
+    let prix;
+    let type;
 
-      if (selectTaille) {
-        const optionChoisie = selectTaille.options[selectTaille.selectedIndex];
-        prix = parseFloat(optionChoisie.getAttribute('data-price'));
-        type = 'pizza';
-      } else {
-        const prixElement = produitElement.querySelector('.prix-produit');
-        prix = parseFloat(prixElement.getAttribute('data-price'));
-        type = typeProduit || 'autre'; // Utilise le type de l'élément ou 'autre' par défaut
-      }
+    if (selectTaille) {
+      const optionChoisie = selectTaille.options[selectTaille.selectedIndex];
+      prix = parseFloat(optionChoisie.getAttribute('data-price'));
+      type = 'pizza';
+    } else {
+      const prixElement = produitElement.querySelector('.prix-produit');
+      prix = parseFloat(prixElement.getAttribute('data-price'));
+      type = typeProduit || 'autre'; // Utilise le type de l'élément ou 'autre' par défaut
+    }
 
-      const image = produitElement.querySelector('img').src;
+    const image = produitElement.querySelector('img').src;
 
-      const produitExistant = trouverProduitIdentique(nom, prix, type, []);
+    const produitExistant = trouverProduitIdentique(nom, prix, type, []);
 
-      if (produitExistant) {
-        produitExistant.quantite += 1;
-      } else {
-        const produit = {
-          id: Date.now(),
-          nom,
-          prix,
-          image,
-          type,
-          supplements: [],
-          quantite: 1
-        };
-        panier.push(produit);
-      }
+    if (produitExistant) {
+      produitExistant.quantite += 1;
+      showToast(`Quantité augmentée pour ${nom}`, "ajout");
+    } else {
+      const produit = {
+        id: Date.now(),
+        nom,
+        prix,
+        image,
+        type,
+        supplements: [],
+        quantite: 1
+      };
+      panier.push(produit);
+      showToast(`Produit ajouté : ${nom}`, "ajout");
+    }
 
-      localStorage.setItem('panier', JSON.stringify(panier));
-      afficherPanier();
-    });
+    localStorage.setItem('panier', JSON.stringify(panier));
+    afficherPanier();
   });
+});
 
-  // Afficher le panier
-  function afficherPanier() {
-    listePanier.innerHTML = '';
-    let total = 0;
+// Afficher le panier
+function afficherPanier() {
+  listePanier.innerHTML = '';
+  let total = 0;
 
-    panier.forEach(item => {
-      if (typeof item.prix !== 'number' || isNaN(item.prix)) {
-        console.error(`Prix non valide pour ${item.nom} :`, item.prix);
-        item.prix = 0;
-      }
+  panier.forEach(item => {
+    if (typeof item.prix !== 'number' || isNaN(item.prix)) {
+      console.error(`Prix non valide pour ${item.nom} :`, item.prix);
+      item.prix = 0;
+    }
 
-      const li = document.createElement('li');
-      li.classList.add('article-panier');
+    const li = document.createElement('li');
+    li.classList.add('article-panier');
 
-      const details = document.createElement('div');
-      details.classList.add('details-panier');
-      details.innerHTML = `
-        <img src="${item.image}" alt="${item.nom}" />
-        <div>
-          <h4>${item.nom} × ${item.quantite}</h4>
+    const details = document.createElement('div');
+    details.classList.add('details-panier');
+    details.innerHTML = `
+      <img src="${item.image}" alt="${item.nom}" />
+      <div>
+        <h4>${item.nom} × ${item.quantite}</h4>
         <p>Type : ${
           item.type === 'pizza' ? 'Pizza' :
           item.type === 'burger' ? 'Burger' :
@@ -740,49 +763,74 @@ document.getElementById('fermer-panier').addEventListener('click', function() {
           item.type === 'pates' ? 'Pâtes' : 
           'Autre'
         }</p>
+        <p>Prix unitaire : ${item.prix.toFixed(2)} €</p>
+        <p>Prix total : ${(item.prix * item.quantite).toFixed(2)} €</p>
+      </div>
+    `;
 
-          <p>Prix unitaire : ${item.prix.toFixed(2)} €</p>
-          <p>Prix total : ${(item.prix * item.quantite).toFixed(2)} €</p>
-        </div>
-      `;
-
-      const boutonSupprimer = document.createElement('button');
-      boutonSupprimer.textContent = '×';
-      boutonSupprimer.classList.add('supprimer');
-      boutonSupprimer.addEventListener('click', () => {
-        panier = panier.filter(p => p.id !== item.id);
-        localStorage.setItem('panier', JSON.stringify(panier));
-        afficherPanier();
-      });
-
-      li.appendChild(details);
-      li.appendChild(boutonSupprimer);
-      listePanier.appendChild(li);
-
-      const sousTotal = item.prix * item.quantite;
-      if (!isNaN(sousTotal)) {
-        total += sousTotal;
-      } else {
-        console.error(`Sous-total invalide pour ${item.nom}:`, sousTotal);
-      }
+    const boutonSupprimer = document.createElement('button');
+    boutonSupprimer.textContent = '×';
+    boutonSupprimer.classList.add('supprimer');
+    boutonSupprimer.addEventListener('click', () => {
+      panier = panier.filter(p => p.id !== item.id);
+      localStorage.setItem('panier', JSON.stringify(panier));
+      afficherPanier();
+      showToast(`Produit supprimé : ${item.nom}`, "suppression");
     });
 
-    compteurPanier.textContent = panier.reduce((acc, item) => acc + item.quantite, 0);
-    totalElement.textContent = isNaN(total) ? '0.00' : total.toFixed(2);
-  }
+    li.appendChild(details);
+    li.appendChild(boutonSupprimer);
+    listePanier.appendChild(li);
 
-  // Toggle panier flottant
-  togglePanier.addEventListener('click', () => {
-    document.getElementById('contenu-panier').classList.toggle('ouvert');
+    const sousTotal = item.prix * item.quantite;
+    if (!isNaN(sousTotal)) {
+      total += sousTotal;
+    } else {
+      console.error(`Sous-total invalide pour ${item.nom}:`, sousTotal);
+    }
   });
 
-  fermerPanier.addEventListener('click', () => {
-    panierFlottant.classList.remove('ouvert');
-  });
+  compteurPanier.textContent = panier.reduce((acc, item) => acc + item.quantite, 0);
+  totalElement.textContent = isNaN(total) ? '0.00' : total.toFixed(2);
+}
 
-  // Initialisation
-  afficherPanier();
+// Toggle panier flottant
+togglePanier.addEventListener('click', () => {
+  document.getElementById('contenu-panier').classList.toggle('ouvert');
+});
+
+fermerPanier.addEventListener('click', () => {
+  panierFlottant.classList.remove('ouvert');
+});
+
+// Initialisation
+afficherPanier();
+
+
+// --- Toast Notification ---
+
+function showToast(message = "Produit ajouté au panier", type = "ajout") {
+  const toast = document.getElementById('toast-notification');
+  toast.textContent = message;
+
+  toast.className = `toast show ${type}`;
+
+  setTimeout(() => {
+    toast.classList.remove('show', 'ajout', 'suppression');
+  }, 2500);
+}
+
+
+
 </script>
+
+
+
+
+
+
+
+
 
 
     </div>
