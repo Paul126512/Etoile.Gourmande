@@ -530,20 +530,21 @@ button[type="submit"].valid {
             const orderNum = `CMD-${String(now.getDate()).padStart(2,'0')}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}`;
 
             // Préparation des données par catégorie (incluant maintenant les pâtes)
-            const commandeData = {
-                numero_cmd: orderNum,
-                client: { name, email },
-                pizzas: panier.filter(item => item.type === 'pizza'),
-                burgers: panier.filter(item => item.type === 'burger'),
-                bagels: panier.filter(item => item.type === 'bagel'),
-                menus: panier.filter(item => item.type === 'menu'),
-                boissons: panier.filter(item => item.type === 'boisson'),
-                desserts: panier.filter(item => item.type === 'dessert'),
-                tacos: panier.filter(item => item.type === 'tacos'),
-                pates: panier.filter(item => item.type === 'pates'), // Ajout des pâtes ici
-                supplements: panier.flatMap(item => item.supplements || []),
-                total: panier.reduce((sum, item) => sum + (item.prix * item.quantite), 0)
-            };
+const commandeData = {
+    numero_cmd: orderNum,
+    client: { name, email },
+    pizzas: panier.filter(item => item.type === 'pizza'),
+    burgers: panier.filter(item => item.type === 'burger'),
+    bagels: panier.filter(item => item.type === 'bagel'),
+    menus: panier.filter(item => item.type === 'menu'),
+    boissons: panier.filter(item => item.type === 'boisson'),
+    desserts: panier.filter(item => item.type === 'dessert'),
+    tacos: panier.filter(item => item.type === 'tacos'),
+    pates: panier.filter(item => item.type === 'pates'), // ← AJOUT ICI
+    supplements: panier.flatMap(item => item.supplements || []),
+    total: panier.reduce((sum, item) => sum + (item.prix * item.quantite), 0)
+};
+
 
             const response = await fetch('/api/enregistrer-commande', {
                 method: 'POST',
