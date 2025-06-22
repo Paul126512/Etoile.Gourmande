@@ -375,14 +375,13 @@ button[type="submit"].valid {
   </div>
 </div>
 
-  
-
-
-
 
 
   <script>
-document.addEventListener('DOMContentLoaded', () => {
+
+
+
+    document.addEventListener('DOMContentLoaded', () => {
     const listePanier = document.getElementById('liste-panier');
     const commandeTotal = document.getElementById('commande-total');
     const form = document.getElementById('form');
@@ -452,6 +451,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="infos">
                         <h4>${item.nom} × ${item.quantite}</h4>
                         ${item.description ? `<p class="description">${item.description}</p>` : ''}
+                        <p class="type"><strong>Type :</strong> ${
+                            item.type === 'pizza' ? 'Pizza' :
+                            item.type === 'burger' ? 'Burger' :
+                            item.type === 'bagel' ? 'Bagel' :
+                            item.type === 'tacos' ? 'Tacos' :
+                            item.type === 'pates' ? 'Pâtes' :
+                            item.type === 'menu' ? 'Menu' :
+                            item.type === 'boisson' ? 'Boisson' :
+                            item.type === 'dessert' ? 'Dessert' :
+                            'Autre'
+                        }</p>
                         ${detailsMenu}
                         ${supplementsHtml}
                         <p class="prix"><strong>Prix unitaire :</strong> ${item.prix.toFixed(2)} €</p>
@@ -474,11 +484,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Validation d'email améliorée
-function validateEmail(email) {
-    // Version finale qui bloque les extensions suspectes comme .ez ou .c2
-    return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,6}(\.[a-zA-Z]{2,3})?$/.test(email) && 
-           !/\.(ez|c2|xyz|tk|gq)$/i.test(email); // Liste noire d'extensions
-}
+    function validateEmail(email) {
+        return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,6}(\.[a-zA-Z]{2,3})?$/.test(email) && 
+               !/\.(ez|c2|xyz|tk|gq)$/i.test(email);
+    }
+
     // Gestion du formulaire
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -514,31 +524,32 @@ function validateEmail(email) {
         message.textContent = 'Traitement de votre commande...';
         message.style.color = 'green';
 
- try {
-        // Génération du numéro de commande
-        const now = new Date();
-        const orderNum = `CMD-${String(now.getDate()).padStart(2,'0')}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}`;
+        try {
+            // Génération du numéro de commande
+            const now = new Date();
+            const orderNum = `CMD-${String(now.getDate()).padStart(2,'0')}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}`;
 
-        // Préparation des données par catégorie (ajout du numero_cmd ici)
-        const commandeData = {
-            numero_cmd: orderNum,   // <-- ici
-            client: { name, email },
-            pizzas: panier.filter(item => item.type === 'pizza'),
-            burgers: panier.filter(item => item.type === 'burger'),
-            bagels: panier.filter(item => item.type === 'bagel'),
-            menus: panier.filter(item => item.type === 'menu'),
-            boissons: panier.filter(item => item.type === 'boisson'),
-            desserts: panier.filter(item => item.type === 'dessert'),
-            tacos: panier.filter(item => item.type === 'tacos'),
-            supplements: panier.flatMap(item => item.supplements || []),
-            total: panier.reduce((sum, item) => sum + (item.prix * item.quantite), 0)
-        };
+            // Préparation des données par catégorie (incluant maintenant les pâtes)
+            const commandeData = {
+                numero_cmd: orderNum,
+                client: { name, email },
+                pizzas: panier.filter(item => item.type === 'pizza'),
+                burgers: panier.filter(item => item.type === 'burger'),
+                bagels: panier.filter(item => item.type === 'bagel'),
+                menus: panier.filter(item => item.type === 'menu'),
+                boissons: panier.filter(item => item.type === 'boisson'),
+                desserts: panier.filter(item => item.type === 'dessert'),
+                tacos: panier.filter(item => item.type === 'tacos'),
+                pates: panier.filter(item => item.type === 'pates'), // Ajout des pâtes ici
+                supplements: panier.flatMap(item => item.supplements || []),
+                total: panier.reduce((sum, item) => sum + (item.prix * item.quantite), 0)
+            };
 
-        const response = await fetch('/api/enregistrer-commande', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(commandeData)
-        });
+            const response = await fetch('/api/enregistrer-commande', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(commandeData)
+            });
 
             if (!response.ok) {
                 const errorData = await response.json();
@@ -564,8 +575,6 @@ function validateEmail(email) {
     // Initialisation
     afficherPanier();
 });
-</script>
 
-
- </body>
-</html>
+    
+  </script>
