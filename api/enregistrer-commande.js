@@ -16,26 +16,24 @@ const ALLOWED_ORIGINS = [
 
 export default async function handler(req, res) {
   // Gestion CORS
-// Gestion CORS
-const origin = req.headers.origin;
-if (ALLOWED_ORIGINS.includes(origin)) {
-  res.setHeader('Access-Control-Allow-Origin', origin);
-}
-res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  const origin = req.headers.origin;
+  if (ALLOWED_ORIGINS.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-// Réponse à la requête prévol OPTIONS
-if (req.method === 'OPTIONS') {
-  return res.status(204).end();
-}
-
+  // Réponse à la requête prévol OPTIONS
+  if (req.method === 'OPTIONS') {
+    return res.status(204).end();
+  }
 
   // On accepte uniquement POST
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Méthode non autorisée. Utilisez POST.' });
   }
 
-  const { client, pizzas, boissons, burgers, desserts, supplements, menus, bagels, tacos } = req.body;
+  const { client, pizzas, boissons, burgers, desserts, supplements, menus, bagels, tacos, pates } = req.body;
 
   if (!client || !client.name || !client.email) {
     return res.status(400).json({ message: 'Nom et email obligatoires.' });
@@ -47,6 +45,7 @@ if (req.method === 'OPTIONS') {
     return res.status(400).json({ message: 'Adresse email invalide.' });
   }
 
+  // Combinaison de tous les types de produits
   const produits = [
     ...(Array.isArray(pizzas) ? pizzas : []),
     ...(Array.isArray(burgers) ? burgers : []),
@@ -54,7 +53,8 @@ if (req.method === 'OPTIONS') {
     ...(Array.isArray(menus) ? menus : []),
     ...(Array.isArray(boissons) ? boissons : []),
     ...(Array.isArray(desserts) ? desserts : []),
-    ...(Array.isArray(tacos) ? tacos : [])
+    ...(Array.isArray(tacos) ? tacos : []),
+    ...(Array.isArray(pates) ? pates : []) // Ajout des pates ici
   ];
 
   if (produits.length === 0) {
