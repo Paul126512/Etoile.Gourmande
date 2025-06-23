@@ -795,6 +795,26 @@
 }
 
 
+@media (max-width: 480px) {
+  .cookie-banner {
+    position: fixed !important;
+    bottom: calc(1rem + env(safe-area-inset-bottom)) !important; /* colle en bas, évite zone barre iPhone */
+    right: calc(1rem + env(safe-area-inset-right)) !important;  /* colle à droite en respectant safe area */
+    left: auto !important;
+    top: auto !important;
+    max-width: 320px !important;
+    width: 90% !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    z-index: 9999 !important;
+  }
+
+  .cookie-close {
+    top: 14px !important;
+    right: 14px !important;
+  }
+}
+
 
 
 
