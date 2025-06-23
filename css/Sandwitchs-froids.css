@@ -320,6 +320,47 @@
       color: white;
     }
 
+
+    /* === Panier flottant avec scroll === */
+#contenu-panier {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 350px;
+  background: white;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  padding: 20px;
+  max-height: 70vh; /* Limite la hauteur à 70% de la hauteur visible */
+  overflow-y: auto; /* Active le défilement vertical */
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-20px);
+  transition: all 0.3s ease;
+}
+
+#contenu-panier.ouvert {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+#liste-panier {
+  flex: 1;
+  overflow-y: auto; /* Défilement interne si nécessaire */
+  margin: 0;
+  padding: 10px;
+  list-style: none;
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  max-height: calc(70vh - 150px); /* Réserve de l'espace pour header et footer */
+}
+
+
+
+
+
     /* === Contenu panier === */
     #contenu-panier {
       position: absolute;
@@ -527,6 +568,10 @@
   margin-top: 2px; /* réduit l'espace vertical */
   line-height: 1.2;
 }
+
+
+
+
 
 
 
