@@ -698,6 +698,8 @@
         border-color: #c0c0c0;
     }
 
+
+
 .cookie-close {
   position: absolute;
   top:  50px;    /* Distance du haut de la bannière */
@@ -792,28 +794,9 @@
 
 @media (max-width: 480px) {
   .cookie-banner {
-    bottom: 1rem !important;
-    right: 1rem !important;
-    left: auto !important;
-    top: auto !important;
-    max-width: 320px !important;
-    width: 90% !important;
-    box-sizing: border-box !important;
-    margin: 0 !important;
-  }
-
-  .cookie-close {
-    top: 25px !important;   /* ajusté ici */
-    right: 10px !important;
-  }
-}
-
-
-@media (max-width: 480px) {
-  .cookie-banner {
     position: fixed !important;
-    bottom: calc(1rem + env(safe-area-inset-bottom)) !important; /* colle en bas, évite zone barre iPhone */
-    right: calc(1rem + env(safe-area-inset-right)) !important;  /* colle à droite en respectant safe area */
+    bottom: calc(1rem + env(safe-area-inset-bottom)) !important;
+    right: calc(1rem + env(safe-area-inset-right)) !important;
     left: auto !important;
     top: auto !important;
     max-width: 320px !important;
@@ -824,12 +807,46 @@
   }
 
   .cookie-close {
-    top: 14px !important;
-    right: 14px !important;
+    position: absolute !important; /* bien positionné dans la bannière */
+    top: 8px !important;    /* plus haut */
+    right: 8px !important;  /* plus à droite */
+    width: 20px !important;
+    height: 20px !important;
+    cursor: pointer !important;
+    opacity: 0.6 !important;
+    transition: opacity 0.3s !important;
+    z-index: 1100 !important;
   }
 }
 
+/* Style par défaut hors mobile */
+.cookie-close {
+  position: absolute;
+  top: 50px;    /* Distance du haut de la bannière */
+  right: 16px;  /* Distance de la droite de la bannière */
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.3s;
+  z-index: 1100;
+}
 
+.cookie-close::before, 
+.cookie-close::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 14px;
+  height: 2px;
+  background: #000;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.cookie-close::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
 
 
 
@@ -1619,5 +1636,4 @@
         }
     }  
 }
-
 
