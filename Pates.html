@@ -761,6 +761,8 @@ function afficherPanier() {
           item.type === 'bagel' ? 'Bagel' :
           item.type === 'tacos' ? 'Tacos' :
           item.type === 'pates' ? 'Pâtes' : 
+          item.type === 'salades' ? 'Salade' : 
+          item.type === 'sandwitchs_froids' ? 'Sandwich Froid' :
           'Autre'
         }</p>
         <p>Prix unitaire : ${item.prix.toFixed(2)} €</p>
@@ -823,6 +825,12 @@ function showToast(message = "Produit ajouté au panier", type = "ajout") {
 
 
 </script>
+
+
+
+
+
+
 
 
 
