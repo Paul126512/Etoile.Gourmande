@@ -22,37 +22,24 @@ Ce site web est en cours de développement pour permettre aux clients de **comma
 - Panier interactif avec total dynamique.
 - Système de commande avec génération de numéro unique.
 - Paiement en ligne (en cours d'intégration).
-- 
-🔁 Serveur Commandes
-Responsable de l'enregistrement et du traitement des commandes passées. Il inclut plusieurs fichiers clés :
+- 🗂️ Fichiers du Serveur Commandes
+🧑‍💻 session – Gestion des sessions utilisateur
 
-session : gestion des sessions utilisateur.
+🛒 checkout.js – Traitement du panier et du processus de commande
 
-checkout.js : processus de validation du panier.
+📇 contact.js – Enregistrement des informations de contact
 
-contact.js : prise en charge des informations de contact client.
+💳 create-checkout-session.js – Création d’une session Stripe pour le paiement
 
-create-checkout-session.js : création de sessions Stripe.
+🧾 create-client.js – Ajout ou mise à jour du client dans la base
 
-create-client.js : gestion des clients dans la base de données.
+📝 enregistrer-commande.js – Sauvegarde complète de la commande
 
-enregistrer-commande.js : logique d'enregistrement des commandes.
+⚙️ orderManager.js – Logique métier pour la gestion des commandes
 
-orderManager.js : logique métier liée à la gestion des commandes.
+📦 orders.js – Accès aux commandes (API / routes)
 
-orders.js : API ou route de récupération des commandes.
-
-speedReport.js : mesures ou rapports de performance.
-
-stripe-webhook.js : écoute des événements Stripe (paiement, remboursement, etc).
-
-🔢 Serveur Numéros
-Ce serveur est dédié à la génération et la gestion des numéros de commande :
-
-Génération UUID ou numéros incrémentaux.
-
-Utilisé pour garantir l’unicité et la traçabilité des commandes entre service
-
+🚀 speedReport.js – Suivi des performances
 ---
 
 ## 🧰 Stack Technique
