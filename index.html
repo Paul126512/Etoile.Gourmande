@@ -86,8 +86,6 @@
 </section>
 
 
-
-
 <div class="cookie-banner" id="cookieBanner">
     <span class="cookie-close" id="cookieClose"></span>
     <div class="cookie-content" id="cookieMain">
@@ -97,46 +95,48 @@
             <a href="/politique-de-confidentialite" class="privacy-link">En savoir plus</a>.
         </p>
         <div class="cookie-buttons">
-            <button class="cookie-btn cookie-btn-settings" id="cookieSettings">Paramètres</button>
+            <button id="cookieSettings" class="cookie-btn cookie-btn-settings">Paramètres</button>
             <button class="cookie-btn cookie-btn-accept" id="cookieAccept">Tout accepter</button>
         </div>
     </div>
 
-    <!-- Panneau des paramètres (caché par défaut) -->
-    <div class="cookie-settings" id="cookieSettingsPanel" style="display:none">
+    <div class="cookie-settings" id="cookieSettingsPanel" style="display:none;">
         <h3 class="cookie-title">Gestion des cookies</h3>
         
-        <div class="cookie-setting">
-            <div class="setting-header">
-                <span class="setting-title">Cookies essentiels</span>
-                <label class="switch">
+        <!-- Cookies essentiels -->
+        <div class="cookie-option">
+            <div class="cookie-option-header">
+                <span>Cookies essentiels</span>
+                <label class="cookie-toggle">
                     <input type="checkbox" checked disabled>
-                    <span class="slider round"></span>
+                    <span class="cookie-toggle-slider"></span>
                 </label>
             </div>
-            <p class="setting-desc">Nécessaires au fonctionnement du site (toujours activés)</p>
+            <p class="cookie-option-desc">Nécessaires au fonctionnement du site</p>
         </div>
         
-        <div class="cookie-setting">
-            <div class="setting-header">
-                <span class="setting-title">Cookies analytiques</span>
-                <label class="switch">
-                    <input type="checkbox" id="analyticsCookies" checked>
-                    <span class="slider round"></span>
+        <!-- Cookies analytiques -->
+        <div class="cookie-option">
+            <div class="cookie-option-header">
+                <span>Cookies analytiques</span>
+                <label class="cookie-toggle">
+                    <input type="checkbox" id="analyticsCookies">
+                    <span class="cookie-toggle-slider"></span>
                 </label>
             </div>
-            <p class="setting-desc">Nous aident à améliorer le site</p>
+            <p class="cookie-option-desc">Pour analyser l'usage du site</p>
         </div>
         
-        <div class="cookie-setting">
-            <div class="setting-header">
-                <span class="setting-title">Cookies marketing</span>
-                <label class="switch">
+        <!-- Cookies marketing -->
+        <div class="cookie-option">
+            <div class="cookie-option-header">
+                <span>Cookies marketing</span>
+                <label class="cookie-toggle">
                     <input type="checkbox" id="marketingCookies">
-                    <span class="slider round"></span>
+                    <span class="cookie-toggle-slider"></span>
                 </label>
             </div>
-            <p class="setting-desc">Pour personnaliser les publicités</p>
+            <p class="cookie-option-desc">Pour personnaliser les publicités</p>
         </div>
         
         <div class="cookie-buttons">
@@ -145,6 +145,7 @@
         </div>
     </div>
 </div>
+
 
 
 
@@ -165,22 +166,24 @@ document.addEventListener('DOMContentLoaded', function() {
         cookieBanner.style.display = 'block';
         setTimeout(() => {
             cookieBanner.style.opacity = '1';
-            cookieBanner.style.transform = 'translateY(0)';
         }, 100);
     }
 
     // Gestion des clics
-    cookieSettings.addEventListener('click', () => {
+    cookieSettings.addEventListener('click', function(e) {
+        e.preventDefault();
         cookieMain.style.display = 'none';
         cookieSettingsPanel.style.display = 'block';
     });
 
-    cookieBack.addEventListener('click', () => {
+    cookieBack.addEventListener('click', function(e) {
+        e.preventDefault();
         cookieSettingsPanel.style.display = 'none';
         cookieMain.style.display = 'block';
     });
 
-    cookieAccept.addEventListener('click', () => {
+    cookieAccept.addEventListener('click', function(e) {
+        e.preventDefault();
         savePreferences({
             essential: true,
             analytics: true,
@@ -189,7 +192,8 @@ document.addEventListener('DOMContentLoaded', function() {
         hideBanner();
     });
 
-    cookieSave.addEventListener('click', () => {
+    cookieSave.addEventListener('click', function(e) {
+        e.preventDefault();
         savePreferences({
             essential: true,
             analytics: document.getElementById('analyticsCookies').checked,
@@ -198,17 +202,21 @@ document.addEventListener('DOMContentLoaded', function() {
         hideBanner();
     });
 
-    cookieClose.addEventListener('click', hideBanner);
+    if (cookieClose) {
+        cookieClose.addEventListener('click', function(e) {
+            e.preventDefault();
+            hideBanner();
+        });
+    }
 
     function savePreferences(prefs) {
         localStorage.setItem('cookiePreferences', JSON.stringify(prefs));
-        // Ici vous pouvez charger les scripts correspondants aux choix
+        // Ici vous pouvez charger les scripts en fonction des préférences
         console.log('Préférences enregistrées:', prefs);
     }
 
     function hideBanner() {
         cookieBanner.style.opacity = '0';
-        cookieBanner.style.transform = 'translateY(10px)';
         setTimeout(() => {
             cookieBanner.style.display = 'none';
         }, 300);
@@ -216,8 +224,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 </script>
-
-
+    
 
 
 <section class="image-categories" id="nos-creations">
