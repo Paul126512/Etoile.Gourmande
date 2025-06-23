@@ -57,6 +57,7 @@ export default async function handler(req, res) {
     ...(Array.isArray(sandwitchs_froids) ? sandwitchs_froids : []),
     ...(Array.isArray(salades) ? salades : []),
     ...(Array.isArray(pates) ? pates : []) // Ajout des pates ici
+    ...(Array.isArray(supplements) ? supplements : []) // J'ai aussi ajouté les suppléments ici au cas où
   ];
 
   if (produits.length === 0) {
