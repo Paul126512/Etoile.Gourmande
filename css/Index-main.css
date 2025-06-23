@@ -29,24 +29,6 @@
             z-index: 100;
         }
         
-        .logo {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.8rem;
-            font-weight: 10px;
-            letter-spacing: 1px;
-            height: 1px;
-        }
-
-        .logo img {
-            position: relative;
-            top: -30px;
-            height: 75px;
-            transition: transform 0.3s ease;
-        }
-
-        .logo img:hover {
-            transform: scale(1.05);
-        }
 
         nav ul {
             display: flex;
@@ -119,7 +101,6 @@
   height: auto;
   object-fit: cover;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
   opacity: 0.95;
   transition: opacity 0.5s ease, transform 0.5s ease;
   margin: 0 auto; /* pour centrer */
@@ -131,16 +112,7 @@
             transform: scale(1.02);
         }
         
-        .hero-content {
-            position: relative;
-            z-index: 10;
-            padding: 3rem;
-            margin-left: 5%;
-            background-color: rgba(249, 249, 249, 0.8);
-            backdrop-filter: blur(5px);
-            border-radius: 10px;
-            max-width: 500px;
-        }
+     
 
         /* Titres responsive */
         .title {
@@ -181,11 +153,7 @@
                     padding: 1rem 5%;
                 }
                 
-                .logo img {
-                    height: 60px;
-                    margin-bottom: 10px;
-                }
-                
+        
                 nav ul {
                     flex-wrap: wrap;
                     justify-content: center;
@@ -760,20 +728,66 @@
 }
 
 
+
+
+
+/* Image */
 .logo img {
-  width: 80px;
-  height: auto;
-  transition: width 0.3s ease, height 0.3s ease;
+    width: 80px;
+    height: auto;
+    transition: all 0.3s ease;
 }
 
-@media (max-width: 479px) {
-  .logo img {
-    width: 100px !important;  /* même taille que desktop */
-    height: auto !important;
-    max-height: none !important; /* on enlève la limite */
-    object-fit: contain !important;
-  }
+.logo img:hover {
+    transform: scale(1.05);
 }
+
+
+/* ⚠️ PETITS TÉLÉPHONES - iPhones compris */
+@media (max-width: 480px) {
+    .logo {
+        top: calc(env(safe-area-inset-top, 0px) + 10px);  /* espace encoche + marge */
+        left: calc(env(safe-area-inset-left, 0px) + 10px); /* espace bord gauche + marge */
+    }
+
+    .logo img {
+        width: 60px;
+    }
+}
+
+
+/* TABLETTES */
+@media (min-width: 481px) and (max-width: 768px) {
+    .logo {
+        top: calc(env(safe-area-inset-top, 0px) + 12px);
+        left: calc(env(safe-area-inset-left, 0px) + 15px);
+    }
+
+    .logo img {
+        width: 70px;
+    }
+}
+
+
+/* GRANDS ÉCRANS (optionnel pour s'assurer qu'encoches ne gênent pas) */
+@media (min-width: 769px) {
+    .logo {
+        top: calc(env(safe-area-inset-top, 0px) + 15px);
+        left: calc(env(safe-area-inset-left, 0px) + 20px);
+    }
+
+    .logo img {
+        width: 80px;
+    }
+}
+
+
+
+
+
+
+
+
 
 
 @media (max-width: 480px) {
@@ -846,18 +860,9 @@
         top: 0 !important;
         width: 100% !important;
         height: 44px !important;
-        background: white !important;
         z-index: 1000;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
-    
-    .logo img {
-        height: 30px !important;
-        position: absolute !important;
-        left: 50% !important;
-        top: 7px !important;
-        transform: translateX(-50%) !important;
-    }
+  
+  
     
     /* HERO RECALIBRÉ */
     .hero {
@@ -874,8 +879,7 @@
         width: 90% !important;
         margin: 20px auto !important;
         padding: 15px !important;
-        background: white !important;
-        box-shadow: none !important;
+
     }
     
     .title {
@@ -959,12 +963,10 @@
     header {
         padding: 0.5rem 5% !important;
         position: fixed !important;
-        background: var(--blanc) !important;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
 
     .logo img {
-        height: 40px !important;
+        height: 55px !important;
         top: -15px !important;
     }
 
@@ -993,7 +995,6 @@
         padding: 1.5rem !important;
         margin: 1rem auto 0 !important;
         position: relative !important;
-        background: rgba(249, 249, 249, 0.95) !important;
     }
 
     .title {
@@ -1169,7 +1170,7 @@
                 width: 90%;
                 margin: 2rem auto;
                 padding: 2rem;
-                background-color: rgba(249, 249, 249, 0.95);
+    
             }
             
             .grid {
@@ -1616,4 +1617,7 @@
             width: 25px;
             height: 25px;
         }
-    }
+    }  
+}
+
+
