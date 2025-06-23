@@ -33,7 +33,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Méthode non autorisée. Utilisez POST.' });
   }
 
-  const { client, pizzas, boissons, burgers, desserts, supplements, menus, bagels, tacos, pates, sandwitchs_froids } = req.body;
+  const { client, pizzas, boissons, burgers, desserts, supplements, menus, bagels, tacos, pates, sandwitchs_froids, salades } = req.body;
 
   if (!client || !client.name || !client.email) {
     return res.status(400).json({ message: 'Nom et email obligatoires.' });
@@ -55,6 +55,7 @@ export default async function handler(req, res) {
     ...(Array.isArray(desserts) ? desserts : []),
     ...(Array.isArray(tacos) ? tacos : []),
     ...(Array.isArray(sandwitchs_froids) ? sandwitchs_froids : []),
+    ...(Array.isArray(salades) ? salades : []),
     ...(Array.isArray(pates) ? pates : []) // Ajout des pates ici
   ];
 
