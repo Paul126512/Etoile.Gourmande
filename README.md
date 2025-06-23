@@ -22,9 +22,36 @@ Ce site web est en cours de développement pour permettre aux clients de **comma
 - Panier interactif avec total dynamique.
 - Système de commande avec génération de numéro unique.
 - Paiement en ligne (en cours d'intégration).
-- Deux serveurs :
-  - 🔁 **Serveur Commandes** : enregistre les commandes passées.
-  - 🔢 **Serveur Numéros** : génère et gère les numéros de commande (UUID / incrémental).
+- 
+🔁 Serveur Commandes
+Responsable de l'enregistrement et du traitement des commandes passées. Il inclut plusieurs fichiers clés :
+
+session : gestion des sessions utilisateur.
+
+checkout.js : processus de validation du panier.
+
+contact.js : prise en charge des informations de contact client.
+
+create-checkout-session.js : création de sessions Stripe.
+
+create-client.js : gestion des clients dans la base de données.
+
+enregistrer-commande.js : logique d'enregistrement des commandes.
+
+orderManager.js : logique métier liée à la gestion des commandes.
+
+orders.js : API ou route de récupération des commandes.
+
+speedReport.js : mesures ou rapports de performance.
+
+stripe-webhook.js : écoute des événements Stripe (paiement, remboursement, etc).
+
+🔢 Serveur Numéros
+Ce serveur est dédié à la génération et la gestion des numéros de commande :
+
+Génération UUID ou numéros incrémentaux.
+
+Utilisé pour garantir l’unicité et la traçabilité des commandes entre service
 
 ---
 
@@ -32,7 +59,7 @@ Ce site web est en cours de développement pour permettre aux clients de **comma
 
 - **Frontend** : HTML, CSS, JavaScript
 - **Backend** : Node.js (Express)
-- **Base de données** : JSON local / MongoDB (à venir) 
+- **Base de données** : JSON local / SupaBase
 - **Paiement** : Stripe 
 - **Déploiement** : https://l-etoile-gourmande.vercel.app
 
