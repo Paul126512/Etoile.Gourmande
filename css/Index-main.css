@@ -113,15 +113,18 @@
             position: absolute;
         }
         
-        .hero-image {
-            width: 500px;
-            height: auto;
-            object-fit: cover;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            opacity: 0.95;
-            transition: opacity 0.5s ease, transform 0.5s ease;
-        }
+.hero-image {
+  width: 100%;
+  max-width: 350px;
+  height: auto;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  opacity: 0.95;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  margin: 0 auto; /* pour centrer */
+}
+
         
         .hero-image:hover {
             opacity: 1;
@@ -986,8 +989,293 @@
 
 
 
+/* RESET FORCÉ POUR IPHONE 12 */
+@media only screen and (max-width: 390px) and (max-height: 844px) {
+    /* ÉCRASEMENT COMPLET DES STYLES EXISTANTS */
+    body, header, .hero, footer {
+        all: initial;
+        font-family: -apple-system, BlinkMacSystemFont, sans-serif !important;
+        display: block !important;
+    }
+    
+    /* HEADER MINIMALISTE */
+    header {
+        position: fixed !important;
+        top: 0 !important;
+        width: 100% !important;
+        height: 44px !important;
+        background: white !important;
+        z-index: 1000;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    
+    .logo img {
+        height: 30px !important;
+        position: absolute !important;
+        left: 50% !important;
+        top: 7px !important;
+        transform: translateX(-50%) !important;
+    }
+    
+    /* HERO RECALIBRÉ */
+    .hero {
+        padding-top: 44px !important;
+        height: auto !important;
+        min-height: 0 !important;
+    }
+    
+    .hero-gallery {
+        display: none !important; /* Suppression temporaire */
+    }
+    
+    .hero-content {
+        width: 90% !important;
+        margin: 20px auto !important;
+        padding: 15px !important;
+        background: white !important;
+        box-shadow: none !important;
+    }
+    
+    .title {
+        font-size: 22px !important;
+        margin-bottom: 5px !important;
+    }
+    
+    .subtitle {
+        font-size: 10px !important;
+        letter-spacing: 2px !important;
+        margin: 0 0 15px 0 !important;
+    }
+    
+    /* GRILLE COMPACTE */
+    .grid {
+        grid-template-columns: 1fr !important;
+        gap: 10px !important;
+        padding: 10px !important;
+    }
+    
+    .image-category {
+        height: 150px !important;
+        margin-bottom: 5px !important;
+    }
+    
+    /* FOOTER REDESIGN */
+    footer {
+        padding: 20px 10px !important;
+    }
+    
+    .footer-actions {
+        flex-direction: column !important;
+    }
+    
+    .grolet-button {
+        width: 100% !important;
+        margin: 5px 0 !important;
+        padding: 8px !important;
+        font-size: 12px !important;
+    }
+    
+    /* MENU BURGER FORCÉ */
+    nav ul {
+        display: none !important;
+    }
+    
+    .burger-menu {
+        display: flex !important;
+        position: fixed !important;
+        right: 15px !important;
+        top: 10px !important;
+    }
+}
+
+/* OVERRIDE ULTIME POUR LES ÉLÉMENTS RÉCALCITRANTS */
+@media only screen and (max-width: 390px) {
+    * {
+        max-width: 100% !important;
+        float: none !important;
+        position: static !important;
+    }
+    
+    body {
+        overflow-x: hidden !important;
+        width: 100vw !important;
+    }
+    
+    div {
+        box-sizing: border-box !important;
+    }
+}
 
 
+/* CORRECTIONS MOBILE - VERSION OPTIMISÉE */
+@media only screen and (max-width: 480px) {
+    :root {
+        font-size: 12px; /* Base réduite pour tout le contenu */
+    }
+
+    /* ----- HEADER ----- */
+    header {
+        padding: 0.5rem 5% !important;
+        position: fixed !important;
+        background: var(--blanc) !important;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .logo img {
+        height: 40px !important;
+        top: -15px !important;
+    }
+
+    /* ----- HERO SECTION ----- */
+    .hero {
+        padding-top: 60px !important;
+        min-height: auto !important;
+        height: auto !important;
+        padding-bottom: 2rem !important;
+    }
+
+    .hero-gallery {
+        position: relative !important;
+        flex-direction: column !important;
+        height: auto !important;
+    }
+
+    .hero-image {
+        width: 90% !important;
+        margin: 0 auto 15px !important;
+        max-width: none !important;
+    }
+
+    .hero-content {
+        width: 90% !important;
+        padding: 1.5rem !important;
+        margin: 1rem auto 0 !important;
+        position: relative !important;
+        background: rgba(249, 249, 249, 0.95) !important;
+    }
+
+    .title {
+        font-size: 1.8rem !important;
+        flex-direction: column !important;
+    }
+
+    .subtitle {
+        font-size: 0.7rem !important;
+        letter-spacing: 3px !important;
+        margin: 10px 0 !important;
+        white-space: normal !important;
+    }
+
+    .decor-line {
+        width: 30px !important;
+    }
+
+    .wheat-icon, .right-icon {
+        width: 20px !important;
+    }
+
+    /* ----- GRID ----- */
+    .image-categories {
+        padding: 2rem 1rem !important;
+    }
+
+    .category-title {
+        font-size: 1.6rem !important;
+        margin-bottom: 1.5rem !important;
+    }
+
+    .image-category {
+        height: 180px !important;
+    }
+
+    /* ----- FOOTER ----- */
+    .footer-content {
+        padding: 0 1rem !important;
+    }
+
+    .logo-main {
+        font-size: 1.8rem !important;
+    }
+
+    .logo-sub {
+        font-size: 0.7rem !important;
+    }
+
+    .footer-actions {
+        flex-direction: column !important;
+        gap: 0.8rem !important;
+    }
+
+    .grolet-button {
+        padding: 0.8rem !important;
+        font-size: 0.8rem !important;
+        width: 100% !important;
+    }
+
+    .footer-links {
+        flex-direction: column !important;
+        align-items: center !important;
+    }
+
+    .links-column {
+        width: 100% !important;
+        text-align: center !important;
+        margin-bottom: 1.5rem !important;
+    }
+
+    .social-icon {
+        width: 40px !important;
+        height: 40px !important;
+    }
+
+    /* ----- BURGER MENU ----- */
+    .burger-menu {
+        width: 25px !important;
+        height: 18px !important;
+    }
+
+    nav ul {
+        top: 60px !important;
+        right: 10px !important;
+        width: 80% !important;
+        padding: 1rem !important;
+    }
+
+    /* ----- BOUTONS ----- */
+    .btn {
+        padding: 0.8rem 1.2rem !important;
+        font-size: 0.7rem !important;
+    }
+
+    /* ----- CORRECTIONS SPÉCIFIQUES ----- */
+    body {
+        overflow-x: hidden !important;
+    }
+
+    * {
+        max-width: 100% !important;
+    }
+}
+
+/* Correction pour l'orientation paysage */
+@media only screen and (max-width: 480px) and (orientation: landscape) {
+    .hero {
+        min-height: 120vh !important;
+    }
+    
+    .hero-gallery {
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+    }
+    
+    .hero-image {
+        width: 45% !important;
+    }
+    
+    .hero-content {
+        width: 80% !important;
+    }
+}
 
 
 
