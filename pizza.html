@@ -1407,64 +1407,7 @@ document.getElementById('fermer-panier').addEventListener('click', function() {
 
 
 <script>
- document.querySelectorAll('.produit').forEach(produit => {
-  const selectTaille = produit.querySelector('select.taille-select');
-  const prixElement = produit.querySelector('.prix-produit');
-  const supplementsDiv = produit.querySelector('.supplements');
 
-  // Fonction pour calculer prix total (taille + suppléments)
-  function calculerPrix() {
-    const optionChoisie = selectTaille.options[selectTaille.selectedIndex];
-    const prixTaille = parseFloat(optionChoisie.getAttribute('data-price')) || 0;
-
-    // Suppléments cochés sauf "Aucun"
-    const supplementsChecked = supplementsDiv ? supplementsDiv.querySelectorAll('input[type="checkbox"]:checked') : [];
-    let totalSupplements = 0;
-
-    supplementsChecked.forEach(cb => {
-      if (cb.value.toLowerCase() === "aucun") {
-        totalSupplements = 0; // Si "Aucun" est coché, on ignore les autres
-        return;
-      }
-      const prixSup = parseFloat(cb.getAttribute('data-price')) || 0;
-      totalSupplements += prixSup;
-    });
-
-    const total = prixTaille + totalSupplements;
-    prixElement.textContent = total.toFixed(2).replace('.', ',') + ' €';
-    prixElement.setAttribute('data-price', total.toFixed(2));
-  }
-
-  // Gestion exclusivité "Aucun" pour les suppléments
-  if (supplementsDiv) {
-    supplementsDiv.addEventListener('change', e => {
-      if (e.target.name === "supplement") {
-        if (e.target.value.toLowerCase() === "aucun" && e.target.checked) {
-          supplementsDiv.querySelectorAll('input[type="checkbox"]').forEach(cb => {
-            if (cb !== e.target) cb.checked = false;
-          });
-        } else if (e.target.checked) {
-          const aucunCb = supplementsDiv.querySelector('input[value="aucun"]');
-          if (aucunCb && aucunCb.checked) {
-            aucunCb.checked = false;
-          }
-        }
-        calculerPrix();
-      }
-    });
-  }
-
-  // Mise à jour prix quand on change la taille
-  if (selectTaille) {
-    selectTaille.addEventListener('change', calculerPrix);
-  }
-
-  // Calcul initial au chargement
-  calculerPrix();
-});
-
-
-// Gestion du panier avec prise en compte des suppléments
 const boutonsAjouter = document.querySelectorAll('.produit button');
 const compteurPanier = document.getElementById('compteur-panier');
 const listePanier = document.getElementById('liste-panier');
@@ -1472,21 +1415,67 @@ const totalElement = document.getElementById('total');
 const panierFlottant = document.getElementById('panier-flottant');
 const togglePanier = document.querySelector('.toggle');
 const fermerPanier = document.getElementById('fermer-panier');
+const notification = document.getElementById('notification');
 
 let panier = JSON.parse(localStorage.getItem('panier')) || [];
 
-panier = panier.map(item => ({
-  ...item,
-  quantite: item.quantite || 1
-}));
+// Initialisation
+document.addEventListener('DOMContentLoaded', () => {
+  afficherPanier();
 
-// Trouver produit identique selon nom, prix, type, suppléments et taille
-function trouverProduitIdentique(nom, prix, type, supplements, taille) {
-  return panier.find(item =>
-    item.nom === nom &&
-    item.prix === prix &&
-    item.type === type &&
-    item.taille === taille &&
+  document.querySelectorAll('.produit').forEach(produit => {
+    const options = produit.querySelectorAll('.option-prix');
+    const menuOptions = produit.querySelector('.menu-options');
+    const menuChoice = produit.querySelector('.menu-choice');
+    const dessertOptions = produit.querySelector('.dessert-options');
+    const dessertType = produit.querySelector('.dessert-type');
+
+    // Par défaut, activer "seul" s'il existe
+    if (options.length > 0) {
+      options.forEach(opt => opt.classList.remove('selected'));
+      const seul = produit.querySelector('.option-prix[data-option="seul"]');
+      if (seul) seul.classList.add('selected');
+      if (menuOptions) menuOptions.style.display = 'none';
+      if (dessertOptions) dessertOptions.style.display = 'none';
+
+      options.forEach(option => {
+        option.addEventListener('click', () => {
+          options.forEach(o => o.classList.remove('selected'));
+          option.classList.add('selected');
+
+          const isMenu = option.getAttribute('data-option') === 'menu';
+          if (menuOptions) menuOptions.style.display = isMenu ? 'block' : 'none';
+        });
+      });
+    }
+
+    // Affichage des desserts si "dessert" est sélectionné
+    if (menuChoice) {
+      menuChoice.addEventListener('change', () => {
+        if (menuChoice.value === 'dessert') {
+          if (dessertOptions) dessertOptions.style.display = 'block';
+          if (dessertType) dessertType.setAttribute('required', 'required');
+        } else {
+          if (dessertOptions) dessertOptions.style.display = 'none';
+          if (dessertType) {
+            dessertType.removeAttribute('required');
+            dessertType.value = '';
+          }
+        }
+      });
+    }
+  });
+});
+
+// Fonction pour trouver un produit identique dans le panier
+function trouverProduitIdentique(nom, prix, type, supplements, menuChoice, drinkChoice, optionType) {
+  return panier.find(item => 
+    item.nom === nom && 
+    item.prix === prix && 
+    item.type === type && 
+    item.optionType === optionType &&
+    item.menuChoice === menuChoice &&
+    item.drinkChoice === drinkChoice &&
     JSON.stringify(item.supplements) === JSON.stringify(supplements)
   );
 }
@@ -1494,57 +1483,78 @@ function trouverProduitIdentique(nom, prix, type, supplements, taille) {
 // Ajouter au panier
 boutonsAjouter.forEach(bouton => {
   bouton.addEventListener('click', () => {
-    const produitElement = bouton.closest('.produit');
-    const nom = produitElement.querySelector('h3').textContent.trim();
+    const produit = bouton.closest('.produit');
+    const nom = produit.querySelector('h3').textContent.trim();
+    const typeProduit = produit.getAttribute('data-type') || 'autre';
+    const image = produit.querySelector('img').src;
 
-    // Récupération de la taille et prix
-    const selectTaille = produitElement.querySelector('select.taille-select');
-    let prix, type, taille = null;
+    // Gestion des options (seul/menu)
+    let prix, optionType = 'seul', menuChoice = null, drinkChoice = null;
+    
+    const selectedOption = produit.querySelector('.option-prix.selected');
+    if (selectedOption) {
+      optionType = selectedOption.getAttribute('data-option');
+      prix = parseFloat(selectedOption.querySelector('.prix').getAttribute('data-price'));
+    } else {
+      // Fallback pour les produits sans options
+      const prixElement = produit.querySelector('.prix-produit');
+      if (prixElement) {
+        prix = parseFloat(prixElement.getAttribute('data-price'));
+      } else {
+        console.error('Impossible de trouver le prix du produit');
+        return;
+      }
+    }
 
+    // Gestion des menus
+    if (optionType === 'menu') {
+      menuChoice = produit.querySelector('.menu-choice')?.value;
+      drinkChoice = produit.querySelector('.drink-choice')?.value;
+
+      if (!menuChoice || !drinkChoice) {
+        afficherNotification("Complétez toutes les options du menu.");
+        return;
+      }
+
+      if (menuChoice === 'dessert') {
+        const dessertType = produit.querySelector('.dessert-type')?.value;
+        if (!dessertType) {
+          afficherNotification("Veuillez choisir un dessert.");
+          return;
+        }
+        menuChoice = `dessert (${dessertType})`;
+      }
+    }
+
+    // Gestion des tailles (pour pizzas, etc.)
+    const selectTaille = produit.querySelector('select.taille-select');
     if (selectTaille) {
       const optionChoisie = selectTaille.options[selectTaille.selectedIndex];
-      prix = parseFloat(produitElement.querySelector('.prix-produit').getAttribute('data-price'));
-      taille = optionChoisie.value;
-      type = 'pizza';
-    } else {
-      const prixElement = produitElement.querySelector('.prix-produit');
-      prix = parseFloat(prixElement.getAttribute('data-price'));
-      type = 'burger';
+      prix = parseFloat(optionChoisie.getAttribute('data-price'));
+      typeProduit = 'pizza';
     }
 
-    // Récupération des suppléments cochés
-    const supplementsDiv = produitElement.querySelector('.supplements');
-    let supplements = [];
-    if (supplementsDiv) {
-      const checkedSupps = supplementsDiv.querySelectorAll('input[type="checkbox"]:checked');
-      checkedSupps.forEach(cb => {
-        if (cb.value.toLowerCase() !== "aucun") {
-          supplements.push({
-            nom: cb.value,
-            prix: parseFloat(cb.getAttribute('data-price')) || 0
-          });
-        }
-      });
-    }
-
-    const image = produitElement.querySelector('img').src;
-
-    const produitExistant = trouverProduitIdentique(nom, prix, type, supplements, taille);
+    const produitExistant = trouverProduitIdentique(
+      nom, prix, typeProduit, [], menuChoice, drinkChoice, optionType
+    );
 
     if (produitExistant) {
       produitExistant.quantite += 1;
+      afficherNotification(`Quantité augmentée pour ${nom}`);
     } else {
-      const produit = {
+      panier.push({
         id: Date.now(),
         nom,
-        prix,
         image,
-        type,
-        taille,
-        supplements,
+        prix,
+        type: typeProduit,
+        optionType,
+        menuChoice,
+        drinkChoice,
+        supplements: [],
         quantite: 1
-      };
-      panier.push(produit);
+      });
+      afficherNotification('Ajouté au panier !');
     }
 
     localStorage.setItem('panier', JSON.stringify(panier));
@@ -1566,20 +1576,21 @@ function afficherPanier() {
     const li = document.createElement('li');
     li.classList.add('article-panier');
 
-    // Création liste suppléments en texte
-    const supplText = item.supplements.length > 0 ? 
-      `<p>Suppléments : ${item.supplements.map(s => s.nom).join(', ')}</p>` : '';
+    // Construction du nom affiché selon les options
+    let nomAffiche = item.nom;
+    if (item.optionType === 'menu') {
+      nomAffiche += ` (Menu avec ${item.menuChoice} + ${item.drinkChoice})`;
+    } else if (item.optionType === 'seul') {
+      nomAffiche += ' (Seul)';
+    }
 
     const details = document.createElement('div');
     details.classList.add('details-panier');
     details.innerHTML = `
       <img src="${item.image}" alt="${item.nom}" />
       <div>
-        <h4>
-          ${item.nom} 
-          ${item.taille ? `(Taille : ${item.taille})` : ''} × ${item.quantite}
-        </h4>
-      <p>Type : ${
+        <h4>${nomAffiche} × ${item.quantite}</h4>
+        <p>Type : ${
           item.type === 'pizza' ? 'Pizza' :
           item.type === 'burger' ? 'Burger' :
           item.type === 'bagel' ? 'Bagel' :
@@ -1588,13 +1599,15 @@ function afficherPanier() {
           item.type === 'salades' ? 'Salade' : 
           item.type === 'sandwitchs_froids' ? 'Sandwich Froid' :
           'Autre'
-}</p>
-
-        ${supplText}
+        }</p>
         <p>Prix unitaire : ${item.prix.toFixed(2)} €</p>
         <p>Prix total : ${(item.prix * item.quantite).toFixed(2)} €</p>
       </div>
     `;
+
+
+   
+
 
     const boutonSupprimer = document.createElement('button');
     boutonSupprimer.textContent = '×';
@@ -1603,6 +1616,7 @@ function afficherPanier() {
       panier = panier.filter(p => p.id !== item.id);
       localStorage.setItem('panier', JSON.stringify(panier));
       afficherPanier();
+      afficherNotification('Article supprimé');
     });
 
     li.appendChild(details);
@@ -1630,16 +1644,12 @@ fermerPanier.addEventListener('click', () => {
   panierFlottant.classList.remove('ouvert');
 });
 
-// Initialisation
-afficherPanier();
+function afficherNotification(message) {
+  notification.textContent = message;
+  notification.classList.add('visible');
+  setTimeout(() => {
+    notification.classList.remove('visible');
+  }, 2000);
+}
 
 </script>
-
-
-
-
-
-
-</body>
-
-</html>
