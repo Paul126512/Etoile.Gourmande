@@ -16,14 +16,14 @@ Ce site web est en cours de développement pour permettre aux clients de **comma
 
 ---
 
-## 🧑‍🍳 Fonctionnalités prévues
+## Fonctionnalités
 
 - Page d’accueil conviviale avec les **catégories de produits**.
 - Panier interactif avec total dynamique.
 - Système de commande avec génération de numéro unique.
 - Paiement en ligne (en cours d'intégration).
 - 🗂️ Fichiers du Serveur Commandes
-🧑‍💻 session – Gestion des sessions utilisateur
+-  session – Gestion des sessions utilisateur
 
 🛒 checkout.js – Traitement du panier et du processus de commande
 
