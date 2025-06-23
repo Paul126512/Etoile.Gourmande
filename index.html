@@ -8,20 +8,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/Index-main.css">
-
-    
-
-
-<link rel="icon" href="/images/logo/favicon.ico" type="image/x-icon" />
-<link rel="icon" type="image/png" sizes="32x32" href="/images/logo/favicon-32x32.png" />
-<link rel="icon" type="image/png" sizes="16x16" href="/images/logo/favicon-16x16.png" />
-<link rel="apple-touch-icon" sizes="180x180" href="/images/logo/apple-touch-icon.png" />
-<meta name="msapplication-TileColor" content="#ffffff" />
-<meta name="msapplication-TileImage" content="/images/logo/mstile-150x150.png" />
-<meta name="theme-color" content="#ffffff" />
-
-
-    
   <!-- code optimisé -->
   <script>
     window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
@@ -76,6 +62,8 @@
             <div class="decor">
                 <img src="images/logo/blé.png" class="right-icon" />
                 <div class="decor-line"></div>
+                <meta name="format-detection" content="telephone=no">
+
                 <span class="phone-number">09 84 54 48 86</span>
                 <div class="decor-line"></div>
                 <img src="images/logo/blé.png" class="wheat-icon" />
@@ -96,6 +84,140 @@
         </a>
     </div>
 </section>
+
+
+
+
+<div class="cookie-banner" id="cookieBanner">
+    <span class="cookie-close" id="cookieClose"></span>
+    <div class="cookie-content" id="cookieMain">
+        <h3 class="cookie-title">Préférences de confidentialité</h3>
+        <p class="cookie-text">
+            Nous utilisons différentes technologies pour le bon fonctionnement du site et améliorer votre expérience.
+            <a href="/politique-de-confidentialite" class="privacy-link">En savoir plus</a>.
+        </p>
+        <div class="cookie-buttons">
+            <button class="cookie-btn cookie-btn-settings" id="cookieSettings">Paramètres</button>
+            <button class="cookie-btn cookie-btn-accept" id="cookieAccept">Tout accepter</button>
+        </div>
+    </div>
+
+    <!-- Panneau des paramètres (caché par défaut) -->
+    <div class="cookie-settings" id="cookieSettingsPanel" style="display:none">
+        <h3 class="cookie-title">Gestion des cookies</h3>
+        
+        <div class="cookie-setting">
+            <div class="setting-header">
+                <span class="setting-title">Cookies essentiels</span>
+                <label class="switch">
+                    <input type="checkbox" checked disabled>
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <p class="setting-desc">Nécessaires au fonctionnement du site (toujours activés)</p>
+        </div>
+        
+        <div class="cookie-setting">
+            <div class="setting-header">
+                <span class="setting-title">Cookies analytiques</span>
+                <label class="switch">
+                    <input type="checkbox" id="analyticsCookies" checked>
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <p class="setting-desc">Nous aident à améliorer le site</p>
+        </div>
+        
+        <div class="cookie-setting">
+            <div class="setting-header">
+                <span class="setting-title">Cookies marketing</span>
+                <label class="switch">
+                    <input type="checkbox" id="marketingCookies">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <p class="setting-desc">Pour personnaliser les publicités</p>
+        </div>
+        
+        <div class="cookie-buttons">
+            <button class="cookie-btn cookie-btn-back" id="cookieBack">Retour</button>
+            <button class="cookie-btn cookie-btn-save" id="cookieSave">Enregistrer</button>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const cookieBanner = document.getElementById('cookieBanner');
+    const cookieMain = document.getElementById('cookieMain');
+    const cookieSettingsPanel = document.getElementById('cookieSettingsPanel');
+    const cookieAccept = document.getElementById('cookieAccept');
+    const cookieSettings = document.getElementById('cookieSettings');
+    const cookieBack = document.getElementById('cookieBack');
+    const cookieSave = document.getElementById('cookieSave');
+    const cookieClose = document.getElementById('cookieClose');
+
+    // Afficher la bannière si pas encore de préférences
+    if (!localStorage.getItem('cookiePreferences')) {
+        cookieBanner.style.display = 'block';
+        setTimeout(() => {
+            cookieBanner.style.opacity = '1';
+            cookieBanner.style.transform = 'translateY(0)';
+        }, 100);
+    }
+
+    // Gestion des clics
+    cookieSettings.addEventListener('click', () => {
+        cookieMain.style.display = 'none';
+        cookieSettingsPanel.style.display = 'block';
+    });
+
+    cookieBack.addEventListener('click', () => {
+        cookieSettingsPanel.style.display = 'none';
+        cookieMain.style.display = 'block';
+    });
+
+    cookieAccept.addEventListener('click', () => {
+        savePreferences({
+            essential: true,
+            analytics: true,
+            marketing: true
+        });
+        hideBanner();
+    });
+
+    cookieSave.addEventListener('click', () => {
+        savePreferences({
+            essential: true,
+            analytics: document.getElementById('analyticsCookies').checked,
+            marketing: document.getElementById('marketingCookies').checked
+        });
+        hideBanner();
+    });
+
+    cookieClose.addEventListener('click', hideBanner);
+
+    function savePreferences(prefs) {
+        localStorage.setItem('cookiePreferences', JSON.stringify(prefs));
+        // Ici vous pouvez charger les scripts correspondants aux choix
+        console.log('Préférences enregistrées:', prefs);
+    }
+
+    function hideBanner() {
+        cookieBanner.style.opacity = '0';
+        cookieBanner.style.transform = 'translateY(10px)';
+        setTimeout(() => {
+            cookieBanner.style.display = 'none';
+        }, 300);
+    }
+});
+
+</script>
+
+
 
 
 <section class="image-categories" id="nos-creations">
@@ -131,7 +253,7 @@
         </div>
           <div class="image-category" onclick="location.href='Pates.html'">
             <img src="images/Pates/Pates.png" alt="Pates" />
-            <span>Pates</span>
+            <span>Pâtes</span>
         </div>
     </div> <!-- fermeture correcte ici -->
 </section>
