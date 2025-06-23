@@ -543,6 +543,8 @@ const commandeData = {
     desserts: panier.filter(item => item.type === 'dessert'),
     tacos: panier.filter(item => item.type === 'tacos'),
     pates: panier.filter(item => item.type === 'pates'), // ← AJOUT ICI
+    sandwitchs_froids: panier.filter(item => item.type === 'sandwitchs_froids'), // ←  ICI LES sandwitchs
+    salades: panier.filter(item => item.type === 'salades'), // ← SALADES
     supplements: panier.flatMap(item => item.supplements || []),
     total: panier.reduce((sum, item) => sum + (item.prix * item.quantite), 0)
 };
