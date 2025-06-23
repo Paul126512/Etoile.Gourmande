@@ -751,84 +751,104 @@
 }
 
 /* ================= SWITCH ================= */
+
+
+
+
+
+/* ========= RESET CSS ESSENTIEL ========= */
+input[type="checkbox"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0;
+}
+
+/* ========= SWITCH STYLES CORRIGÉS ========= */
 .cookie-toggle {
-  position: relative;
-  display: inline-block;
-  width: 42px;
-  height: 22px;
+    position: relative;
+    display: inline-block;
+    width: 60px; /* Taille augmentée */
+    height: 34px; /* Taille augmentée */
+    margin-left: 10px;
 }
 
 .cookie-toggle input {
-  opacity: 0;
-  width: 0;
-  height: 0;
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    z-index: 2;
+    cursor: pointer;
 }
 
 .cookie-toggle-slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  border-radius: 22px;
-  transition: 0.3s;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    border-radius: 34px;
+    transition: .4s;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
 }
 
-.cookie-toggle-slider::before {
-  content: "";
-  position: absolute;
-  height: 18px;
-  width: 18px;
-  left: 2px;
-  bottom: 2px;
-  background-color: white;
-  border-radius: 50%;
-  transition: 0.3s;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+.cookie-toggle-slider:before {
+    content: "";
+    position: absolute;
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    top: 4px;
+    background-color: white;
+    border-radius: 50%;
+    transition: .4s;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
+/* État activé */
 .cookie-toggle input:checked + .cookie-toggle-slider {
-  background-color: #555;
+    background-color: #2196F3;
 }
 
-.cookie-toggle input:checked + .cookie-toggle-slider::before {
-  transform: translateX(20px);
+.cookie-toggle input:checked + .cookie-toggle-slider:before {
+    transform: translateX(26px);
 }
 
+/* État désactivé */
 .cookie-toggle input:disabled + .cookie-toggle-slider {
-  background-color: #ddd;
-  cursor: not-allowed;
+    background-color: #e0e0e0;
+    cursor: not-allowed;
 }
 
-/* ================= RESPONSIVE ================= */
-@media (max-width: 600px) {
-  .cookie-banner {
-    right: 50%;
-    left: auto;
-    transform: translateX(50%);
-    bottom: 1rem;
-    padding: 1rem;
-  }
-
-  .cookie-buttons {
-    flex-direction: column;
-    justify-content: center;
-    align-items: stretch;
-  }
-
-  .cookie-btn {
-    flex: 1 1 100%;
-    width: 100%;
-  }
+.cookie-toggle input:disabled + .cookie-toggle-slider:before {
+    background-color: #f5f5f5;
 }
 
+/* CSS */
+.cookie-buttons {
+    display: flex;
+    gap: 10px;
+}
 
+/* Masquer le bouton Paramètres sur mobile */
+@media (max-width: 768px) {
+    #cookieSettings {
+        display: none;
+    }
+    
+    .cookie-btn-accept {
+        width: 100%;
+    }
+}
 
-
-
-
+/* Pour forcer l'affichage quand le panneau de paramètres est ouvert */
+.cookie-settings .cookie-buttons #cookieBack,
+.cookie-settings .cookie-buttons #cookieSave {
+    display: inline-block !important;
+}
 
 
 
@@ -1516,18 +1536,3 @@
   }
  }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
