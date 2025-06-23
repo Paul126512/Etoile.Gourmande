@@ -9,6 +9,13 @@
 </head>
 
 
+<style>
+
+
+  
+</style>
+
+
 <body>
   <div class="container">
     <a href="index.html" class="bouton-retour">
@@ -19,7 +26,7 @@
 
 
 
-    <!-- === Panier Flottant === -->
+<!-- === Panier Flottant === -->
 
 <div id="panier-flottant">
   <button class="toggle">
@@ -58,7 +65,7 @@
      
     <div class="liste-produits">
 <div class="liste-produits">
-  <div class="produit" id="Poulet">
+  <div class="produit" id="sandwitchs_Poulet" data-type="sandwitchs_froids">
     <img src="images/Sandwitchs/Sandwitchs-Poulet.png" alt="Sandwich Poulet" class="image-produit" />
     <div class="produit-contenu">
       <h3>Poulet</h3>
@@ -143,7 +150,7 @@
 
 
 <div class="liste-produits">
-  <div class="produit" id="Thon">
+  <div class="produit" id="sandwitchs_Thon" data-type="sandwitchs_froids">
     <img src="images/Sandwitchs/Sandwitchs-Thon.png" alt="Sandwich Thon" class="image-produit" />
     <div class="produit-contenu">
       <h3>Thon</h3>
@@ -244,7 +251,7 @@
 
 
 <div class="liste-produits">
-  <div class="produit" id="Jambon-Beurre">
+  <div class="produit" id="sandwitchs_Jambon_Beurre" data-type="sandwitchs_froids">
     <img src="images/Sandwitchs/Jambon-Beurre.png" alt="Sandwich Jambon-Beurre" class="image-produit" />
     <div class="produit-contenu">
       <h3>Jambon Beurre</h3>
@@ -319,7 +326,7 @@
 
 
 <div class="liste-produits">
-  <div class="produit" id="Chorizo">
+    <div class="produit" id="sandwitchs_Chorizo" data-type="sandwitchs_froids">
     <img src="images/Sandwitchs/Jambon-Chorizo.png" alt="Sandwich Chorizo" class="image-produit" />
     <div class="produit-contenu">
       <h3>Chorizo Beurre</h3>
@@ -390,7 +397,7 @@
 
 
 <div class="liste-produits">
-  <div class="produit" id="Poulet">
+  <div class="produit" id="sandwitchs_Poulet" data-type="sandwitchs_froids">
     <img src="images/Sandwitchs/Sandwitchs-Poulet.png" alt="Sandwich Poulet" class="image-produit" />
     <div class="produit-contenu">
       <h3>Poulet</h3>
@@ -459,73 +466,6 @@
 
 
 
-
-
-<div class="liste-produits">
-  <div class="produit" id="Poulet">
-    <img src="images/Sandwitchs/Sandwitchs-Poulet.png" alt="Sandwich Poulet" class="image-produit" />
-    <div class="produit-contenu">
-      <h3>Poulet</h3>
-      <p class="description-produit">Sandwich frais au poulet avec choix</p>
-
-      <!-- Options Seul / Menu -->
-      <div class="options-prix">
-        <div class="option-prix selected" data-option="seul">
-          <span>Seul</span>
-          <span class="prix" data-price="4.00">4,00 €</span>
-        </div>
-        <div class="option-prix" data-option="menu">
-          <span>Menu</span>
-          <span class="prix" data-price="6.00">6,00 €</span>
-        </div>
-      </div>
-
-      <!-- Choix menu -->
-      <div class="menu-options">
-        <p>Choisissez vos options de menu :</p>
-
-        <select class="menu-choice">
-          <option value="frites">Frites</option>
-          <option value="dessert">Dessert</option>
-        </select>
-
-        <!-- Sous-choix visible uniquement si "Dessert" sélectionné -->
-        <div class="dessert-options" style="display: none; margin-top: 10px;">
-          <label for="dessert-type">Choisissez votre dessert</label> 
-
- <select class="dessert-type" id="dessert-type" required>
-  <option value="">Sélectionnez</option>
-  <option value="cookies-3chocolats">Cookies 3 chocolats</option>
-  <option value="cookies-daim">Cookies Daim</option>
-  <option value="donuts-oreo">Donuts Oreo</option>
-  <option value="donuts-daim">Donuts Daim</option>
-  <option value="donuts-mms">Donuts M&M's</option>
-  <option value="muffins-milka">Muffins Milka</option>
-  <option value="muffins-nutella">Muffins Nutella</option>
-  <option value="muffins-framboise-blanc">Muffins framboise chocolat blanc</option>
-  <option value="maxi-beignet-choco">Maxi beignets au chocolat</option>
-</select>
-
-        </div>  <br>
-
-        <!-- Boissons -->
-  <select class="drink-choice">
-  <option value="coca">Coca-Cola</option>
-  <option value="coca-zero">Coca-Cola sans sucre</option>
-  <option value="coca-cherry">Coca-Cola cherry</option>
-  <option value="fanta-orange">Fanta orange</option>
-  <option value="fanta-mangue">Fanta mangue fruit du dragon</option>
-  <option value="oasis-tropical">Oasis tropical</option>
-  <option value="oasis-pomme">Oasis pomme cassis framboise</option>
-  <option value="lipton-peche">Lipton pêche</option>
-</select>
-
-      </div>
-
-      <button aria-label="Ajouter Sandwich Poulet au panier">Ajouter au panier</button>
-    </div>
-  </div>
-</div>
 
 
 
@@ -541,35 +481,36 @@
   <div class="notification" id="notification">Ajouté au panier !</div>
 
   
+<script>
 
+const boutonsAjouter = document.querySelectorAll('.produit button');
+const compteurPanier = document.getElementById('compteur-panier');
+const listePanier = document.getElementById('liste-panier');
+const totalElement = document.getElementById('total');
+const panierFlottant = document.getElementById('panier-flottant');
+const togglePanier = document.querySelector('.toggle');
+const fermerPanier = document.getElementById('fermer-panier');
+const notification = document.getElementById('notification');
 
+let panier = JSON.parse(localStorage.getItem('panier')) || [];
 
-  <script>
-  const boutonsAjouter = document.querySelectorAll('.produit button');
-  const compteurPanier = document.getElementById('compteur-panier');
-  const listePanier = document.getElementById('liste-panier');
-  const totalElement = document.getElementById('total');
-  const notification = document.getElementById('notification');
-  const togglePanier = document.querySelector('.toggle');
-  const fermerPanier = document.getElementById('fermer-panier');
-  let panier = JSON.parse(localStorage.getItem('panier')) || [];
+// Initialisation
+document.addEventListener('DOMContentLoaded', () => {
+  afficherPanier();
 
-  // Initialisation
-  document.addEventListener('DOMContentLoaded', () => {
-    afficherPanier();
+  document.querySelectorAll('.produit').forEach(produit => {
+    const options = produit.querySelectorAll('.option-prix');
+    const menuOptions = produit.querySelector('.menu-options');
+    const menuChoice = produit.querySelector('.menu-choice');
+    const dessertOptions = produit.querySelector('.dessert-options');
+    const dessertType = produit.querySelector('.dessert-type');
 
-    document.querySelectorAll('.produit').forEach(produit => {
-      const options = produit.querySelectorAll('.option-prix');
-      const menuOptions = produit.querySelector('.menu-options');
-      const menuChoice = produit.querySelector('.menu-choice');
-      const dessertOptions = produit.querySelector('.dessert-options');
-      const dessertType = produit.querySelector('.dessert-type');
-
-      // Par défaut, activer "seul"
+    // Par défaut, activer "seul" s'il existe
+    if (options.length > 0) {
       options.forEach(opt => opt.classList.remove('selected'));
       const seul = produit.querySelector('.option-prix[data-option="seul"]');
-      seul.classList.add('selected');
-      menuOptions.style.display = 'none';
+      if (seul) seul.classList.add('selected');
+      if (menuOptions) menuOptions.style.display = 'none';
       if (dessertOptions) dessertOptions.style.display = 'none';
 
       options.forEach(option => {
@@ -578,143 +519,212 @@
           option.classList.add('selected');
 
           const isMenu = option.getAttribute('data-option') === 'menu';
-          menuOptions.style.display = isMenu ? 'block' : 'none';
+          if (menuOptions) menuOptions.style.display = isMenu ? 'block' : 'none';
         });
       });
+    }
 
-      // Affichage des desserts si "dessert" est sélectionné
-      if (menuChoice) {
-        menuChoice.addEventListener('change', () => {
-          if (menuChoice.value === 'dessert') {
-            dessertOptions.style.display = 'block';
-            dessertType.setAttribute('required', 'required');
-          } else {
-            dessertOptions.style.display = 'none';
+    // Affichage des desserts si "dessert" est sélectionné
+    if (menuChoice) {
+      menuChoice.addEventListener('change', () => {
+        if (menuChoice.value === 'dessert') {
+          if (dessertOptions) dessertOptions.style.display = 'block';
+          if (dessertType) dessertType.setAttribute('required', 'required');
+        } else {
+          if (dessertOptions) dessertOptions.style.display = 'none';
+          if (dessertType) {
             dessertType.removeAttribute('required');
             dessertType.value = '';
           }
-        });
-      }
-    });
+        }
+      });
+    }
   });
+});
 
-  boutonsAjouter.forEach(bouton => {
-    bouton.addEventListener('click', () => {
-      const produit = bouton.closest('.produit');
-      const nom = produit.querySelector('h3').textContent.trim();
-      const image = produit.querySelector('img').src;
-      const selectedOption = produit.querySelector('.option-prix.selected');
-      const optionType = selectedOption.getAttribute('data-option');
-      const prix = parseFloat(selectedOption.querySelector('.prix').getAttribute('data-price'));
+// Fonction pour trouver un produit identique dans le panier
+function trouverProduitIdentique(nom, prix, type, supplements, menuChoice, drinkChoice, optionType) {
+  return panier.find(item => 
+    item.nom === nom && 
+    item.prix === prix && 
+    item.type === type && 
+    item.optionType === optionType &&
+    item.menuChoice === menuChoice &&
+    item.drinkChoice === drinkChoice &&
+    JSON.stringify(item.supplements) === JSON.stringify(supplements)
+  );
+}
 
-      let menuChoice = null;
-      let drinkChoice = null;
+// Ajouter au panier
+boutonsAjouter.forEach(bouton => {
+  bouton.addEventListener('click', () => {
+    const produit = bouton.closest('.produit');
+    const nom = produit.querySelector('h3').textContent.trim();
+    const typeProduit = produit.getAttribute('data-type') || 'autre';
+    const image = produit.querySelector('img').src;
 
-      if (optionType === 'menu') {
-        menuChoice = produit.querySelector('.menu-choice').value;
-        drinkChoice = produit.querySelector('.drink-choice').value;
+    // Gestion des options (seul/menu)
+    let prix, optionType = 'seul', menuChoice = null, drinkChoice = null;
+    
+    const selectedOption = produit.querySelector('.option-prix.selected');
+    if (selectedOption) {
+      optionType = selectedOption.getAttribute('data-option');
+      prix = parseFloat(selectedOption.querySelector('.prix').getAttribute('data-price'));
+    } else {
+      // Fallback pour les produits sans options
+      const prixElement = produit.querySelector('.prix-produit');
+      if (prixElement) {
+        prix = parseFloat(prixElement.getAttribute('data-price'));
+      } else {
+        console.error('Impossible de trouver le prix du produit');
+        return;
+      }
+    }
 
-        if (!menuChoice || !drinkChoice) {
-          afficherNotification("Complétez toutes les options du menu.");
+    // Gestion des menus
+    if (optionType === 'menu') {
+      menuChoice = produit.querySelector('.menu-choice')?.value;
+      drinkChoice = produit.querySelector('.drink-choice')?.value;
+
+      if (!menuChoice || !drinkChoice) {
+        afficherNotification("Complétez toutes les options du menu.");
+        return;
+      }
+
+      if (menuChoice === 'dessert') {
+        const dessertType = produit.querySelector('.dessert-type')?.value;
+        if (!dessertType) {
+          afficherNotification("Veuillez choisir un dessert.");
           return;
         }
-
-        if (menuChoice === 'dessert') {
-          const dessertType = produit.querySelector('.dessert-type').value;
-          if (!dessertType) {
-            afficherNotification("Veuillez choisir un dessert.");
-            return;
-          }
-          menuChoice = `dessert (${dessertType})`;
-        }
+        menuChoice = `dessert (${dessertType})`;
       }
+    }
 
-      ajouterAuPanier(nom, image, optionType, prix, menuChoice, drinkChoice);
-      afficherNotification('Ajouté au panier !');
-    });
-  });
+    // Gestion des tailles (pour pizzas, etc.)
+    const selectTaille = produit.querySelector('select.taille-select');
+    if (selectTaille) {
+      const optionChoisie = selectTaille.options[selectTaille.selectedIndex];
+      prix = parseFloat(optionChoisie.getAttribute('data-price'));
+      typeProduit = 'pizza';
+    }
 
-  togglePanier.addEventListener('click', () => {
-    document.getElementById('contenu-panier').classList.toggle('ouvert');
-  });
-
-  fermerPanier.addEventListener('click', () => {
-    document.getElementById('contenu-panier').classList.remove('ouvert');
-  });
-
-  function ajouterAuPanier(nom, image, option, prix, menuChoice, drinkChoice) {
-    const existant = panier.find(item =>
-      item.nom === nom &&
-      item.option === option &&
-      item.menuChoice === menuChoice &&
-      item.drinkChoice === drinkChoice
+    const produitExistant = trouverProduitIdentique(
+      nom, prix, typeProduit, [], menuChoice, drinkChoice, optionType
     );
 
-    if (existant) {
-      existant.quantite += 1;
+    if (produitExistant) {
+      produitExistant.quantite += 1;
+      afficherNotification(`Quantité augmentée pour ${nom}`);
     } else {
       panier.push({
         id: Date.now(),
         nom,
         image,
-        option,
         prix,
+        type: typeProduit,
+        optionType,
         menuChoice,
         drinkChoice,
+        supplements: [],
         quantite: 1
       });
+      afficherNotification('Ajouté au panier !');
     }
 
     localStorage.setItem('panier', JSON.stringify(panier));
     afficherPanier();
-  }
+  });
+});
 
-  function afficherPanier() {
-    listePanier.innerHTML = '';
-    let total = 0;
+// Afficher le panier
+function afficherPanier() {
+  listePanier.innerHTML = '';
+  let total = 0;
 
-    panier.forEach(item => {
-      const li = document.createElement('li');
-      li.classList.add('article-panier');
+  panier.forEach(item => {
+    if (typeof item.prix !== 'number' || isNaN(item.prix)) {
+      console.error(`Prix non valide pour ${item.nom} :`, item.prix);
+      item.prix = 0;
+    }
 
-      const nomAffiche = item.option === 'menu'
-        ? `${item.nom} (Menu avec ${item.menuChoice} + ${item.drinkChoice})`
-        : `${item.nom} (Seul)`;
+    const li = document.createElement('li');
+    li.classList.add('article-panier');
 
-      li.innerHTML = `
-        <div class="details-panier">
-          <img src="${item.image}" alt="${item.nom}">
-          <div>
-            <h4>${nomAffiche} × ${item.quantite}</h4>
-            <p>Prix unitaire : ${item.prix.toFixed(2)} €</p>
-            <p>Prix total : ${(item.prix * item.quantite).toFixed(2)} €</p>
-          </div>
-        </div>
-        <button class="supprimer">×</button>
-      `;
+    // Construction du nom affiché selon les options
+    let nomAffiche = item.nom;
+    if (item.optionType === 'menu') {
+      nomAffiche += ` (Menu avec ${item.menuChoice} + ${item.drinkChoice})`;
+    } else if (item.optionType === 'seul') {
+      nomAffiche += ' (Seul)';
+    }
 
-      li.querySelector('.supprimer').addEventListener('click', () => {
-        panier = panier.filter(p => p.id !== item.id);
-        localStorage.setItem('panier', JSON.stringify(panier));
-        afficherPanier();
-        afficherNotification('Article supprimé');
-      });
+    const details = document.createElement('div');
+    details.classList.add('details-panier');
+    details.innerHTML = `
+      <img src="${item.image}" alt="${item.nom}" />
+      <div>
+        <h4>${nomAffiche} × ${item.quantite}</h4>
+        <p>Type : ${
+          item.type === 'pizza' ? 'Pizza' :
+          item.type === 'burger' ? 'Burger' :
+          item.type === 'bagel' ? 'Bagel' :
+          item.type === 'tacos' ? 'Tacos' :
+          item.type === 'pates' ? 'Pâtes' : 
+          item.type === 'salades' ? 'Salade' : 
+          item.type === 'sandwitchs_froids' ? 'Sandwich Froid' :
+          'Autre'
+        }</p>
+        <p>Prix unitaire : ${item.prix.toFixed(2)} €</p>
+        <p>Prix total : ${(item.prix * item.quantite).toFixed(2)} €</p>
+      </div>
+    `;
 
-      listePanier.appendChild(li);
-      total += item.prix * item.quantite;
+
+   
+
+
+    const boutonSupprimer = document.createElement('button');
+    boutonSupprimer.textContent = '×';
+    boutonSupprimer.classList.add('supprimer');
+    boutonSupprimer.addEventListener('click', () => {
+      panier = panier.filter(p => p.id !== item.id);
+      localStorage.setItem('panier', JSON.stringify(panier));
+      afficherPanier();
+      afficherNotification('Article supprimé');
     });
 
-    compteurPanier.textContent = panier.reduce((acc, item) => acc + item.quantite, 0);
-    totalElement.textContent = total.toFixed(2);
-  }
+    li.appendChild(details);
+    li.appendChild(boutonSupprimer);
+    listePanier.appendChild(li);
 
-  function afficherNotification(message) {
-    notification.textContent = message;
-    notification.classList.add('visible');
-    setTimeout(() => {
-      notification.classList.remove('visible');
-    }, 2000);
-  }
+    const sousTotal = item.prix * item.quantite;
+    if (!isNaN(sousTotal)) {
+      total += sousTotal;
+    } else {
+      console.error(`Sous-total invalide pour ${item.nom}:`, sousTotal);
+    }
+  });
+
+  compteurPanier.textContent = panier.reduce((acc, item) => acc + item.quantite, 0);
+  totalElement.textContent = isNaN(total) ? '0.00' : total.toFixed(2);
+}
+
+// Toggle panier flottant
+togglePanier.addEventListener('click', () => {
+  document.getElementById('contenu-panier').classList.toggle('ouvert');
+});
+
+fermerPanier.addEventListener('click', () => {
+  panierFlottant.classList.remove('ouvert');
+});
+
+function afficherNotification(message) {
+  notification.textContent = message;
+  notification.classList.add('visible');
+  setTimeout(() => {
+    notification.classList.remove('visible');
+  }, 2000);
+}
+
 </script>
-
-
