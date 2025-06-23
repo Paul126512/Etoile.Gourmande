@@ -2,12 +2,12 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Boulangerie | L'Etoile Gourmande</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/Index-main.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <!-- code optimisé -->
   <script>
     window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
@@ -21,25 +21,20 @@
         <img src="images/logo/logo halal.png" alt="Logo Halal">
     </div>
 
-    
-<div class="burger-container">
-    <div class="burger-menu" id="burger-menu">
-        <span></span>
-        <span></span>
-        <span></span>
+    <div class="burger-container">
+        <div class="burger-menu" id="burger-menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
     </div>
-</div>
 
-
-
-    <nav>
+    <nav id="main-nav">
         <ul>
             <li><a href="#">Accueil</a></li>
             <li><a href="#nos-creations">Nos Créations</a></li>
             <li><a href="suivi-commande.html">Suivi de commande</a></li>
             <li><a href="Contact.html">Contact</a></li>
-            
-       
         </ul>
     </nav>
 </header>
@@ -53,6 +48,9 @@
             <div>✻</div>
             <div>✻</div>
         </div>
+
+
+
     
         <h1 class="title">L'Étoile Gourmande</h1>
         <br>
@@ -84,19 +82,32 @@
         </a>
     </div>
 </section>
+        
+
+
+        <script>
+        
+        const burger = document.getElementById('burger-menu');
+const nav = document.getElementById('main-nav');
+
+burger.addEventListener('click', () => {
+    nav.classList.toggle('active');
+});
+</script>
+
 
 
 <div class="cookie-banner" id="cookieBanner">
-    <span class="cookie-close" id="cookieClose"></span>
+    <span class="cookie-close" id="cookieClose">×</span>
     <div class="cookie-content" id="cookieMain">
-        <h3 class="cookie-title">Préférences de confidentialité</h3>
+        <h3 class="cookie-title">Confidentialité</h3>
         <p class="cookie-text">
-            Nous utilisons différentes technologies pour le bon fonctionnement du site et améliorer votre expérience.
-            <a href="/politique-de-confidentialite" class="privacy-link">En savoir plus</a>.
+            Nous utilisons des cookies pour le site et votre expérience.
+            <a href="/politique-de-confidentialite" class="privacy-link">Plus d'infos</a>.
         </p>
         <div class="cookie-buttons">
             <button id="cookieSettings" class="cookie-btn cookie-btn-settings">Paramètres</button>
-            <button class="cookie-btn cookie-btn-accept" id="cookieAccept">Tout accepter</button>
+            <button class="cookie-btn cookie-btn-accept" id="cookieAccept">Accepter</button>
         </div>
     </div>
 
@@ -106,48 +117,45 @@
         <!-- Cookies essentiels -->
         <div class="cookie-option">
             <div class="cookie-option-header">
-                <span>Cookies essentiels</span>
+                <span>Essentiels</span>
                 <label class="cookie-toggle">
                     <input type="checkbox" checked disabled>
                     <span class="cookie-toggle-slider"></span>
                 </label>
             </div>
-            <p class="cookie-option-desc">Nécessaires au fonctionnement du site</p>
+            <p class="cookie-option-desc">Fonctionnement du site</p>
         </div>
         
         <!-- Cookies analytiques -->
         <div class="cookie-option">
             <div class="cookie-option-header">
-                <span>Cookies analytiques</span>
+                <span>Analytiques</span>
                 <label class="cookie-toggle">
                     <input type="checkbox" id="analyticsCookies">
                     <span class="cookie-toggle-slider"></span>
                 </label>
             </div>
-            <p class="cookie-option-desc">Pour analyser l'usage du site</p>
+            <p class="cookie-option-desc">Analyse d'usage</p>
         </div>
         
         <!-- Cookies marketing -->
         <div class="cookie-option">
             <div class="cookie-option-header">
-                <span>Cookies marketing</span>
+                <span>Marketing</span>
                 <label class="cookie-toggle">
                     <input type="checkbox" id="marketingCookies">
                     <span class="cookie-toggle-slider"></span>
                 </label>
             </div>
-            <p class="cookie-option-desc">Pour personnaliser les publicités</p>
+            <p class="cookie-option-desc">Publicités</p>
         </div>
         
         <div class="cookie-buttons">
             <button class="cookie-btn cookie-btn-back" id="cookieBack">Retour</button>
-            <button class="cookie-btn cookie-btn-save" id="cookieSave">Enregistrer</button>
+            <button class="cookie-btn cookie-btn-save" id="cookieSave">Valider</button>
         </div>
     </div>
 </div>
-
-
-
 
 
 <script>
@@ -202,17 +210,15 @@ document.addEventListener('DOMContentLoaded', function() {
         hideBanner();
     });
 
-    if (cookieClose) {
-        cookieClose.addEventListener('click', function(e) {
-            e.preventDefault();
-            hideBanner();
-        });
-    }
+    cookieClose.addEventListener('click', function(e) {
+        e.preventDefault();
+        hideBanner();
+    });
 
     function savePreferences(prefs) {
         localStorage.setItem('cookiePreferences', JSON.stringify(prefs));
-        // Ici vous pouvez charger les scripts en fonction des préférences
-        console.log('Préférences enregistrées:', prefs);
+        // Charger les scripts en fonction des préférences
+        loadScriptsBasedOnPreferences(prefs);
     }
 
     function hideBanner() {
@@ -221,10 +227,18 @@ document.addEventListener('DOMContentLoaded', function() {
             cookieBanner.style.display = 'none';
         }, 300);
     }
-});
 
+    function loadScriptsBasedOnPreferences(prefs) {
+        // Implémentez ici le chargement des scripts
+        console.log('Préférences:', prefs);
+    }
+});
 </script>
-    
+
+
+
+
+
 
 
 <section class="image-categories" id="nos-creations">
@@ -267,7 +281,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-<!-- Bannière Cookies style Cédric Grolet -->
+
+
+
+
+
+
+
+
+<!-- Bannière Cookies style -->
 <div class="cookie-banner">
     <div class="cookie-header">
         <svg class="cookie-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -291,62 +313,54 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <script src="index.js"></script>
 
-<footer class="grolet-footer">
-    <div class="footer-content">
-        <div class="footer-actions">
-            <button class="grolet-button primary">L'étoile Gourmande</button>
-         <button class="grolet-button secondary" onclick="window.location.href='suivi-commande.html'">Suivi de commande</button>
-
-        </div>
-        
-        <div class="footer-links">
-            <div class="links-column">
-                <h3>Nos créations</h3>
-                <ul>
-                    <li><a href="#">Pains signature</a></li>
-                    <li><a href="#">Viennoiseries</a></li>
-                    <li><a href="#">Pâtisseries</a></li>
-                    <li><a href="#">Collections saisonnières</a></li>
-                </ul>
-            </div>
-            
-            <div class="links-column">
-                <h3>Nos Partenaires</h3>
-                <ul>
-                    <li><a href="#">Uber Eats</a></li>
-                    <li><a href="#">Deliveroo</a></li>
-                </ul>
-            </div>
-            
-            <div class="links-column">
-                <h3>Informations</h3>
-                <ul>
-                    <li><a href="Contact.html">Contact</a></li>
-                    <li><a href="#">Horaires</a></li>
-                    <li><a href="#">Recrutement</a></li>
-                </ul>
-            </div>
-        </div>
-        
-        <div class="footer-social">
-            <a href="#" class="social-icon">
-                <img src="images/logo/Uber-Eats.png" alt="Instagram" class="social-image">
-            </a>
-            <a href="#" class="social-icon">
-                <img src="images/logo/deliveroo.png" alt="Deliveroo" class="social-image">
-            </a>
-            <a href="#" class="social-icon">
-                <img src="images/logo/instagram.png" alt="Instagram" class="social-image">
-            </a>
-        </div>
-        
-        <div class="footer-legal">
-            <p>© 2025 L'Etoile Gourmande | <a href="#">Mentions légales</a> | <a href="#">CGV</a></p>
-        </div>
+<footer class="modern-footer">
+  <div class="footer-wrapper">
+    <!-- Boutons principaux -->
+    <div class="footer-buttons">
+      <a href="#" class="main-btn">L'étoile Gourmande</a>
+      <a href="suivi-commande.html" class="second-btn">Suivi de commande</a>
     </div>
- </footer>
 
-    
+    <!-- Liens principaux -->
+    <div class="footer-links">
+      <div class="link-group">
+        <h4>Nos créations</h4>
+        <ul>
+          <li><a href="#">Pains signature</a></li>
+          <li><a href="#">Viennoiseries</a></li>
+          <li><a href="#">Pâtisseries</a></li>
+          <li><a href="#">Saisonnier</a></li>
+        </ul>
+      </div>
+
+      <div class="link-group">
+        <h4>Nos partenaires</h4>
+        <ul>
+          <li><a href="#">Uber Eats</a></li>
+          <li><a href="#">Deliveroo</a></li>
+        </ul>
+      </div>
+
+      <div class="link-group">
+        <h4>Informations</h4>
+        <ul>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="#">Horaires</a></li>
+          <li><a href="#">Recrutement</a></li>
+        </ul>
+      </div>
+    </div>
+
+  
+
+<!-- Mentions légales -->
+  <footer class="footerr" role="contentinfo">
+    <div class="footer-legal">
+      <p>© 2025 L'Etoile Gourmande | <a href="#" aria-label="Mentions légales">Mentions légales</a> | <a href="#" aria-label="Politique de confidentialité">Politique de confidentialité</a></p>
+    </div>
+  </footer>
+
+</footer>
 
 <script>
   (function() {
@@ -361,5 +375,5 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
     
     
- </body>
+  </body>
 </html>
