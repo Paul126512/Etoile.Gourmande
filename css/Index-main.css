@@ -730,16 +730,18 @@
         border-color: #c0c0c0;
     }
 
- .cookie-close {
-    position: absolute;
-    top: 16px;
-    right: 16px;
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-    opacity: 0.6;
-    transition: opacity 0.3s;
+.cookie-close {
+  position: absolute;
+  top:  50px;    /* Distance du haut de la bannière */
+  right: 16px;  /* Distance de la droite de la bannière */
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.3s;
+  z-index: 1100;
 }
+
 
 .cookie-close::before, 
 .cookie-close::after {
@@ -757,21 +759,40 @@
     transform: translate(-50%, -50%) rotate(-45deg);
 }
 
-@media (max-width: 480px) {
-    .cookie-banner {
-        left: auto !important;         /* désactive la marge à gauche */
-        right: 12px !important;        /* marge à droite */
-        max-width: 280px !important;   /* largeur max plus petite */
-        width: auto !important;        /* largeur automatique */
-        box-sizing: border-box;        /* inclure padding dans la largeur */
-    }
+
+.logo img {
+  width: 80px;
+  height: auto;
+  transition: width 0.3s ease, height 0.3s ease;
+}
+
+@media (max-width: 479px) {
+  .logo img {
+    width: 100px !important;  /* même taille que desktop */
+    height: auto !important;
+    max-height: none !important; /* on enlève la limite */
+    object-fit: contain !important;
+  }
 }
 
 
+@media (max-width: 480px) {
+  .cookie-banner {
+    bottom: 1rem !important;
+    right: 1rem !important;
+    left: auto !important;
+    top: auto !important;
+    max-width: 320px !important;
+    width: 90% !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+  }
 
-
-
-
+  .cookie-close {
+    top: 25px !important;   /* ajusté ici */
+    right: 10px !important;
+  }
+}
 
 
 
