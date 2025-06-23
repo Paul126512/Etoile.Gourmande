@@ -46,19 +46,20 @@ export default async function handler(req, res) {
   }
 
   // Combinaison de tous les types de produits
-  const produits = [
-    ...(Array.isArray(pizzas) ? pizzas : []),
-    ...(Array.isArray(burgers) ? burgers : []),
-    ...(Array.isArray(bagels) ? bagels : []),
-    ...(Array.isArray(menus) ? menus : []),
-    ...(Array.isArray(boissons) ? boissons : []),
-    ...(Array.isArray(desserts) ? desserts : []),
-    ...(Array.isArray(tacos) ? tacos : []),
-    ...(Array.isArray(sandwitchs_froids) ? sandwitchs_froids : []),
-    ...(Array.isArray(salades) ? salades : []),
-    ...(Array.isArray(pates) ? pates : []) // Ajout des pates ici
-    ...(Array.isArray(supplements) ? supplements : []) // J'ai aussi ajouté les suppléments ici au cas où
-  ];
+const produits = [
+  ...(Array.isArray(pizzas) ? pizzas : []),
+  ...(Array.isArray(burgers) ? burgers : []),
+  ...(Array.isArray(bagels) ? bagels : []),
+  ...(Array.isArray(menus) ? menus : []),
+  ...(Array.isArray(boissons) ? boissons : []),
+  ...(Array.isArray(desserts) ? desserts : []),
+  ...(Array.isArray(tacos) ? tacos : []),
+  ...(Array.isArray(sandwitchs_froids) ? sandwitchs_froids : []),
+  ...(Array.isArray(salades) ? salades : []),
+  ...(Array.isArray(pates) ? pates : []), // <-- virgule ici
+  ...(Array.isArray(supplements) ? supplements : []) // <-- ici aussi OK
+];
+
 
   if (produits.length === 0) {
     return res.status(400).json({ message: 'Votre panier est vide.' });
