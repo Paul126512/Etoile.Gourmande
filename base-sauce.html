@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Nos Pizza Base sauce tomate</title>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 
 
@@ -605,43 +605,90 @@ h1:after {
   animation: pop-panier 0.3s ease;
 }
 
-/* === Responsive === */
-@media (max-width: 768px) {
-  .container {
-    padding: 30px 15px;
+@media (max-width: 767px) {
+  .liste-produits {
+    display: block; /* Solution simple et efficace */
   }
   
+@media (max-width: 767px) {
   .liste-produits {
-    grid-template-columns: 1fr;
-    gap: 30px;
+    display: block; /* Solution simple et efficace */
   }
   
   .produit {
-    max-width: 400px;
-    margin: 0 auto;
+    width: 100%;
+    margin: 0 auto 30px;
+    float: none;
   }
-  
+  }
+  }
+
+
+
+
+
+
+/* Version mobile - Panier à gauche avec animation inversée */
+@media (max-width: 767px) {
   #panier-flottant {
-    top: auto;
-    bottom: 20px;
-    right: 20px;
+    left: 20px !important; /* Position fixe à gauche */
+    right: auto !important;
+    transform: none !important;
+    top: 80px !important;
   }
-#contenu-panier {
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(-20px);
-  transition: all 0.3s ease;
+
+  #contenu-panier {
+    left: 0 !important; /* Alignement à gauche */
+    right: auto !important;
+    transform: translateX(-10px) translateY(20px); /* Animation part de la gauche */
+    width: 90vw;
+    max-width: 300px;
+    top: calc(100% + 15px);
+    transition: transform 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28), opacity 0.2s ease;
+  }
+
+  #contenu-panier.ouvert {
+    transform: translateX(0) translateY(0); /* Position finale sans décalage */
+    opacity: 1;
+  }
+
+  /* Ajustement du bouton toggle */
+  #panier-flottant button.toggle {
+    width: auto;
+    padding: 11px 20px;
+
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
 }
 
-#contenu-panier.ouvert {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateY(0);
-}
 
 
+/* Version mobile - Alignement à droite */
+@media (max-width: 767px) {
+  .container .container { /* Cible spécifiquement le conteneur du bouton */
+    text-align: right; /* Aligne le bouton à droite */
+    padding-right: 15px; /* Marge intérieure pour respiration */
+  }
   
+  .bouton-retour {
+    margin-left: auto; /* Pousse le bouton vers la droite */
+    display: inline-flex; /* Pour mieux gérer l'icône */
+    align-items: center;
+    padding: 5px 10px 7px 20px; /* Ajustement du padding */
+  }
+  
+  .bouton-retour:hover {
+    padding-left: 25px; /* Ajustement hover mobile */
+    padding-right: 15px;
+  }
+  
+  .bouton-retour::before {
+  
+    margin-right: 8px;
+    position: static; /* Reset de la position absolute */
+  }
 }
+
 </style>
 
 
@@ -831,7 +878,16 @@ h1:after {
 </script>
 
 
-
+<style>
+@media (max-width: 767px) {
+  .produit {
+    float: none !important;
+    display: block !important;
+    width: 100% !important;
+    margin-right: 0 !important;
+  }
+}
+</style>
 
     
     <div class="liste-produits">
@@ -1716,12 +1772,7 @@ function afficherNotification(message) {
 }
 
 </script>
-
-
-
-
-
-</div>
-</div>
-</body>
+   </div>
+  </div>
+ </body>
 </html>
