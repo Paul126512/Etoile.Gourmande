@@ -11,14 +11,14 @@
     <link rel="shortcut icon" href="/images/logo/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/images/logo/favicon.ico" type="image/x-icon">
     <meta name="description" content="Boulangerie L'Étoile Gourmande">
-    <meta name="keywords" content="boulangerie, pain frais, pâtisserie, viennoiserie, artisan, L'Étoile Gourmande, pâtisseries artisanales">
+    <meta name="keywords" content="boulangerie, pain frais, pâtisserie, viennoiserie, artisan, L'Étoile Gourmande, snacking, Saint-Maur-des-Fossés, produits frais, commande en ligne, retrait en magasin">
     <meta name="author" content="L'Étoile Gourmande">
     <meta property="og:title" content="Boulangerie L'Étoile Gourmande">
-    <meta property="og:description" content="pâtisseries artisanales et viennoiseries. Découvrez nos produits.">
+    <meta property="og:description" content="boulangerie, pain frais, pâtisserie, viennoiserie, artisan, L'Étoile Gourmande, snacking, Saint-Maur-des-Fossés, produits frais, commande en ligne, retrait en magasin">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Boulangerie L'Étoile Gourmande">
-    <meta name="twitter:description" content="Pains frais, pâtisseries artisanales et viennoiseries faites maison.">
+    <meta name="twitter:description" content="Pains frais, viennoiseries .">
 
 
 
@@ -52,7 +52,7 @@
         </ul>
     </nav>
 </header>
-
+<div id="top"></div> <!-- En haut de page -->
 <section class="hero">
     <div class="hero-gallery"></div>
     
@@ -66,7 +66,9 @@
 
 
     
-        <h1 class="title">L'Étoile Gourmande</h1>
+        <h1 class="title">L'Étoile Gourmande</h1> 
+
+
         <br>
         <div style="border: 0px solid; width: 300px; margin: auto;">
             <div class="subtitle">Pâtisserie  I Snacking</div>
@@ -90,10 +92,40 @@
             </p>
         </div>
 
-        <!-- Flèche animée pour scroller vers la section suivante -->
-        <a href="#nos-creations" class="scroll-down-arrow" id="scroll-down-btn">
-            ↓
-        </a>
+      <!-- Flèche du bas (visible seulement en bas de page) -->
+<!-- Flèche centrale (toujours visible) -->
+<a href="#bottom" class="scroll-arrow center-arrow">↓</a>
+
+<!-- Flèche droite (apparaît au scroll) -->
+<a href="#top" class="scroll-arrow right-arrow">↑</a>
+
+<!-- Ancres -->
+
+
+        <script>
+// Détection du scroll
+window.addEventListener('scroll', function() {
+  if (window.scrollY > 300) { // Seuil d'apparition (300px)
+    document.body.classList.add('scrolled');
+  } else {
+    document.body.classList.remove('scrolled');
+  }
+});
+
+// Animation fluide
+document.querySelectorAll('.scroll-arrow').forEach(arrow => {
+  arrow.addEventListener('click', function(e) {
+    e.preventDefault();
+    const target = this.getAttribute('href');
+    document.querySelector(target).scrollIntoView({
+      behavior: 'smooth'
+    });
+  });
+});
+
+        </script>
+
+
     </div>
 </section>
         
@@ -111,8 +143,10 @@ burger.addEventListener('click', () => {
 
 
 
+
+<div id="bottom"></div> <!-- En bas de page -->
 <div class="cookie-banner" id="cookieBanner">
-    <span class="cookie-close" id="cookieClose">×</span>
+    <span class="cookie-close" id="cookieClose"></span>
     <div class="cookie-content" id="cookieMain">
         <h3 class="cookie-title">Confidentialité</h3>
         <p class="cookie-text">
@@ -366,6 +400,7 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
 
   
+
 
 <!-- Mentions légales -->
   <footer class="footerr" role="contentinfo">
