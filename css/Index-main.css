@@ -1699,3 +1699,115 @@ input[type="checkbox"] {
     gap: 10px;
   }
 }
+
+
+
+
+
+
+.scroll-arrow {
+  position: fixed;
+  width: 50px;
+  height: 50px;
+  font-size: 24px;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.8);
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  cursor: pointer;
+  text-decoration: none;
+
+  /* Centrage parfait */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  overflow: hidden;
+  line-height: 1;
+}
+
+/* Animation au hover */
+.scroll-arrow:hover {
+  background-color: #000;
+  transform: scale(1.15);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+
+
+
+.center-arrow {
+  position: fixed; /* Nécessaire pour le positionnement précis */
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%); /* Centre horizontalement */
+  width: 42px; /* Largeur explicite */
+  height: 42px; /* Hauteur explicite */
+  display: flex; /* Pour centrer le contenu si nécessaire */
+  justify-content: center;
+  align-items: center;
+  animation: pulse 2s infinite;
+  opacity: 1;
+  visibility: visible;
+  transition: all 0.4s ease;
+
+  z-index: 1000;
+  margin: 0; /* Supprime les marges par défaut */
+  padding: 0; /* Supprime les paddings par défaut */
+}
+
+/* Disparition au scroll */
+body.scrolled .center-arrow {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-50%) translateY(20px);
+}
+
+/* Flèche droite */
+.right-arrow {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+  transition: opacity 0.4s, transform 0.4s, visibility 0.4s;
+  z-index: 1000;
+}
+
+body.scrolled .right-arrow {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* Animation pulse */
+@keyframes pulse {
+  0%   { transform: translateX(-50%) scale(1); }
+  50%  { transform: translateX(-50%) scale(1.05); }
+  100% { transform: translateX(-50%) scale(1); }
+}
+
+/* M/* Mobile */
+@media (max-width: 768px) {
+  .scroll-arrow {
+    width: 42px;
+    height: 42px;
+    font-size: 18px;
+  }
+
+  .center-arrow {
+    bottom: 20px;
+    margin-left: 150px !important; /* Moitié de la largeur (42px/2) */
+    transform: translateX(-50%) translateY(0) !important; /* Ajuste le centrage */
+    right: auto !important; /* Annule toute propriété right */
+   
+  }
+
+.right-arrow {
+  display: none !important;
+ }
+}
