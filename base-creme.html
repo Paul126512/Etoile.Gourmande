@@ -2,7 +2,148 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>Nos pizzas base créme fraiche</title>
+  <title>Nos Pizza Base Crème</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+
+
+  <style>
+/* Style général inspiré de la pâtisserie haute-couture */
+.supplements {
+    position: relative;
+    font-family: 'Montserrat', sans-serif;
+    max-width: 300px;
+    margin: 15px 0;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Bouton principal - style minimaliste chic */
+.supplements > p {
+    background-color: #000;
+    color: #fff;
+    padding: 16px 20px;
+    margin: 0;
+    cursor: pointer;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    font-size: 14px;
+    position: relative;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    z-index: 2;
+}
+
+/* Flèche stylisée */
+.supplements > p::after {
+    content: "↓";
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%) rotate(0deg);
+    font-size: 14px;
+    transition: all 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+/* Conteneur des options (masqué par défaut) */
+.supplements .options-container {
+    max-height: 0;
+    overflow: hidden;
+    background: #fff;
+    transition: max-height 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+    will-change: max-height;
+}
+
+/* Options visibles quand actif */
+.supplements.active .options-container {
+    max-height: 500px; /* Valeur suffisamment grande */
+}
+
+/* Animation d'ouverture */
+.supplements.active > p::after {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+/* Style des options */
+.supplements label {
+    display: block;
+    padding: 14px 20px;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    opacity: 0;
+    transform: translateY(-10px);
+    border-bottom: 1px solid #f0f0f0;
+    animation: fadeIn 0.5s forwards;
+    animation-delay: calc(var(--i) * 0.1s);
+}
+
+/* Animation d'apparition séquentielle */
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Style des checkbox modernes */
+.supplements input[type="checkbox"] {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #000;
+    border-radius: 4px;
+    margin-right: 12px;
+    position: relative;
+    vertical-align: middle;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.supplements input[type="checkbox"]:checked {
+    background-color: #000;
+    animation: checkAnim 0.4s ease;
+}
+
+@keyframes checkAnim {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.supplements input[type="checkbox"]:checked::after {
+    content: "✓";
+    position: absolute;
+    color: #fff;
+    font-size: 12px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Effet hover subtil */
+.supplements label:hover {
+    background-color: #f9f9f9;
+    transform: translateX(5px);
+}
+
+/* Style pour le prix */
+.supplements label:after {
+    content: attr(data-price);
+    float: right;
+    color: #888;
+    font-size: 12px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.supplements label:hover:after {
+    color: #000;
+}
+  </style>
+
 
 
 
@@ -423,7 +564,6 @@ h1:after {
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
-  border-radius: 4px;
 }
 
 .bouton-retour:hover {
@@ -465,43 +605,90 @@ h1:after {
   animation: pop-panier 0.3s ease;
 }
 
-/* === Responsive === */
-@media (max-width: 768px) {
-  .container {
-    padding: 30px 15px;
+@media (max-width: 767px) {
+  .liste-produits {
+    display: block; /* Solution simple et efficace */
   }
   
+@media (max-width: 767px) {
   .liste-produits {
-    grid-template-columns: 1fr;
-    gap: 30px;
+    display: block; /* Solution simple et efficace */
   }
   
   .produit {
-    max-width: 400px;
-    margin: 0 auto;
+    width: 100%;
+    margin: 0 auto 30px;
+    float: none;
   }
-  
+  }
+  }
+
+
+
+
+
+
+/* Version mobile - Panier à gauche avec animation inversée */
+@media (max-width: 767px) {
   #panier-flottant {
-    top: auto;
-    bottom: 20px;
-    right: 20px;
+    left: 20px !important; /* Position fixe à gauche */
+    right: auto !important;
+    transform: none !important;
+    top: 80px !important;
   }
-#contenu-panier {
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(-20px);
-  transition: all 0.3s ease;
+
+  #contenu-panier {
+    left: 0 !important; /* Alignement à gauche */
+    right: auto !important;
+    transform: translateX(-10px) translateY(20px); /* Animation part de la gauche */
+    width: 90vw;
+    max-width: 300px;
+    top: calc(100% + 15px);
+    transition: transform 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28), opacity 0.2s ease;
+  }
+
+  #contenu-panier.ouvert {
+    transform: translateX(0) translateY(0); /* Position finale sans décalage */
+    opacity: 1;
+  }
+
+  /* Ajustement du bouton toggle */
+  #panier-flottant button.toggle {
+    width: auto;
+    padding: 11px 20px;
+
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
 }
 
-#contenu-panier.ouvert {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateY(0);
-}
 
 
+/* Version mobile - Alignement à droite */
+@media (max-width: 767px) {
+  .container .container { /* Cible spécifiquement le conteneur du bouton */
+    text-align: right; /* Aligne le bouton à droite */
+    padding-right: 15px; /* Marge intérieure pour respiration */
+  }
   
+  .bouton-retour {
+    margin-left: auto; /* Pousse le bouton vers la droite */
+    display: inline-flex; /* Pour mieux gérer l'icône */
+    align-items: center;
+    padding: 5px 10px 7px 20px; /* Ajustement du padding */
+  }
+  
+  .bouton-retour:hover {
+    padding-left: 25px; /* Ajustement hover mobile */
+    padding-right: 15px;
+  }
+  
+  .bouton-retour::before {
+  
+    margin-right: 8px;
+    position: static; /* Reset de la position absolute */
+  }
 }
+
 </style>
 
 
@@ -513,10 +700,10 @@ h1:after {
 
 #creme-btn {
   background-color: white;
-  color: #c21f09;;
-  border: 2px solid #9c2d1f;
-  padding: 12px 10px;
-  border-radius: 4px;
+  color: #09a0c2;;
+  border: 2px solid #09a0c2;
+  padding: 14px 28px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 16px;
   font-weight: 600;
@@ -525,6 +712,7 @@ h1:after {
   position: relative;
   overflow: hidden;
   z-index: 1;
+  box-shadow: 0 4px 6px #09a0c2;
   font-family: 'Montserrat', sans-serif;
   text-transform: uppercase;
   text-decoration: none;
@@ -544,7 +732,7 @@ h1:after {
   right: -100%;
   width: 100%;
   height: 100%;
-  background: #c21f09;
+  background: #09a0c2;
   z-index: -1;
   transition: all 0.6s cubic-bezier(0.77, 0, 0.175, 1);
 }
@@ -552,7 +740,7 @@ h1:after {
 #creme-btn:hover {
   color: white;
   transform: translateY(-3px);
-  box-shadow: #c21f09;
+  box-shadow: #09a0c2;
 }
 
 #creme-btn::before {
@@ -562,7 +750,7 @@ h1:after {
   left: -100%;      /* au lieu de right */
   width: 100%;
   height: 100%;
-  background: #c21f09;
+  background: #09a0c2;
   z-index: -1;
   transition: all 0.6s cubic-bezier(0.77, 0, 0.175, 1);
 }
@@ -619,37 +807,33 @@ h1:after {
 .taille-select-wrapper {
   position: relative;
   display: inline-block;
+  
+  }
+
+  .toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #000000;
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 16px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 1000;
 }
 
-.blue-cream {
-    color: #09a0c2; /* Bleu spécifié */
-    font-weight: normal; /* Conserve le gras du h1 si besoin */
-    font-style: italic; /* Optionnel pour différenciation */
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
 }
-.blue-cream::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    height: 1px;
-    
-    opacity: 0.3; /* Soulignement très discret */
-}
+
+
+
 </style>
-
-<script>
-  document.querySelector('.toggle').addEventListener('click', function() {
-  document.getElementById('panier-flottant').classList.toggle('active');
-});
-
-document.getElementById('fermer-panier').addEventListener('click', function() {
-  document.getElementById('panier-flottant').classList.remove('active');
-});
-
-
-
-</script>
 
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
@@ -659,19 +843,16 @@ document.getElementById('fermer-panier').addEventListener('click', function() {
   <a href="pizza.html" class="bouton-retour">
     ← Retour 
   </a>
- 
+
 </div>
 
+    <h1>NOS PIZZAS : Base Crème </h1>
+    <p class="sous-titre">Crudités au choix • Menu complet + Frites ou Dessert + Boisson 33cl</p>
 
-<h1>NOS PIZZAS : <span class="blue-cream">base crème fraîche</span></h1>
-<p class="sous-titre">Supléments : Taille M + 1,80€ I Taille L + 6.80€</p>
-<h2 class="section-title">Nos créations</h2>
+    <h2 class="section-title">Nos créations</h2>   
 
 
 
-<button id="creme-btn">
-  <span>Base sauce tomate →</span>
-</button>
 <br><br>
 
 <style>
@@ -691,193 +872,393 @@ document.getElementById('fermer-panier').addEventListener('click', function() {
 
     // Après la durée de la transition (ici 500ms), on change de page
     setTimeout(() => {
-      window.location.href = "pizza.html"; // Redirige vers la page d'accueil
+      window.location.href = "base-creme.html";
     }, 500); 
   });
 </script>
 
 
-
+<style>
+@media (max-width: 767px) {
+  .produit {
+    float: none !important;
+    display: block !important;
+    width: 100% !important;
+    margin-right: 0 !important;
+  }
+}
+</style>
 
     
     <div class="liste-produits">
-      <div class="produit" id="kebab">
-        <img src="images/Pizzas/pizza-kebab.png" alt="kebab" class="image-produit" />
+ <div class="produit" id="Kebab" data-type="pizza">
+        <img src="images/Pizzas/pizza_kebab.jpg" alt="Kebab" class="image-produit" />
         <div class="produit-contenu">
-          <h3>KEBAB</h3>
-          <p class="description-produit">Mozzarella, kebab, poivrons, chedar, oignons </p>
-    <select class="taille-select" data-id="kebab">
+          <h3>Pizza Kebab</h3>
+          <p class="description-produit">Mozzarella, Kebab, poivrons, chedar, oignons</p>
+    <select class="taille-select" data-id="Kebab">
     <option value="S" data-price="5.00">Petite - 5,00 €</option>
     <option value="M" data-price="6.80">Moyenne - 6,80 €</option>
     <option value="L" data-price="10.80">Large - 10,80 €</option>
 </select>
+
+
+<div class="supplements" data-id="4-fromages">
+  <p><strong>Suppléments :</strong></p>
+  
+<div class="options-container">
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="aucun" id="aucun" checked> Aucun</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Mozzarella" data-price="1"> Mozzarella (+1 €)</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Kebab" data-price="1"> Kebab (+1 €)</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Pomme_de_terre" data-price="1"> Pomme de terre (+1,00 €)</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Chedar" data-price="1"> Chedar (+1 €)</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Lardons" data-price="1"> Lardons (+1 €)</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Champigons" data-price="1"> Champigons (+1 €)</label>
+ </div>
+</div>
+
          <p class="prix-produit" data-price="5.00">5,00 €</p>
-          <button aria-label="Ajouter la pizza kebab au panier">Ajouter au panier</button>
+          <button aria-label="Ajouter pizza_kebab au panier">Ajouter au panier</button>
         </div>
       </div>
 
 
 
 
-<div class="produit" id="Boursinette">
-  <img src="images/Pizzas/Boursinette.png" alt="Boursinette" class="image-produit" />
+ <div class="produit" id="boursinette" data-type="pizza">
+  <img src="images/Pizzas/pizza_boursinette.jpg" alt="boursinette" class="image-produit" />
   <div class="produit-contenu">
-    <h3>Boursinette</h3>
-    <p class="description-produit">Mozzarella, emincé de poulet, pommes de terre, boursin</p>
-<select class="taille-select" data-id="Boursinette">
+    <h3>Pizza boursinette</h3>
+    <p class="description-produit">Mozzarella, poulet fumé, lardons, pommes de terre</p>
+<select class="taille-select" data-id="boursinette">
     <option value="S" data-price="5.00">Petite - 5,00 €</option>
     <option value="M" data-price="6.80">Moyenne - 6,80 €</option>
     <option value="L" data-price="10.80">Large - 10,80 €</option>
 </select>
+
+<div class="supplements" data-id="4-fromages">
+  <p><strong>Suppléments :</strong></p>
+  
+<div class="options-container">
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="aucun" id="aucun" checked> Aucun</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Mozzarella" data-price="1"> Mozzarella (+1 €)</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Kebab" data-price="1"> Kebab (+1 €)</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Pomme_de_terre" data-price="1"> Pomme de terre (+1,00 €)</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Chedar" data-price="1"> Chedar (+1 €)</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Lardons" data-price="1"> Lardons (+1 €)</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Champigons" data-price="1"> Champigons (+1 €)</label>
+ </div>
+</div>
+
     <p class="prix-produit" data-price="5.00">5,00 €</p>
-    <button aria-label="Ajouter pizza Boursinette au panier">Ajouter au panier</button>
+    <button aria-label="Ajoute pizza boursinette au panier">Ajouter au panier</button>
     
   </div>
 </div>
 
 
-
-
-
-
-      <div class="produit" id="Chicken">
-        <img src="images/Pizzas/chicken-pizza.png" alt="Chicken" class="image-produit" />
+      <div class="produit" id="Chicken" data-type="pizza">
+        <img src="images/Pizzas/pizza_chicken.jpg" alt="Chicken" class="image-produit" />
         <div class="produit-contenu">
           <h3>Pizza Chicken</h3>
-          <p class="description-produit">Mozzarella, émincé de poulet, pomme de terre</p>
+          <p class="description-produit">Mozzarella, émincé de pouler, pommes de terre</p>
 <select class="taille-select" data-id="Chicken">
     <option value="S" data-price="5.00">Petite - 5,00 €</option>
     <option value="M" data-price="6.80">Moyenne - 6,80 €</option>
     <option value="L" data-price="10.80">Large - 10,80 €</option>
 </select>
-          <p class="prix-produit" data-price="Chicken">5,00 €</p>
-          <button aria-label="Ajouter pizza Chicken  au panier">Ajouter au panier</button>
+
+<div class="supplements" data-id="Chicken">
+  <p><strong>Suppléments :</strong></p>
+  
+<div class="options-container">
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="aucun" id="aucun" checked> Aucun</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Mozzarella" data-price="1"> Mozzarella (+1 €)</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Kebab" data-price="1"> Kebab (+1 €)</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Pomme_de_terre" data-price="1"> Pomme de terre (+1,00 €)</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Chedar" data-price="1"> Chedar (+1 €)</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Lardons" data-price="1"> Lardons (+1 €)</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Champigons" data-price="1"> Champigons (+1 €)</label>
+ </div>
+</div>
+          <p class="prix-produit" data-price="5.00">5,00 €</p>
+          <button aria-label="Ajouter Pizza Chicken au panier">Ajouter au panier</button>
         </div>
       </div>
 
+      
 
-      <div class="produit" id="Milano">
-        <img src="images/Pizzas/pizza-milano.png" alt="Milano" class="image-produit" />
+
+
+  <div class="produit" id="Milano" data-type="pizza">
+        <img src="images/Pizzas/pizza_milano.jpg" alt="Milano" class="image-produit" />
         <div class="produit-contenu">
-          <h3>Milano</h3>
-          <p class="description-produit">Mozzarella, jambon, champignons, origan</p>
+          <h3>Pizza Milano</h3>
+          <p class="description-produit">Mozzarella, lardons, pomme de terre</p>
 <select class="taille-select" data-id="Milano">
     <option value="S" data-price="5.00">Petite - 5,00 €</option>
     <option value="M" data-price="6.80">Moyenne - 6,80 €</option>
     <option value="L" data-price="10.80">Large - 10,80 €</option>
 </select>
-      
+
+<div class="supplements" data-id="Milano">
+  <p><strong>Suppléments :</strong></p>
+  
+<div class="options-container">
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="aucun" id="aucun" checked> Aucun</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Mozzarella" data-price="1"> Mozzarella (+1 €)</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Kebab" data-price="1"> Kebab (+1 €)</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Pomme_de_terre" data-price="1"> Pomme de terre (+1,00 €)</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Chedar" data-price="1"> Chedar (+1 €)</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Lardons" data-price="1"> Lardons (+1 €)</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Champigons" data-price="1"> Champigons (+1 €)</label>
+ </div>
+</div>
+
+          
           <p class="prix-produit" data-price="5.00">5,00 €</p>
           <button aria-label="Ajouter Pizza Milano au panier">Ajouter au panier</button>
         </div>
       </div>
 
-
-    <div class="produit" id="Paysan">
-        <img src="images/Pizzas/pizza-paysan.png" alt="Paysan" class="image-produit" />
+<div class="produit" id="pizza_paysan" data-type="pizza">
+        <img src="images/Pizzas/pizza_paysan.jpg" alt="pizza_paysan" class="image-produit" />
         <div class="produit-contenu">
-          <h3>Paysan</h3>
-          <p class="description-produit"> Mozzarella, viande hachée, oignons, champignons, origan</p>
-<select class="taille-select" data-id="Paysan">
+          <h3>Pizza Paysan</h3>
+          <p class="description-produit">Mozzarella, jambon, oignons, pomme de terre</p>
+<select class="taille-select" data-id=pizza_paysan>
     <option value="S" data-price="5.00">Petite - 5,00 €</option>
     <option value="M" data-price="6.80">Moyenne - 6,80 €</option>
     <option value="L" data-price="10.80">Large - 10,80 €</option>
 </select>
-       
+
+<div class="supplements" data-id="pizza_paysan">
+  <p><strong>Suppléments :</strong></p>
+  
+<div class="options-container">
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="aucun" id="aucun" checked> Aucun</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Mozzarella" data-price="1"> Mozzarella (+1 €)</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Kebab" data-price="1"> Kebab (+1 €)</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Pomme_de_terre" data-price="1"> Pomme de terre (+1,00 €)</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Chedar" data-price="1"> Chedar (+1 €)</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Lardons" data-price="1"> Lardons (+1 €)</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Champigons" data-price="1"> Champigons (+1 €)</label>
+ </div>
+</div>
+          
           <p class="prix-produit" data-price="5.00">5,00 €</p>
-          <button aria-label="Ajouter Pizza Paysan au panier">Ajouter au panier</button>
+          <button aria-label="Ajouter Pizza paysan au panier">Ajouter au panier</button>
         </div>
       </div>
 
 
 
 
-<div class="produit" id="Western">
-  <img src="images/Pizzas/pizza-Western.png" alt="Western" class="image-produit" />
+<div class="produit" id="Western" data-type="pizza">
+  <img src="images/Pizzas/pizza_western.png" alt="Western" class="image-produit" />
   <div class="produit-contenu">
-    <h3>Western</h3>
-    <p class="description-produit"> Mozzarella, poulet, champignons, poivrons   </p>
- <select class="taille-select" data-id="Western">
+    <h3>Pizza Western</h3>
+<p class="description-produit">Mozzarella, poulet, champignons, poivrons</p>
+<select class="taille-select" data-id="Western">
     <option value="S" data-price="5.00">Petite - 5,00 €</option>
     <option value="M" data-price="6.80">Moyenne - 6,80 €</option>
     <option value="L" data-price="10.80">Large - 10,80 €</option>
 </select>
 
-    <p class="prix-produit" data-price="5.00">5,00 €</p>
-    <button aria-label="Ajouter Pizza Paysan au panier">Ajouter au panier</button>
-
-  </div>
-</div>
-
-<div class="produit" id="Norvegienne">
-  <img src="images/Pizzas/pizza-Norvegienne.png" alt="Norvegienne" class="image-produit" />
-  <div class="produit-contenu">
-    <h3>Norvégienne</h3>
-    <p class="description-produit">  Mozzarella, saumon fumé, citron </p>
-<select class="taille-select" data-id="Norvegienne">
-    <option value="S" data-price="5.00">Petite - 5,00 €</option>
-    <option value="M" data-price="6.80">Moyenne - 6,80 €</option>
-    <option value="L" data-price="10.80">Large - 10,80 €</option>
-</select>
-
-    <p class="prix-produit" data-price="5.00">5,00 €</p>
-    <button aria-label="Ajouter Pizza Norvegienne au panier">Ajouter au panier</button>
-
-  </div>
-</div>
-
-<div class="produit" id="Raclette">
-  <img src="images/Pizzas/pizza-raclette.png" alt="Raclette" class="image-produit" />
-  <div class="produit-contenu">
-    <h3>Raclette</h3>
-    <p class="description-produit"> Mozzarella, chorizo, champignons, olives </p>
-<select class="taille-select" data-id="Raclette">
-    <option value="S" data-price="5.00">Petite - 5,00 €</option>
-    <option value="M" data-price="6.80">Moyenne - 6,80 €</option>
-    <option value="L" data-price="10.80">Large - 10,80 €</option>
-</select>
-
-    <p class="prix-produit" data-price="5.00">5,00 €</p>
-    <button aria-label="Ajouter Pizza Raclette au panier">Ajouter au panier</button>
-
-  </div>
-</div>
-
-<div class="produit" id="chevre-miel">
-  <img src="images/Pizzas/pizza-chevre-miel.png" alt="chevre-miel" class="image-produit" />
-  <div class="produit-contenu">
-    <h3>Chèvre Miel</h3>
-    <p class="description-produit">Mozzarella, chévre, miel</p>
-    <select class="taille-select" data-id="chevre-miel">
-    <option value="S" data-price="5.00">Petite - 5,00 €</option>
-    <option value="M" data-price="6.80">Moyenne - 6,80 €</option>
-    <option value="L" data-price="10.80">Large - 10,80 €</option>
-</select>
+<div class="supplements" data-id="Western">
+  <p><strong>Suppléments :</strong></p>
   
-    <p class="prix-produit" data-price="5.00">5,00 €</p>
-    <button aria-label="Ajouter Pizza Chevre Miel au panier">Ajouter au panier</button>
+<div class="options-container">
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="aucun" id="aucun" checked> Aucun</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Mozzarella" data-price="1"> Mozzarella (+1 €)</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Kebab" data-price="1"> Kebab (+1 €)</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Pomme_de_terre" data-price="1"> Pomme de terre (+1,00 €)</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Chedar" data-price="1"> Chedar (+1 €)</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Lardons" data-price="1"> Lardons (+1 €)</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Champigons" data-price="1"> Champigons (+1 €)</label>
+ </div>
+</div>
+    
+      <p class="prix-produit" data-price="5.00">5,00 €</p>
+    <button class="btn-ajouter">Ajouter au panier</button>
 
   </div>
 </div>
 
-<div class="produit" id="Crousty">
-  <img src="images/Pizzas/Roquette.png" alt="Crousty" class="image-produit" />
+<div class="produit" id="norvegienne" data-type="pizza">
+  <img src="images/Pizzas/pizza_norvegienne.jpg" alt="norvegienne" class="image-produit" />
   <div class="produit-contenu">
-    <h3>Crousty</h3>
+    <h3>Pizza Norvégienne</h3>
+     <p class="description-produit">Mozzarella, saumon fumé, citron</p>
+<select class="taille-select" data-id="Fermière">
+    <option value="S" data-price="5.00">Petite - 5,00 €</option>
+    <option value="M" data-price="6.80">Moyenne - 6,80 €</option>
+    <option value="L" data-price="10.80">Large - 10,80 €</option>
+</select>
+
+<div class="supplements" data-id="norvegienne">
+  <p><strong>Suppléments :</strong></p>
+  
+<div class="options-container">
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="aucun" id="aucun" checked> Aucun</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Mozzarella" data-price="1"> Mozzarella (+1 €)</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Kebab" data-price="1"> Kebab (+1 €)</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Pomme_de_terre" data-price="1"> Pomme de terre (+1,00 €)</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Chedar" data-price="1"> Chedar (+1 €)</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Lardons" data-price="1"> Lardons (+1 €)</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Champigons" data-price="1"> Champigons (+1 €)</label>
+ </div>
+</div>
+   
+    <p class="prix-produit" data-price="5.00">5,00 €</p>
+    <button class="btn-ajouter">Ajouter au panier</button>
+
+  </div>
+</div>
+
+<div class="produit" id="raclette" data-type="pizza">
+  <img src="images/Pizzas/pizza_raclette.png" alt="raclette" class="image-produit" />
+  <div class="produit-contenu">
+    <h3>Pizza raclette</h3>
+     <p class="description-produit">Mozzarella, raclette, jambon, pomme de terre</p>
+<select class="taille-select" data-id="raclette">
+    <option value="S" data-price="5.00">Petite - 5,00 €</option>
+    <option value="M" data-price="6.80">Moyenne - 6,80 €</option>
+    <option value="L" data-price="10.80">Large - 10,80 €</option>
+</select>
+<div class="supplements" data-id="raclette">
+  <p><strong>Suppléments :</strong></p>
+  
+  
+<div class="options-container">
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="aucun" id="aucun" checked> Aucun</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Mozzarella" data-price="1"> Mozzarella (+1 €)</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Kebab" data-price="1"> Kebab (+1 €)</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Pomme_de_terre" data-price="1"> Pomme de terre (+1,00 €)</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Chedar" data-price="1"> Chedar (+1 €)</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Lardons" data-price="1"> Lardons (+1 €)</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Champigons" data-price="1"> Champigons (+1 €)</label>
+ </div>
+</div>
+
+   
+    <p class="prix-produit" data-price="5.00">5,00 €</p>
+    <button class="btn-ajouter">Ajouter au panier</button>
+
+  </div>
+</div>
+
+<div class="produit" id="pizza_chevre_miel" data-type="pizza">
+  <img src="images/Pizzas/pizza_chevre_miel.jpg" alt="pizza_chevre_miel" class="image-produit" />
+  <div class="produit-contenu">
+    <h3>Pizza Chèvre miel</h3>
+     <p class="description-produit">Mozzarella, chèvre, miel</p>
+     <select class="taille-select" data-id="pizza_chevre_miel">
+    <option value="S" data-price="5.00">Petite - 5,00 €</option>
+    <option value="M" data-price="6.80">Moyenne - 6,80 €</option>
+    <option value="L" data-price="10.80">Large - 10,80 €</option>
+</select>
+
+<div class="supplements" data-id="pizza_chevre_miel">
+  <p><strong>Suppléments :</strong></p>
+  
+<div class="options-container">
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="aucun" id="aucun" checked> Aucun</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Mozzarella" data-price="1"> Mozzarella (+1 €)</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Kebab" data-price="1"> Kebab (+1 €)</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Pomme_de_terre" data-price="1"> Pomme de terre (+1,00 €)</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Chedar" data-price="1"> Chedar (+1 €)</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Lardons" data-price="1"> Lardons (+1 €)</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Champigons" data-price="1"> Champigons (+1 €)</label>
+ </div>
+</div>
+
+
+   
+    <p class="prix-produit" data-price="5.00">5,00 €</p>
+    <button class="btn-ajouter">Ajouter au panier</button>
+
+  </div>
+</div>
+
+
+<div class="produit" id="Crousty" data-type="pizza">
+  <img src="images/Pizzas/pizza_crousty.jpg" alt="Crousty" class="image-produit" />
+  <div class="produit-contenu">
+    <h3>Pizza Crousty</h3>
+    <p class="description-produit">Mozzarella, viande hachée, pomme de terre, oignons</p>
      <select class="taille-select" data-id="Crousty">
     <option value="S" data-price="5.00">Petite - 5,00 €</option>
     <option value="M" data-price="6.80">Moyenne - 6,80 €</option>
     <option value="L" data-price="10.80">Large - 10,80 €</option>
 </select>
-    <p class="description-produit">
 
-      Mozzarella, viande hachée, Pomme de terre, oignons</p>
-    </p>
+<div class="supplements" data-id="Fruits_de_Mer">
+  <p><strong>Suppléments :</strong></p>
+  
+<div class="options-container">
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="aucun" id="aucun" checked> Aucun</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Mozzarella" data-price="1"> Mozzarella (+1 €)</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Kebab" data-price="1"> Kebab (+1 €)</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Pomme_de_terre" data-price="1"> Pomme de terre (+1,00 €)</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Chedar" data-price="1"> Chedar (+1 €)</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Lardons" data-price="1"> Lardons (+1 €)</label>
+  <label><input type="checkbox" class="supplement-checkbox" name="supplement" value="Champigons" data-price="1"> Champigons (+1 €)</label>
+ </div>
+</div>
+
+
     <p class="prix-produit" data-price="5.00">5,00 €</p>
-    <button aria-label="Ajouter Pizza Crousty Miel au panier">Ajouter au panier</button>
+    <button class="btn-ajouter">Ajouter au panier</button>
 
   </div>
 </div>
+
+
+
+
+
+
+
+<div id="toast-notification" class="toast">Produit ajouté au panier</div>
+
+
+
+
+
+<script>
+
+document.querySelectorAll('.supplements').forEach(supplementGroup => {
+  const checkboxes = supplementGroup.querySelectorAll('input[type="checkbox"]');
+  const aucunCheckbox = Array.from(checkboxes).find(cb => cb.value === "aucun");
+
+  checkboxes.forEach(checkbox => {
+    if (checkbox.value !== "aucun") {
+      checkbox.addEventListener('change', () => {
+        if (checkbox.checked) {
+          aucunCheckbox.checked = false;
+        }
+
+        const anyChecked = Array.from(checkboxes)
+          .filter(cb => cb.value !== "aucun")
+          .some(cb => cb.checked);
+
+        if (!anyChecked) {
+          aucunCheckbox.checked = true;
+        }
+      });
+    } else {
+      checkbox.addEventListener('change', () => {
+        if (checkbox.checked) {
+          checkboxes.forEach(cb => {
+            if (cb !== checkbox) cb.checked = false;
+          });
+        }
+      });
+    }
+  });
+});
+</script>
 
 
 
@@ -904,7 +1285,7 @@ document.getElementById('fermer-panier').addEventListener('click', function() {
 
     <div class="total-fixe">
       <p>Total : <span id="total">0</span> €</p>
-      <a href="confirmation.html">
+      <a href="Card.html">
         <button id="valider-commande">Voir le panier</button>
       </a>
     </div>
@@ -917,189 +1298,357 @@ document.getElementById('fermer-panier').addEventListener('click', function() {
 
 
 
-
-
-
 <script>
-  document.querySelector('.toggle').addEventListener('click', function() {
-  document.getElementById('panier-flottant').classList.toggle('active');
+
+
+
+
+  
+  // PANIER OUVERTURE FERMETURE"
+document.addEventListener('DOMContentLoaded', function() {
+    const supplementHeaders = document.querySelectorAll('.supplements > p');
+    
+    supplementHeaders.forEach(header => {
+        header.addEventListener('click', function() {
+            const supplements = this.parentElement;
+            supplements.classList.toggle('active');
+            
+            // Réinitialise les animations pour le réouverture
+            if (supplements.classList.contains('active')) {
+                const labels = supplements.querySelectorAll('label');
+                labels.forEach((label, index) => {
+                    label.style.setProperty('--i', index);
+                    label.style.animation = 'none';
+                    setTimeout(() => {
+                        label.style.animation = 'fadeIn 0.5s forwards';
+                    }, 10);
+                });
+            }
+        });
+    });
+
+    // Gestion de la sélection "Aucun"
+    const aucunCheckbox = document.querySelector('#aucun');
+    const otherCheckboxes = document.querySelectorAll('.supplements input[type="checkbox"]:not(#aucun)');
+    
+    aucunCheckbox.addEventListener('change', function() {
+        if (this.checked) {
+            otherCheckboxes.forEach(checkbox => {
+                checkbox.checked = false;
+            });
+        }
+    });
+    
+    otherCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            if (this.checked) {
+                aucunCheckbox.checked = false;
+            }
+        });
+    });
 });
 
-document.getElementById('fermer-panier').addEventListener('click', function() {
-  document.getElementById('panier-flottant').classList.remove('active');
-});
+
 
 </script>
 
 <script>
-  // Mise à jour du prix affiché en fonction de la taille sélectionnée
+// Sélection des éléments DOM
+const boutonsAjouter = document.querySelectorAll('.produit button');
+const compteurPanier = document.getElementById('compteur-panier');
+const listePanier = document.getElementById('liste-panier');
+const totalElement = document.getElementById('total');
+const panierFlottant = document.getElementById('panier-flottant');
+const togglePanier = document.querySelector('.toggle');
+const fermerPanier = document.getElementById('fermer-panier');
+const notification = document.getElementById('notification');
+
+// Initialisation du panier
+let panier = JSON.parse(localStorage.getItem('panier')) || [];
+
+// Initialisation au chargement de la page
+document.addEventListener('DOMContentLoaded', () => {
+  initialiserProduits();
+  initialiserSupplements();
+  afficherPanier();
+});
+
+// Fonction d'initialisation des produits
+function initialiserProduits() {
   document.querySelectorAll('.produit').forEach(produit => {
-    const selectTaille = produit.querySelector('select.taille-select');
-    const prixElement = produit.querySelector('.prix-produit');
+    // Gestion des options (seul/menu)
+    const options = produit.querySelectorAll('.option-prix');
+    const menuOptions = produit.querySelector('.menu-options');
+    const dessertOptions = produit.querySelector('.dessert-options');
+    const menuChoice = produit.querySelector('.menu-choice');
+    const dessertType = produit.querySelector('.dessert-type');
 
-    if (selectTaille && prixElement) {
-      // Au chargement, mettre à jour le prix en fonction de la taille sélectionnée par défaut
-      const optionChoisie = selectTaille.options[selectTaille.selectedIndex];
-      const prixInitial = parseFloat(optionChoisie.getAttribute('data-price'));
-      prixElement.setAttribute('data-price', prixInitial);
-      prixElement.textContent = prixInitial.toFixed(2) + ' €';
+    if (options.length > 0) {
+      options.forEach(opt => opt.classList.remove('selected'));
+      const seul = produit.querySelector('.option-prix[data-option="seul"]');
+      if (seul) seul.classList.add('selected');
+      if (menuOptions) menuOptions.style.display = 'none';
+      if (dessertOptions) dessertOptions.style.display = 'none';
 
-      // Quand on change la taille, on met à jour le prix affiché
-      selectTaille.addEventListener('change', () => {
-        const optionChoisie = selectTaille.options[selectTaille.selectedIndex];
-        const nouveauPrix = parseFloat(optionChoisie.getAttribute('data-price'));
-        prixElement.setAttribute('data-price', nouveauPrix);
-        prixElement.textContent = nouveauPrix.toFixed(2) + ' €';
+      options.forEach(option => {
+        option.addEventListener('click', () => {
+          options.forEach(o => o.classList.remove('selected'));
+          option.classList.add('selected');
+
+          const isMenu = option.getAttribute('data-option') === 'menu';
+          if (menuOptions) menuOptions.style.display = isMenu ? 'block' : 'none';
+        });
+      });
+    }
+
+    // Gestion des menus et desserts
+    if (menuChoice) {
+      menuChoice.addEventListener('change', () => {
+        if (menuChoice.value === 'dessert') {
+          if (dessertOptions) dessertOptions.style.display = 'block';
+          if (dessertType) dessertType.setAttribute('required', 'required');
+        } else {
+          if (dessertOptions) dessertOptions.style.display = 'none';
+          if (dessertType) {
+            dessertType.removeAttribute('required');
+            dessertType.value = '';
+          }
+        }
       });
     }
   });
+}
 
-
-  // Gestion du panier
-  const boutonsAjouter = document.querySelectorAll('.produit button');
-  const compteurPanier = document.getElementById('compteur-panier');
-  const listePanier = document.getElementById('liste-panier');
-  const totalElement = document.getElementById('total');
-  const panierFlottant = document.getElementById('panier-flottant');
-  const togglePanier = document.querySelector('.toggle');
-  const fermerPanier = document.getElementById('fermer-panier');
-
-  let panier = JSON.parse(localStorage.getItem('panier')) || [];
-
-  panier = panier.map(item => ({
-    ...item,
-    quantite: item.quantite || 1
-  }));
-
-  // Trouver produit identique selon nom, prix, type et supplements (et taille)
-  function trouverProduitIdentique(nom, prix, type, supplements, taille) {
-    return panier.find(item => 
-      item.nom === nom && 
-      item.prix === prix && 
-      item.type === type && 
-      item.taille === taille &&
-      JSON.stringify(item.supplements) === JSON.stringify(supplements)
-    );
-  }
-
-  // Ajouter au panier
-  boutonsAjouter.forEach(bouton => {
-    bouton.addEventListener('click', () => {
-      const produitElement = bouton.closest('.produit');
-      const nom = produitElement.querySelector('h3').textContent.trim();
-
-      // On récupère le select taille et le prix affiché (qui doit correspondre à la taille choisie)
-      const selectTaille = produitElement.querySelector('select.taille-select');
-      let prix;
-      let type;
-      let taille = null;
-
-      if (selectTaille) {
-        // Taille sélectionnée et prix correspondant
-        const optionChoisie = selectTaille.options[selectTaille.selectedIndex];
-        prix = parseFloat(optionChoisie.getAttribute('data-price'));
-        taille = optionChoisie.value;
-        type = 'pizza';
-      } else {
-        const prixElement = produitElement.querySelector('.prix-produit');
-        prix = parseFloat(prixElement.getAttribute('data-price'));
-        type = 'burger';
+// Initialisation des suppléments
+function initialiserSupplements() {
+  // Gestion de la case "Aucun" qui désactive les autres
+  document.querySelectorAll('.supplement-checkbox[value="aucun"]').forEach(checkbox => {
+    checkbox.addEventListener('change', function() {
+      if (this.checked) {
+        const container = this.closest('.options-container');
+        container.querySelectorAll('.supplement-checkbox:not([value="aucun"])').forEach(cb => {
+          cb.checked = false;
+        });
       }
-
-      const image = produitElement.querySelector('img').src;
-
-      const produitExistant = trouverProduitIdentique(nom, prix, type, [], taille);
-
-      if (produitExistant) {
-        produitExistant.quantite += 1;
-      } else {
-        const produit = {
-          id: Date.now(),
-          nom,
-          prix,
-          image,
-          type,
-          taille,
-          supplements: [],
-          quantite: 1
-        };
-        panier.push(produit);
-      }
-
-      localStorage.setItem('panier', JSON.stringify(panier));
-      afficherPanier();
     });
   });
 
-  // Afficher le panier
-  function afficherPanier() {
-    listePanier.innerHTML = '';
-    let total = 0;
-
-    panier.forEach(item => {
-      if (typeof item.prix !== 'number' || isNaN(item.prix)) {
-        console.error(`Prix non valide pour ${item.nom} :`, item.prix);
-        item.prix = 0;
+  // Gestion des autres cases qui désactive "Aucun"
+  document.querySelectorAll('.supplement-checkbox:not([value="aucun"])').forEach(checkbox => {
+    checkbox.addEventListener('change', function() {
+      if (this.checked) {
+        const container = this.closest('.options-container');
+        container.querySelector('.supplement-checkbox[value="aucun"]').checked = false;
       }
+    });
+  });
+}
 
-      const li = document.createElement('li');
-      li.classList.add('article-panier');
-
-      const details = document.createElement('div');
-      details.classList.add('details-panier');
-      details.innerHTML = `
-        <img src="${item.image}" alt="${item.nom}" />
-        <div>
-          <h4>
-  ${item.nom} 
-  ${item.taille ? `(${item.taille})` : ''} × ${item.quantite}
-</h4>
-
-          <p>Type : ${item.type === 'pizza' ? 'Pizza' : item.type === 'burger' ? 'Burger' : 'Autre'}</p>
-          <p>Prix unitaire : ${item.prix.toFixed(2)} €</p>
-          <p>Prix total : ${(item.prix * item.quantite).toFixed(2)} €</p>
-        </div>
-      `;
-
-      const boutonSupprimer = document.createElement('button');
-      boutonSupprimer.textContent = '×';
-      boutonSupprimer.classList.add('supprimer');
-      boutonSupprimer.addEventListener('click', () => {
-        panier = panier.filter(p => p.id !== item.id);
-        localStorage.setItem('panier', JSON.stringify(panier));
-        afficherPanier();
+// Fonction pour obtenir les suppléments sélectionnés
+function getSupplements(produit) {
+  const supplements = [];
+  let supplementTotal = 0;
+  
+  const aucunCheckbox = produit.querySelector('.supplement-checkbox[value="aucun"]');
+  const autresSupplements = produit.querySelectorAll('.supplement-checkbox:not([value="aucun"])');
+  
+  autresSupplements.forEach(sup => {
+    if (sup.checked) {
+      const prix = parseFloat(sup.getAttribute('data-price'));
+      supplements.push({
+        nom: sup.value,
+        prix: prix
       });
-
-      li.appendChild(details);
-      li.appendChild(boutonSupprimer);
-      listePanier.appendChild(li);
-
-      const sousTotal = item.prix * item.quantite;
-      if (!isNaN(sousTotal)) {
-        total += sousTotal;
-      } else {
-        console.error(`Sous-total invalide pour ${item.nom}:`, sousTotal);
-      }
-    });
-
-    compteurPanier.textContent = panier.reduce((acc, item) => acc + item.quantite, 0);
-    totalElement.textContent = isNaN(total) ? '0.00' : total.toFixed(2);
+      supplementTotal += prix;
+    }
+  });
+  
+  if (supplements.length === 0 && aucunCheckbox.checked) {
+    supplements.push({ nom: "Aucun", prix: 0 });
+  } else if (supplements.length === 0 && !aucunCheckbox.checked) {
+    afficherNotification("Veuillez sélectionner au moins un supplément ou cocher 'Aucun'");
+    return null;
   }
+  
+  return {
+    supplements: supplements,
+    total: supplementTotal
+  };
+}
 
-  // Toggle panier flottant
-  togglePanier.addEventListener('click', () => {
-    document.getElementById('contenu-panier').classList.toggle('ouvert');
+// Fonction pour trouver un produit identique dans le panier
+function trouverProduitIdentique(nom, prix, type, taille, supplements) {
+  return panier.find(item => 
+    item.nom === nom && 
+    item.prix === prix && 
+    item.type === type && 
+    item.taille === taille &&
+    JSON.stringify(item.supplements) === JSON.stringify(supplements)
+  );
+}
+
+// Gestion de l'ajout au panier
+boutonsAjouter.forEach(bouton => {
+  bouton.addEventListener('click', () => {
+    const produit = bouton.closest('.produit');
+    const nom = produit.querySelector('h3').textContent.trim();
+    const typeProduit = produit.getAttribute('data-type') || 'pizza';
+    const image = produit.querySelector('img').src;
+
+    // Gestion de la taille
+    const selectTaille = produit.querySelector('.taille-select');
+    let taille = null;
+    let prixBase = 0;
+    
+    if (selectTaille) {
+      const optionChoisie = selectTaille.options[selectTaille.selectedIndex];
+      taille = optionChoisie.value;
+      prixBase = parseFloat(optionChoisie.getAttribute('data-price'));
+    }
+
+    // Gestion des suppléments
+    const supplementsData = getSupplements(produit);
+    if (!supplementsData) return;
+    
+    const { supplements, total: supplementTotal } = supplementsData;
+    const prixTotal = prixBase + supplementTotal;
+
+    // Création de l'objet produit
+    const produitPanier = {
+      id: Date.now(),
+      nom,
+      image,
+      prix: prixTotal,
+      type: typeProduit,
+      taille,
+      supplements,
+      quantite: 1
+    };
+
+    // Vérification si le produit existe déjà avec les mêmes options
+    const produitExistant = trouverProduitIdentique(
+      nom, prixTotal, typeProduit, taille, supplements
+    );
+
+    if (produitExistant) {
+      produitExistant.quantite += 1;
+      afficherNotification(`Quantité augmentée pour ${nom}`);
+    } else {
+      panier.push(produitPanier);
+      afficherNotification('Ajouté au panier !');
+    }
+
+    localStorage.setItem('panier', JSON.stringify(panier));
+    afficherPanier();
+  });
+});
+
+// Affichage du panier
+function afficherPanier() {
+  listePanier.innerHTML = '';
+  let total = 0;
+
+  panier.forEach(item => {
+    // Validation du prix
+    if (typeof item.prix !== 'number' || isNaN(item.prix)) {
+      console.error(`Prix non valide pour ${item.nom} :`, item.prix);
+      item.prix = 0;
+    }
+
+    const li = document.createElement('li');
+    li.classList.add('article-panier');
+
+    // Construction de la description des suppléments
+    let supplementsDesc = '';
+    if (item.supplements && item.supplements.length > 0) {
+      supplementsDesc = item.supplements
+        .map(sup => `${sup.nom}${sup.prix > 0 ? ` (+${sup.prix}€)` : ''}`)
+        .join(', ');
+    }
+
+    // Construction du nom affiché
+    let nomAffiche = item.nom;
+    if (item.taille) {
+      nomAffiche += ` (${item.taille})`;
+    }
+
+    // Affichage des détails
+    const details = document.createElement('div');
+    details.classList.add('details-panier');
+    details.innerHTML = `
+      <img src="${item.image}" alt="${item.nom}" />
+      <div>
+        <h4>${nomAffiche} × ${item.quantite}</h4>
+        ${supplementsDesc ? `<p>Suppléments: ${supplementsDesc}</p>` : ''}
+        <p>Type: ${formaterType(item.type)}</p>
+        <p>Prix unitaire: ${item.prix.toFixed(2)} €</p>
+        <p>Total: ${(item.prix * item.quantite).toFixed(2)} €</p>
+      </div>
+    `;
+
+    // Bouton de suppression
+    const boutonSupprimer = document.createElement('button');
+    boutonSupprimer.textContent = '×';
+    boutonSupprimer.classList.add('supprimer');
+    boutonSupprimer.addEventListener('click', () => supprimerDuPanier(item.id));
+
+    li.appendChild(details);
+    li.appendChild(boutonSupprimer);
+    listePanier.appendChild(li);
+
+    // Calcul du total
+    const sousTotal = item.prix * item.quantite;
+    if (!isNaN(sousTotal)) total += sousTotal;
   });
 
-  fermerPanier.addEventListener('click', () => {
-    panierFlottant.classList.remove('ouvert');
-  });
+  // Mise à jour du compteur et du total
+  compteurPanier.textContent = panier.reduce((acc, item) => acc + item.quantite, 0);
+  totalElement.textContent = total.toFixed(2);
+}
 
-  // Initialisation
+// Fonction pour formater le type de produit
+function formaterType(type) {
+  const types = {
+    'pizza': 'Pizza',
+    'burger': 'Burger',
+    'bagel': 'Bagel',
+    'tacos': 'Tacos',
+    'pates': 'Pâtes',
+    'salades': 'Salade',
+    'sandwitchs_froids': 'Sandwich Froid'
+  };
+  return types[type] || 'Autre';
+}
+
+// Fonction pour supprimer un article du panier
+function supprimerDuPanier(id) {
+  panier = panier.filter(p => p.id !== id);
+  localStorage.setItem('panier', JSON.stringify(panier));
   afficherPanier();
-</script>
+  afficherNotification('Article supprimé');
+}
 
-       </div>
-     </div>
-  </body>
+// Gestion de l'affichage du panier
+togglePanier.addEventListener('click', () => {
+  document.getElementById('contenu-panier').classList.toggle('ouvert');
+});
+
+fermerPanier.addEventListener('click', () => {
+  panierFlottant.classList.remove('ouvert');
+});
+
+// Fonction de notification
+function afficherNotification(message) {
+  const toast = document.getElementById('toast-notification');
+  toast.textContent = message;
+  toast.classList.add('show');
+
+  setTimeout(() => {
+    toast.classList.remove('show');
+  }, 2000);
+}
+    </script>
+   </div>
+  </div>
+ </body>
 </html>
