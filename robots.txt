@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://etoile-gourmande-one.vercel.app/sitemap.xml
