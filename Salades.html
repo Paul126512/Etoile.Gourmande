@@ -262,14 +262,15 @@ h1:after {
   z-index: 2;
   text-decoration: none;
 }
-
 /* === Panier flottant === */
 #panier-flottant {
   position: fixed;
   top: 30px;
-  right: 30px;
+  right: 30px; /* par défaut à droite */
   z-index: 1000;
 }
+
+
 
 
 
@@ -295,8 +296,10 @@ h1:after {
   color: white;
 }
 
+
 /* === Contenu panier === */
 
+/* === Contenu panier === */
 #contenu-panier {
   position: absolute;
   top: 100%;
@@ -312,6 +315,7 @@ h1:after {
   max-height: 400px;
   display: flex;
   flex-direction: column;
+  z-index: 100;
 }
 
 #contenu-panier.ouvert {
@@ -327,6 +331,52 @@ h1:after {
   justify-content: space-between;
   align-items: center;
 }
+
+/* === Version Mobile : ouverture à droite === */
+@media (max-width: 768px) {
+  #contenu-panier {
+    position: fixed;
+    top: 140px;
+    right: 29px;
+    width: 80vw;
+    height: 100vh;
+    max-height: 500px;
+    transform: translateX(100%);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    border-left: 1px solid rgba(0, 0, 0, 0.1);
+    opacity: 1;
+    padding: 20px;
+  }
+
+  #contenu-panier.ouvert {
+    transform: translateX(0);
+  }
+}
+
+
+
+
+
+
+/* Version mobile - Panier à gauche avec animation inversée */
+@media (max-width: 767px) {
+  #panier-flottant {
+    left: 20px !important; /* Position fixe à gauche */
+    right: auto !important;
+    transform: none !important;
+    top: 60px !important;
+  }
+
+  #contenu-panier.ouvert {
+    transform: translateX(0) translateY(0); /* Position finale sans décalage */
+    opacity: 1;
+  }
+  }
+
+
+
+
+
 
 #fermer-panier {
   background: none;
@@ -528,6 +578,38 @@ h1:after {
 
   
 }
+
+
+
+/* Version mobile - Alignement à droite */
+@media (max-width: 767px) {
+  .container .container { /* Cible spécifiquement le conteneur du bouton */
+    text-align: right; /* Aligne le bouton à droite */
+    padding-right: 15px; /* Marge intérieure pour respiration */
+  }
+  
+  .bouton-retour {
+    margin-left: auto; /* Pousse le bouton vers la droite */
+    display: inline-flex; /* Pour mieux gérer l'icône */
+    align-items: center;
+    padding: 5px 10px 7px 20px; /* Ajustement du padding */
+  }
+  
+  .bouton-retour:hover {
+    padding-left: 25px; /* Ajustement hover mobile */
+    padding-right: 15px;
+  }
+  
+  .bouton-retour::before {
+  
+    margin-right: 8px;
+    position: static; /* Reset de la position absolute */
+  }
+}
+
+
+
+
 </style>
 
 
@@ -545,7 +627,7 @@ h1:after {
   <div class="container">
     <div class="container">
   <a href="index.html" class="bouton-retour">
-    ← Retour à l'accueil
+    ← Retour
   </a>
   <!-- Le reste de ton contenu... -->
 </div>
@@ -829,8 +911,8 @@ function showToast(message = "Produit ajouté au panier", type = "ajout") {
 
 
 
-</script>
-    </div>
+      </script>
+     </div>
     </div>
   </body>
 </html>
