@@ -517,9 +517,108 @@ h1:after {
   transform: translateY(0);
 }
 
-
   
 }
+
+
+
+
+
+
+/* Version mobile - Alignement à droite */
+@media (max-width: 767px) {
+  .container .container { /* Cible spécifiquement le conteneur du bouton */
+    text-align: right; /* Aligne le bouton à droite */
+    padding-right: 15px; /* Marge intérieure pour respiration */
+  }
+  
+  .bouton-retour {
+    margin-left: auto; /* Pousse le bouton vers la droite */
+    display: inline-flex; /* Pour mieux gérer l'icône */
+    align-items: center;
+    padding: 5px 10px 7px 20px; /* Ajustement du padding */
+  }
+  
+  .bouton-retour:hover {
+    padding-left: 25px; /* Ajustement hover mobile */
+    padding-right: 15px;
+  }
+  
+  .bouton-retour::before {
+  
+    margin-right: 8px;
+    position: static; /* Reset de la position absolute */
+  }
+}
+
+
+
+
+/* Version mobile */
+@media (max-width: 768px) {
+  #contenu-panier {
+    position: fixed; /* Changé de absolute à fixed pour mobile */
+    top: 110px; /* Positionné un peu plus bas que le header */
+    right: 20px; /* Décalé un peu de la droite */
+    width: 90%; /* Largeur plus adaptée à l'écran */
+    max-width: 350px; /* Mais pas plus large que la version desktop */
+    max-height: 70vh; /* Hauteur relative à la vue */
+    z-index: 1000; /* S'assure qu'il est au-dessus des autres éléments */
+    background: white;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15); /* Ombre plus légère */
+    padding: 15px;
+
+    overflow-y: auto; /* Permet le scroll si contenu trop long */
+  }
+
+  #contenu-panier.ouvert {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  #contenu-panier h3 {
+    font-size: 1rem; /* Taille de police légèrement réduite */
+    margin-bottom: 15px;
+    position: sticky; /* Garde le titre visible lors du scroll */
+    top: 0;
+    background: white;
+    padding-bottom: 10px;
+  }
+}
+
+
+
+
+
+
+/* Version mobile - Panier à gauche avec animation inversée */
+@media (max-width: 767px) {
+  #panier-flottant {
+    left: 20px !important; /* Position fixe à gauche */
+    right: auto !important;
+    transform: none !important;
+    top: 60px !important;
+  }
+
+
+
+
+
+  /* Ajustement du bouton toggle */
+  #panier-flottant button.toggle {
+    width: auto;
+    padding: 11px 20px;
+
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }  
+}
+
+
+
+
+
+
 </style>
 
 
@@ -543,7 +642,7 @@ document.getElementById('fermer-panier').addEventListener('click', function() {
   <div class="container">
     <div class="container">
   <a href="index.html" class="bouton-retour">
-    ← Retour à l'accueil
+    ← Retour 
   </a>
   <!-- Le reste de ton contenu... -->
 </div>
