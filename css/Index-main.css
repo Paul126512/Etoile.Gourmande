@@ -205,10 +205,7 @@
                 .grid {
                     grid-template-columns: 1fr;
                 }
-                
-                .image-category {
-                    height: 250px;
-                }
+             
             }
 
             /* Animation de sortie */
@@ -355,55 +352,14 @@
             grid-template-columns: repeat(4, 1fr);
             gap: 1.5rem;
         }
+
+
+
+
+
         
-        .image-category {
-            position: relative;
-            height: 300px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            border: 1px solid rgba(0,0,0,0.08);
-            border-radius: 8px;
-        }
         
-        .image-category:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        }
-        
-        .image-category img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.6s ease;
-            filter: grayscale(15%) contrast(110%);
-        }
-        
-        .image-category:hover img {
-            transform: scale(1.05);
-            filter: grayscale(0%) contrast(100%);
-        }
-        
-        .image-category span {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            padding: 1.5rem;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 500;
-            font-size: 1.1rem;
-            color: var(--blanc);
-            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-        }
-        
-        .image-category:hover span {
-            padding-bottom: 2rem;
-        }
-        
+
         /* Animation discrète */
         @keyframes fadeIn {
             from { opacity: 0.8; }
@@ -999,10 +955,7 @@ input[type="checkbox"] {
         padding: 10px !important;
     }
     
-    .image-category {
-        height: 150px !important;
-        margin-bottom: 5px !important;
-    }
+ 
     
     /* FOOTER REDESIGN */
     footer {
@@ -1126,9 +1079,6 @@ input[type="checkbox"] {
         margin-bottom: 1.5rem !important;
     }
 
-    .image-category {
-        height: 180px !important;
-    }
 
     /* ----- FOOTER ----- */
     .footer-content {
@@ -1301,10 +1251,7 @@ input[type="checkbox"] {
                 grid-template-columns: 1fr;
             }
             
-            .image-category {
-                height: 200px;
-            }
-            
+        
             .cookie-buttons {
                 flex-direction: column;
             }
@@ -1486,10 +1433,6 @@ input[type="checkbox"] {
     gap: 20px;
   }
 
-  .image-category {
-    width: 100%;
-    text-align: center;
-  }
 
   .footer-links {
     flex-direction: column;
@@ -1810,4 +1753,122 @@ body.scrolled .right-arrow {
 .right-arrow {
   display: none !important;
  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ===== STYLES DE BASE ===== */
+.image-category {
+    position: relative;
+    height: 300px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 8px;
+}
+
+.image-category:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.image-category img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+    filter: grayscale(15%) contrast(110%);
+}
+
+.image-category:hover img {
+    transform: scale(1.05);
+    filter: grayscale(0%) contrast(100%);
+}
+
+.image-category span {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 1.5rem;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    font-size: 1.1rem;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    z-index: 2;
+    box-sizing: border-box;
+    text-align: center;
+    display: block;
+}
+
+.image-category:hover span {
+    padding-bottom: 2rem;
+}
+
+
+
+
+
+
+
+
+
+
+/* RÉPARATION DÉFINITIVE POUR MOBILE & IPHONE */
+@media (max-width: 768px) {
+    .image-category {
+        /* Reset des styles problématiques */
+        overflow: visible;
+        -webkit-transform: translateZ(0);
+    }
+
+    .image-category span {
+        /* Style de secours ultra-visible */
+        position: absolute !important;
+        bottom: 15px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        width: 90% !important;
+        
+        /* Apparence clairement visible */
+        color: white !important;
+        font-size: 16px !important;
+        font-weight: 700 !important;
+        padding: 12px 20px !important;
+        border-radius: 8px !important;
+        text-align: center !important;
+        
+        /* Garantie de visibilité */
+        z-index: 1000 !important;
+
+       
+        
+        /* Forçage d'affichage */
+        display: block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+
+    /* Solution nucléaire pour iOS */
+    @supports (-webkit-touch-callout: none) {
+        .image-category span {
+            -webkit-text-stroke: 0.5px white; /* Contour pour lisibilité */
+            backdrop-filter: blur(6px);
+            bottom: max(15px, env(safe-area-inset-bottom)) !important;
+        }
+    }
 }
