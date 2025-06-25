@@ -240,13 +240,32 @@ h1:after {
   text-decoration: none;
 }
 
+
 /* === Panier flottant === */
 #panier-flottant {
   position: fixed;
-  top: 30px;
-  right: 30px;
+  top: 200px; /* Réduit de 30px à 20px pour le remonter */
+  right: 200px; /* Réduit de 30px à 20px pour plus de cohérence */
   z-index: 1000;
 }
+
+/* Pour les écrans mobiles */
+@media (max-width: 768px) {
+  #panier-flottant {
+    top: 15px; /* Position encore plus haute sur mobile */
+    right: 15px;
+    bottom: auto; /* Supprime la position bottom qui était définie précédemment */
+  }
+  
+  #contenu-panier {
+    width: 300px; /* Largeur légèrement réduite pour mobile */
+    max-height: 60vh; /* Hauteur basée sur la hauteur de l'écran */
+  }
+}
+
+
+
+
 
 
 
@@ -266,29 +285,47 @@ h1:after {
   align-items: center;
   gap: 8px;
 }
-
 #panier-flottant button.toggle:hover {
-  background: #111;
-  color: white;
+  background: #333; /* Noir plus clair au survol */
+  transform: translateY(-2px); /* Léger effet de levage */
+  box-shadow: 0 7px 20px rgba(0,0,0,0.15); /* Ombre plus grande au survol */
 }
+
+#panier-flottant button.toggle:active {
+  transform: translateY(0); /* Effet de clic */
+}
+
+#panier-flottant button.toggle {
+  margin-top: -765px; /* Remonte le bouton de 10px */
+}
+
+
+
+
+
+
+
+
 
 /* === Contenu panier === */
 
+/* Contenu du panier - Position modifiée */
 #contenu-panier {
-  position: absolute;
-  top: 100%;
+  position: relative; /* Changez de absolute à relative */
+  top: 9px; /* Ajustez cette valeur pour l'espace entre bouton et contenu */
   right: 0;
   width: 350px;
   background: white;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  
   padding: 20px;
   opacity: 0;
   pointer-events: none;
-  transform: translateY(-20px);
+  transform: translateY(-10px);
   transition: all 0.3s ease;
-  max-height: 400px;
+  max-height: 70vh; /* Utilisez vh pour une hauteur responsive */
   display: flex;
   flex-direction: column;
+  margin-top: 10px; /* Espacement depuis le bouton */
 }
 
 #contenu-panier.ouvert {
@@ -309,13 +346,13 @@ h1:after {
   background: none;
   border: none;
   font-size: 1.2rem;
-  color: #999;
+  color: #ffffff;
   cursor: pointer;
   transition: color 0.3s ease;
 }
 
 #fermer-panier:hover {
-  color: #111;
+  color: #000000;
 }
 
 #liste-panier {
@@ -337,7 +374,7 @@ h1:after {
   object-fit: cover;
   margin-right: 12px;
   border-radius: 4px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+
   vertical-align: middle;
   transition: transform 0.3s ease;
 }
@@ -379,13 +416,92 @@ h1:after {
   border-top: 1px solid #eee;
 }
 
+
+
+
+
+
+
+
+
+
+/* === ADAPTATION DES STYLES PANIER POUR PC - VERSION HAUTE DROITE === */
+@media (min-width: 768px) {
+  /* Position globale du bouton panier */
+  #panier-flottant {
+    position: fixed;
+    top: 15px; /* Un peu plus haut */
+    right: 20px; /* Déplacé à droite */
+    left: auto; /* Annule le left précédent */
+    z-index: 1000;
+  }
+
+  #panier-flottant button.toggle {
+    margin-top: 0;
+    padding: 14px 28px;
+    font-size: 1rem;
+    gap: 10px;
+  }
+
+  /* Position du contenu du panier */
+  #contenu-panier {
+    position: absolute;
+    top: 100%; /* En dessous du bouton */
+    right: 0; /* Aligné à droite pour suivre le bouton */
+    left: auto; /* Annule le left précédent */
+    margin-top: 12px;
+    width: 400px;
+    border: 1px solid #ddd;
+    background: white;
+    z-index: 1000;
+  }
+
+  #liste-panier img {
+    width: 70px;
+    height: 50px;
+  }
+
+  .supprimer {
+    font-size: 1.5rem;
+    margin-left: auto;
+    top: 0;
+    position: static;
+    align-self: flex-end;
+  }
+
+  #liste-panier {
+    padding: 15px;
+  }
+
+  #total {
+    font-size: 1.3rem;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* === Bouton valider === */
 #valider-commande {
-  width: 100%;
+  width: auto; /* Ne plus prendre toute la largeur */
   background-color: #000;
   color: #fff;
   border: none;
-  padding: 15px;
+  padding: 15px 30px; /* Plus large */
   margin-top: 20px;
   font-size: 1rem;
   text-transform: uppercase;
@@ -393,6 +509,8 @@ h1:after {
   cursor: pointer;
   transition: all 0.3s ease;
   border: 2px solid #000;
+  margin-left: auto; /* Pousse le bouton à droite */
+  display: block; /* Pour que margin-left: auto fonctionne */
 }
 
 #valider-commande:hover {
@@ -406,37 +524,13 @@ h1:after {
   cursor: not-allowed;
 }
 
-/* === Bouton retour === */
-.bouton-retour {
-  display: inline-block;
-  margin-bottom: 30px;
-  padding: 8px 15px;
-  background-color: transparent;
-  color: #333;
-  text-decoration: none;
-  border: 1px solid #333;
-  font-size: 0.9rem;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
 
-.bouton-retour:hover {
-  background-color: #333;
-  color: white;
-}
 
-.bouton-retour:hover::before {
-  content: "→";
-  position: absolute;
-  left: -15px;
-  transition: all 0.3s ease;
-}
 
-.bouton-retour:hover {
-  padding-left: 25px;
-  padding-right: 10px;
-}
+
+
+
+
 
 /* === Animations === */
 @keyframes fadeIn {
@@ -497,6 +591,57 @@ h1:after {
 
   
 }
+
+
+/* === Bouton retour - Version gauche === */
+.bouton-retour {
+  display: inline-block;
+  margin-bottom: 30px;
+  padding: 8px 15px;
+  background-color: transparent;
+  color: #000000;
+  text-decoration: none;
+  border: 1px solid #000000;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  float: left; /* Changé de right à left */
+  clear: both; /* S'assure qu'il est sur sa propre ligne */
+  margin-left: 0; /* Alignement parfait à gauche */
+}
+
+.bouton-retour:hover {
+  background-color: #ffffff;
+  color: black;
+}
+
+.bouton-retour:hover::before {
+  content: ""; /* Changé la flèche pour pointer vers la gauche */
+  position: absolute;
+  left: 5px; /* Ajusté la position */
+  transition: all 0.3s ease;
+}
+
+.bouton-retour:hover {
+  padding-left: 25px;
+  padding-right: 10px;
+}
+
+
+/* === Version MOBILE (à droite) === */
+@media (max-width: 767px) {
+  .bouton-retour {
+    float: right;
+    margin-right: 0;
+    margin-left: auto;
+  }
+}
+
+
+
+
+
 </style>
 
 
