@@ -313,6 +313,13 @@ h1:after {
   max-height: calc(1.7em * 4); /* line-height × nombre de lignes */
 }
 
+
+
+
+
+
+
+
 .prix-produit {
   font-size: 1.4rem;
   color: #111;
@@ -371,6 +378,12 @@ h1:after {
   z-index: 2;
   text-decoration: none;
 }
+
+
+
+
+
+
 
 /* === Panier flottant === */
 #panier-flottant {
@@ -463,6 +476,8 @@ h1:after {
 
 
 
+
+
 #liste-panier img {
   width: 60px;
   height: 40px;
@@ -477,6 +492,72 @@ h1:after {
 #liste-panier img:hover {
   transform: scale(1.05);
 }
+
+
+
+
+@media (max-width: 480px) {
+  #panier-flottant {
+    position: fixed !important;
+    top: calc(60px + env(safe-area-inset-top)) !important;  /* augmenté */
+    left: calc(10px + env(safe-area-inset-left)) !important;
+    right: auto !important;
+    bottom: auto !important;
+    z-index: 1001 !important;
+    
+  }
+
+  #contenu-panier {
+    position: absolute !important;
+    top: 100% !important;
+    right: auto !important;
+    left: 0 !important;
+    width: 300px !important;
+    max-height: 500px !important;
+    
+  }
+}
+
+
+
+/* Version mobile - Alignement à droite */
+@media (max-width: 767px) {
+  .container .container { /* Cible spécifiquement le conteneur du bouton */
+    text-align: right; /* Aligne le bouton à droite */
+    padding-right: 15px; /* Marge intérieure pour respiration */
+  }
+  
+  .bouton-retour {
+    margin-left: auto; /* Pousse le bouton vers la droite */
+    display: inline-flex; /* Pour mieux gérer l'icône */
+    align-items: center;
+    padding: 5px 10px 7px 20px; /* Ajustement du padding */
+  }
+  
+  .bouton-retour:hover {
+    padding-left: 25px; /* Ajustement hover mobile */
+    padding-right: 15px;
+  }
+  
+  .bouton-retour::before {
+  
+    margin-right: 8px;
+    position: static; /* Reset de la position absolute */
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 .supprimer {
   background: none;
@@ -569,6 +650,16 @@ h1:after {
   padding-left: 25px;
   padding-right: 10px;
 }
+
+
+
+
+
+
+
+
+
+
 
 /* === Animations === */
 @keyframes fadeIn {
