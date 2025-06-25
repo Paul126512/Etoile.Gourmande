@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Nos Bagels </title>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
@@ -279,6 +279,7 @@ h1:after {
 
 /* === Contenu panier === */
 
+/* === Contenu panier - Version de base === */
 #contenu-panier {
   position: absolute;
   top: 100%;
@@ -294,6 +295,7 @@ h1:after {
   max-height: 400px;
   display: flex;
   flex-direction: column;
+  overflow: hidden; /* Ajouté pour cohérence */
 }
 
 #contenu-panier.ouvert {
@@ -309,6 +311,7 @@ h1:after {
   justify-content: space-between;
   align-items: center;
 }
+
 
 #fermer-panier {
   background: none;
@@ -465,7 +468,13 @@ h1:after {
   animation: pop-panier 0.3s ease;
 }
 
-/* === Responsive === */
+
+
+
+
+
+
+/* === Responsive Global === */
 @media (max-width: 768px) {
   .container {
     padding: 30px 15px;
@@ -480,12 +489,111 @@ h1:after {
     max-width: 400px;
     margin: 0 auto;
   }
+
+  /* Bouton Retour Mobile - Version Gauche */
+.bouton-retour {
+    position: fixed;
+    top: 25px;
+    left: 20px; /* Changé de 'right' à 'left' */
+    margin-bottom: 0;
+    z-index: 1000;
+    background-color: transparent;
+    color: #333;
+    border: 1px solid #333;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 6px 10px;
+    font-size: 0.85rem;
+}
+
+.bouton-retour:hover {
+    background-color: #333;
+    color: white;
+    padding-left: 15px;
+    padding-right: 8px;
+}
+
+.bouton-retour:hover::before {
+    display: block;
+    left: -12px;
+    font-size: 0.85rem;
+}
+
+
   
+  #panier-flottant button.toggle {
+    padding: 10px 15px;
+    font-size: 0.8rem;
+  }
+  
+  #contenu-panier {
+    width: 90vw;
+    max-width: 300px;
+    right: -10px;
+    max-height: 70vh;
+    padding: 15px;
+    overflow: hidden;
+  }
+  
+  #contenu-panier h3 {
+    font-size: 1rem;
+    margin-bottom: 15px;
+  }
+  
+  #liste-panier {
+    max-height: calc(70vh - 200px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .supprimer {
+    margin-left: 150px;
+    top: -60px;
+    font-size: 1.5rem;
+  }
+/* Adaptation pour très petits écrans */
+@media (max-width: 480px) {
   #panier-flottant {
-    top: auto;
-    bottom: 20px;
+    top: 23px; /* 1px de plus que la valeur précédente (22px -> 23px) */
     right: 20px;
   }
+    #contenu-panier {
+      width: 95vw;
+      max-width: 280px;
+      max-height: 80vh;
+      padding: 12px;
+    }
+    
+    #liste-panier {
+      max-height: calc(80vh - 200px);
+    }
+    
+    #liste-panier img {
+      width: 50px;
+      height: 35px;
+      margin-right: 8px;
+    }
+    
+    .supprimer {
+      margin-left: 120px;
+      top: -50px;
+    }
+  }
+  
+  /* Mode paysage */
+  @media (max-height: 500px) and (orientation: landscape) {
+    #contenu-panier {
+      max-height: 90vh;
+      right: 5px;
+    }
+    
+    #liste-panier {
+      max-height: calc(90vh - 200px);
+    }
+  }
+}
+
+/* === États du Panier (doit rester en dehors des media queries) === */
 #contenu-panier {
   opacity: 0;
   pointer-events: none;
@@ -500,8 +608,17 @@ h1:after {
 }
 
 
-  
-}
+
+
+
+
+
+
+
+
+
+
+
 </style>
 
 
@@ -525,7 +642,7 @@ document.getElementById('fermer-panier').addEventListener('click', function() {
   <div class="container">
     <div class="container">
   <a href="index.html" class="bouton-retour">
-    ← Retour à l'accueil
+    ← Retour 
   </a>
   <!-- Le reste de ton contenu... -->
 </div>
@@ -765,18 +882,7 @@ const produitExistant = trouverProduitIdentique(nom, prix, type, []);
 
   afficherPanier();
 </script>
-
-
-
-
-
-
-
-
-
-
-
-    </div>
+     </div>
     </div>
   </body>
 </html>
