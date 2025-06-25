@@ -490,38 +490,38 @@
       cursor: not-allowed;
     }
 
-    /* === Bouton retour === */
-    .bouton-retour {
-      display: inline-block;
-      margin-bottom: 30px;
-      padding: 8px 15px;
-      background-color: transparent;
-      color: #333;
-      text-decoration: none;
-      border: 1px solid #333;
-      font-size: 0.9rem;
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-    }
+.bouton-retour {
+  position: relative;
+  padding: 8px 15px; /* padding visuel */
+  font-size: 0.9rem;
+  color: #333;
+  background: transparent;
+  border: 1px solid #333;
+  cursor: pointer;
+  user-select: none;
+  display: inline-flex;
+  align-items: center;
+  z-index: 10;
+  text-decoration: none;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
 
-    .bouton-retour:hover {
-      background-color: #333;
-      color: white;
-    }
+.bouton-retour::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  bottom: -10px;
+  left: -10px;
+  right: -10px;
+  /* zone cliquable plus large */
+  pointer-events: auto;
+}
 
-    .bouton-retour:hover::before {
-      content: "→";
-      position: absolute;
-      left: -15px;
-      transition: all 0.3s ease;
-    }
 
-    .bouton-retour:hover {
-      padding-left: 25px;
-      padding-right: 10px;
-    }
-
+.bouton-retour:hover {
+  background-color: #333;
+  color: white;
+}
 
     
     /* === Notification === */
