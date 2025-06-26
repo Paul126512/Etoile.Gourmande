@@ -33,7 +33,7 @@ export default async function handler(req, res) {
   const {
     client, pizzas, boissons, burgers, desserts,
     menus, bagels, tacos, pates, sandwitchs_froids, salades
-    // Les suppléments ne sont plus récupérés à ce niveau pour éviter double comptage
+    // On exclut volontairement les suppléments ici
   } = req.body;
 
   if (!client || !client.name || !client.email) {
@@ -46,7 +46,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ message: 'Adresse email invalide.' });
   }
 
-  // On regroupe les produits
+  // On regroupe tous les produits
   const produits = [
     ...(Array.isArray(pizzas) ? pizzas : []),
     ...(Array.isArray(burgers) ? burgers : []),
@@ -58,13 +58,14 @@ export default async function handler(req, res) {
     ...(Array.isArray(sandwitchs_froids) ? sandwitchs_froids : []),
     ...(Array.isArray(salades) ? salades : []),
     ...(Array.isArray(pates) ? pates : []),
-    // Suppléments exclus ici volontairement
+    // Pas les suppléments ici
   ];
 
   if (produits.length === 0) {
     return res.status(400).json({ message: 'Votre panier est vide.' });
   }
 
+  // Calcul du total (prix incluant suppléments dans item.prix)
   let totalCents = 0;
   for (const item of produits) {
     const prix = parseFloat(item.prix);
@@ -82,6 +83,7 @@ export default async function handler(req, res) {
   }
 
   try {
+    // Recherche client en base
     let { data: existingClient, error } = await supabase
       .from('clients')
       .select('id')
@@ -102,6 +104,7 @@ export default async function handler(req, res) {
       existingClient = newClient;
     }
 
+    // Génération numéro commande du jour
     const now = new Date();
     const day = String(now.getDate()).padStart(2, '0');
     const month = String(now.getMonth() + 1).padStart(2, '0');
@@ -119,8 +122,8 @@ export default async function handler(req, res) {
 
     const compteur = String((count || 0) + 1).padStart(3, '0');
     const numero_cmd = `CMD-${day}${month}${year}-${compteur}`;
-    console.log('Numéro de commande généré :', numero_cmd);
 
+    // Préparation des lineItems Stripe sans suppléments
     const lineItems = [];
 
     for (const item of produits) {
@@ -134,13 +137,13 @@ export default async function handler(req, res) {
             images: item.image ? [item.image] : ['https://via.placeholder.com/150?text=Produit'],
             description: item.description || undefined,
           },
-          unit_amount: Math.round(parseFloat(item.prix) * 100),
+          unit_amount: Math.round(parseFloat(item.prix) * 100), // prix avec suppléments inclus
         },
         quantity: quantiteProduit,
       });
-      // Suppléments NON inclus ici dans Stripe, car déjà dans prix
     }
 
+    // Création session Stripe
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: lineItems,
@@ -154,19 +157,7 @@ export default async function handler(req, res) {
       }
     });
 
-    // Ici on stocke la commande avec les produits ET leurs suppléments
-    // Assumons que les suppléments sont dans chaque produit sous item.supplements (tableau d'objets)
-    // On ajoute cette info dans la colonne 'produits' en base pour affichage futur
-    // Exemple d'un produit avec suppléments :
-    // {
-    //   nom: "Campione",
-    //   prix: 6.0,
-    //   quantite: 1,
-    //   supplements: [
-    //     { nom: "Chedar", prix: 1.0 }
-    //   ]
-    // }
-
+    // Sauvegarde commande dans Supabase, avec produits + suppléments pour affichage
     const { error: orderError } = await supabase
       .from('orders')
       .insert([{
@@ -174,7 +165,7 @@ export default async function handler(req, res) {
         client_id: existingClient.id,
         email,
         name,
-        produits, // produits avec suppléments ici pour affichage côté front
+        produits, // contient produits avec leurs suppléments pour l’affichage après
         total_price: totalCents / 100,
         status: 'awaiting_payment',
         stripe_session_id: session.id,
