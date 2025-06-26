@@ -83,6 +83,15 @@
     <!-- Contenu généré par JavaScript -->
 </div>
 
+
+
+
+
+
+
+
+  
+
 <script>
   document.addEventListener('DOMContentLoaded', async () => {
     const card = document.getElementById('confirmation-card');
@@ -108,19 +117,18 @@
     let commandeDetails = { pizzas: [], boissons: [] };
 
     panierPizzas.forEach(pizza => {
-      // Prix de base sans suppléments
-      let prix = pizza.prix;
+      const quantite = pizza.quantite || 1;
+      const prixUnitaire = pizza.prix;
+      const prixTotal = prixUnitaire * quantite;
       let supplements = [];
 
-      // Gestion des suppléments (affichage seulement)
       if (pizza.supplements?.length > 0 && !(pizza.supplements.length === 1 && pizza.supplements[0].id === 'aucun')) {
         supplements = pizza.supplements.map(sup => ({ nom: sup.nom, prix: sup.prix }));
-        
-        // On ajoute les suppléments à l'affichage mais pas au prix
+
         itemsHtml += `
           <div class="order-item">
-            <span>${pizza.nom} (${pizza.taille || 'standard'})</span>
-            <span>${prix.toFixed(2)}€</span>
+            <span>${pizza.nom} (${pizza.taille || 'standard'}) × ${quantite}</span>
+            <span>${prixTotal.toFixed(2)}€</span>
           </div>
           ${pizza.supplements.map(sup => `
             <div class="supplement-item">
@@ -132,20 +140,21 @@
       } else {
         itemsHtml += `
           <div class="order-item">
-            <span>${pizza.nom} (${pizza.taille || 'standard'})</span>
-            <span>${prix.toFixed(2)}€</span>
+            <span>${pizza.nom} (${pizza.taille || 'standard'}) × ${quantite}</span>
+            <span>${prixTotal.toFixed(2)}€</span>
           </div>
         `;
       }
 
-      total += prix; // On n'ajoute que le prix de base
+      total += prixTotal;
 
       commandeDetails.pizzas.push({
         nom: pizza.nom,
         taille: pizza.taille,
-        prix: pizza.prix,
+        prix: prixUnitaire,
+        quantite: quantite,
         supplements: supplements,
-        prix_total: prix // On enregistre seulement le prix de base
+        prix_total: prixTotal
       });
     });
 
@@ -167,7 +176,6 @@
       });
     });
 
-    // Récupération du numéro de commande depuis l'API
     let orderNum;
     try {
       const response = await fetch('/api/orderManager');
@@ -183,7 +191,6 @@
     const now = new Date();
 
     try {
-      // Enregistrement dans Supabase
       const response = await fetch('https://dtkcxmmedsinbdacrbmt.supabase.co/rest/v1/orders', {
         method: 'POST',
         headers: {
@@ -243,3 +250,6 @@
     }
   });
 </script>
+
+  </body>
+</html>
