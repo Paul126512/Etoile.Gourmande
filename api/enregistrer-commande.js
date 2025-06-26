@@ -33,7 +33,7 @@ export default async function handler(req, res) {
   const {
     client, pizzas, boissons, burgers, desserts,
     menus, bagels, tacos, pates, sandwitchs_froids, salades
-    // On NE récupère plus les suppléments ici pour éviter double comptage
+    // Les suppléments ne sont plus récupérés à ce niveau pour éviter double comptage
   } = req.body;
 
   if (!client || !client.name || !client.email) {
@@ -46,7 +46,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ message: 'Adresse email invalide.' });
   }
 
-  // On concatène uniquement les produits avec leur prix final (incluant suppléments)
+  // On regroupe les produits
   const produits = [
     ...(Array.isArray(pizzas) ? pizzas : []),
     ...(Array.isArray(burgers) ? burgers : []),
@@ -58,7 +58,7 @@ export default async function handler(req, res) {
     ...(Array.isArray(sandwitchs_froids) ? sandwitchs_froids : []),
     ...(Array.isArray(salades) ? salades : []),
     ...(Array.isArray(pates) ? pates : []),
-    // SUPPLÉMENTS retirés volontairement ici !
+    // Suppléments exclus ici volontairement
   ];
 
   if (produits.length === 0) {
@@ -138,8 +138,7 @@ export default async function handler(req, res) {
         },
         quantity: quantiteProduit,
       });
-
-      // On ne traite PAS les suppléments ici (car déjà inclus dans les produits)
+      // Suppléments NON inclus ici dans Stripe, car déjà dans prix
     }
 
     const session = await stripe.checkout.sessions.create({
@@ -155,6 +154,19 @@ export default async function handler(req, res) {
       }
     });
 
+    // Ici on stocke la commande avec les produits ET leurs suppléments
+    // Assumons que les suppléments sont dans chaque produit sous item.supplements (tableau d'objets)
+    // On ajoute cette info dans la colonne 'produits' en base pour affichage futur
+    // Exemple d'un produit avec suppléments :
+    // {
+    //   nom: "Campione",
+    //   prix: 6.0,
+    //   quantite: 1,
+    //   supplements: [
+    //     { nom: "Chedar", prix: 1.0 }
+    //   ]
+    // }
+
     const { error: orderError } = await supabase
       .from('orders')
       .insert([{
@@ -162,7 +174,7 @@ export default async function handler(req, res) {
         client_id: existingClient.id,
         email,
         name,
-        produits,
+        produits, // produits avec suppléments ici pour affichage côté front
         total_price: totalCents / 100,
         status: 'awaiting_payment',
         stripe_session_id: session.id,
