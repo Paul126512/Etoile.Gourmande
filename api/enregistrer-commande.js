@@ -55,16 +55,16 @@ export default async function handler(req, res) {
 
   // Regroupement des produits
   const produits = [
-    ...(Array.isArray(pizzas) ? pizzas : [],
-    ...(Array.isArray(burgers) ? burgers : [],
-    ...(Array.isArray(bagels) ? bagels : [],
-    ...(Array.isArray(menus) ? menus : [],
-    ...(Array.isArray(boissons) ? boissons : [],
-    ...(Array.isArray(desserts) ? desserts : [],
-    ...(Array.isArray(tacos) ? tacos : [],
-    ...(Array.isArray(sandwitchs_froids) ? sandwitchs_froids : [],
-    ...(Array.isArray(salades) ? salades : [],
-    ...(Array.isArray(pates) ? pates : []),
+    ...(Array.isArray(pizzas) ? pizzas : []),
+    ...(Array.isArray(burgers) ? burgers : []),
+    ...(Array.isArray(bagels) ? bagels : []),
+    ...(Array.isArray(menus) ? menus : []),
+    ...(Array.isArray(boissons) ? boissons : []),
+    ...(Array.isArray(desserts) ? desserts : []),
+    ...(Array.isArray(tacos) ? tacos : []),
+    ...(Array.isArray(sandwitchs_froids) ? sandwitchs_froids : []),
+    ...(Array.isArray(salades) ? salades : []),
+    ...(Array.isArray(pates) ? pates : [])
   ];
 
   if (produits.length === 0) {
