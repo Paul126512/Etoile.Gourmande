@@ -221,6 +221,10 @@ burger.addEventListener('click', () => {
 </div>
 
 
+
+
+
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const cookieBanner = document.getElementById('cookieBanner');
@@ -232,27 +236,59 @@ document.addEventListener('DOMContentLoaded', function() {
     const cookieSave = document.getElementById('cookieSave');
     const cookieClose = document.getElementById('cookieClose');
 
-    // Afficher la bannière si pas encore de préférences
-    if (!localStorage.getItem('cookiePreferences')) {
-        cookieBanner.style.display = 'block';
-        setTimeout(() => {
-            cookieBanner.style.opacity = '1';
-        }, 100);
+    // Fonction pour afficher la bannière et/ou charger préférences
+    function initPreferences(prefs) {
+        if (!prefs) {
+            // Pas de prefs, afficher la bannière
+            cookieBanner.style.display = 'block';
+            setTimeout(() => {
+                cookieBanner.style.opacity = '1';
+            }, 100);
+        } else {
+            // On stocke en localStorage et on charge les scripts
+            localStorage.setItem('cookiePreferences', JSON.stringify(prefs));
+            loadScriptsBasedOnPreferences(prefs);
+        }
     }
 
-    // Gestion des clics
+    // On commence par essayer de récupérer prefs côté serveur via fetch API
+    fetch('/api/check-cookies')
+        .then(res => res.json())
+        .then(data => {
+            if (data.prefs) {
+                initPreferences(data.prefs);
+            } else {
+                // Pas de prefs côté serveur, on regarde localStorage
+                const localPrefs = JSON.parse(localStorage.getItem('cookiePreferences'));
+                initPreferences(localPrefs);
+            }
+        })
+        .catch(() => {
+            // En cas d’erreur fetch, fallback localStorage
+            const localPrefs = JSON.parse(localStorage.getItem('cookiePreferences'));
+            initPreferences(localPrefs);
+        });
+
+    // Ouvre le panneau de réglages
     cookieSettings.addEventListener('click', function(e) {
         e.preventDefault();
         cookieMain.style.display = 'none';
         cookieSettingsPanel.style.display = 'block';
+
+        // Mettre à jour les cases à cocher avec la valeur actuelle
+        const prefs = JSON.parse(localStorage.getItem('cookiePreferences')) || { analytics: false, marketing: false };
+        document.getElementById('analyticsCookies').checked = prefs.analytics || false;
+        document.getElementById('marketingCookies').checked = prefs.marketing || false;
     });
 
+    // Retour au panneau principal
     cookieBack.addEventListener('click', function(e) {
         e.preventDefault();
         cookieSettingsPanel.style.display = 'none';
         cookieMain.style.display = 'block';
     });
 
+    // Acceptation complète (tout coché)
     cookieAccept.addEventListener('click', function(e) {
         e.preventDefault();
         savePreferences({
@@ -263,6 +299,7 @@ document.addEventListener('DOMContentLoaded', function() {
         hideBanner();
     });
 
+    // Sauvegarder depuis les réglages personnalisés
     cookieSave.addEventListener('click', function(e) {
         e.preventDefault();
         savePreferences({
@@ -273,17 +310,23 @@ document.addEventListener('DOMContentLoaded', function() {
         hideBanner();
     });
 
+    // Fermer la bannière sans sauvegarder (considérer comme refus ?)
     cookieClose.addEventListener('click', function(e) {
         e.preventDefault();
         hideBanner();
     });
 
+    // Fonction pour sauvegarder dans localStorage + cookie HTTP
     function savePreferences(prefs) {
         localStorage.setItem('cookiePreferences', JSON.stringify(prefs));
-        // Charger les scripts en fonction des préférences
+
+        // Cookie HTTP valable 1 an, path=/ pour tout le site, SameSite=Lax pour sécurité
+        document.cookie = `cookiePreferences=${encodeURIComponent(JSON.stringify(prefs))}; path=/; max-age=${60*60*24*365}; SameSite=Lax;`;
+
         loadScriptsBasedOnPreferences(prefs);
     }
 
+    // Cacher la bannière doucement
     function hideBanner() {
         cookieBanner.style.opacity = '0';
         setTimeout(() => {
@@ -291,12 +334,30 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 300);
     }
 
+    // Chargement conditionnel des scripts
     function loadScriptsBasedOnPreferences(prefs) {
-        // Implémentez ici le chargement des scripts
-        console.log('Préférences:', prefs);
+        console.log('Préférences cookies:', prefs);
+
+        if (prefs.analytics) {
+            if (!document.getElementById('script-analytics')) {
+                const script = document.createElement('script');
+                script.id = 'script-analytics';
+                script.src = 'https://exemple.com/analytics.js';
+                document.head.appendChild(script);
+            }
+        } else {
+            const oldScript = document.getElementById('script-analytics');
+            if (oldScript) oldScript.remove();
+        }
+
+        
     }
 });
 </script>
+
+
+
+
 
 
 
@@ -346,34 +407,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-
-
-
-
-
-
-<!-- Bannière Cookies style -->
-<div class="cookie-banner">
-    <div class="cookie-header">
-        <svg class="cookie-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3Z" stroke="#111111" stroke-width="1.5"/>
-            <path d="M9 10C9.55228 10 10 9.55228 10 9C10 8.44772 9.55228 8 9 8C8.44772 8 8 8.44772 8 9C8 9.55228 8.44772 10 9 10Z" fill="#111111"/>
-            <path d="M16 15C16.5523 15 17 14.5523 17 14C17 13.4477 16.5523 13 16 13C15.4477 13 15 13.4477 15 14C15 14.5523 15.4477 15 16 15Z" fill="#111111"/>
-            <path d="M10.5 12.5L13.5 11" stroke="#111111" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
-        <div class="cookie-title">Vie privée</div>
-    </div>
-    <div class="cookie-text">
-        Nous accordons une grande importance à votre vie privée. Nous utilisons des cookies pour personnaliser votre expérience et rendre votre visite plus douce. 
-        <a href="policy.html" class="privacy-link">Consultez notre politique de confidentialité</a>.
-    </div>
-
-    <div class="cookie-buttons">
-        <button class="cookie-btn cookie-btn-accept">Accepter</button>
-        <button class="cookie-btn cookie-btn-reject">Refuser</button>  
-    </div>
-</div>
-
 <script src="index.js"></script>
 
 <footer class="modern-footer">
@@ -397,7 +430,7 @@ document.addEventListener('DOMContentLoaded', function() {
       <div class="link-group">
         <h4>Nos partenaires</h4>
         <ul>
-          <li><a href="https://www.ubereats.com/fr/store/letoile-gourmande/ZojpspdwX6qUsyPGGn-4LQ?diningMode=DELIVERY&pl=JTdCJTIyYWRkcmVzcyUyMiUzQSUyMkwnRXRvaWxlJTIwQmVyYiVDMyVBOHJlJTIyJTJDJTIycmVmZXJlbmNlJTIyJTNBJTIyQ2hJSkNTNEZHQVZ1NWtjUkw3eE03amZOeHJnJTIyJTJDJTIycmVmZXJlbmNlVHlwZSUyMiUzQSUyMmdvb2dsZV9wbGFjZXMlMjIlMkMlMjJsYXRpdHVkZSUyMiUzQTQ4Ljg2NDI4Nzc5OTk5OTk5JTJDJTIybG9uZ2l0dWRlJTIyJTNBMi4zNTc5MzUzJTdE&utm_campaign=CM2508147-search-free-nonbrand-google-pas_e_all_acq_Global&utm_medium=search-free-nonbrand&utm_source=google-pas">Uber Eats</a></li>
+          <li><a href="#">Uber Eats</a></li>
           <li><a href="#">Deliveroo</a></li>
         </ul>
       </div>
@@ -405,7 +438,7 @@ document.addEventListener('DOMContentLoaded', function() {
       <div class="link-group">
         <h4>Informations</h4>
         <ul>
-          <li><a href="Contact.html">Contact</a></li>
+          <li><a href="contact.html">Contact</a></li>
           <li><a href="Contact.html">Horaires</a></li>
         </ul>
       </div>
@@ -436,5 +469,5 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
     
     
-  </body>
+ </body>
 </html>
