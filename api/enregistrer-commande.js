@@ -15,7 +15,6 @@ const ALLOWED_ORIGINS = [
 ];
 
 export default async function handler(req, res) {
-  // Gestion CORS
   const origin = req.headers.origin;
   if (ALLOWED_ORIGINS.includes(origin)) {
     res.setHeader('Access-Control-Allow-Origin', origin);
@@ -23,17 +22,18 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  // Réponse à la requête prévol OPTIONS
   if (req.method === 'OPTIONS') {
     return res.status(204).end();
   }
 
-  // On accepte uniquement POST
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Méthode non autorisée. Utilisez POST.' });
   }
 
-  const { client, pizzas, boissons, burgers, desserts, supplements, menus, bagels, tacos, pates, sandwitchs_froids, salades } = req.body;
+  const {
+    client, pizzas, boissons, burgers, desserts, supplements,
+    menus, bagels, tacos, pates, sandwitchs_froids, salades
+  } = req.body;
 
   if (!client || !client.name || !client.email) {
     return res.status(400).json({ message: 'Nom et email obligatoires.' });
@@ -45,21 +45,19 @@ export default async function handler(req, res) {
     return res.status(400).json({ message: 'Adresse email invalide.' });
   }
 
-  // Combinaison de tous les types de produits
-const produits = [
-  ...(Array.isArray(pizzas) ? pizzas : []),
-  ...(Array.isArray(burgers) ? burgers : []),
-  ...(Array.isArray(bagels) ? bagels : []),
-  ...(Array.isArray(menus) ? menus : []),
-  ...(Array.isArray(boissons) ? boissons : []),
-  ...(Array.isArray(desserts) ? desserts : []),
-  ...(Array.isArray(tacos) ? tacos : []),
-  ...(Array.isArray(sandwitchs_froids) ? sandwitchs_froids : []),
-  ...(Array.isArray(salades) ? salades : []),
-  ...(Array.isArray(pates) ? pates : []), // <-- virgule ici
-  ...(Array.isArray(supplements) ? supplements : []) // <-- ici aussi OK
-];
-
+  const produits = [
+    ...(Array.isArray(pizzas) ? pizzas : []),
+    ...(Array.isArray(burgers) ? burgers : []),
+    ...(Array.isArray(bagels) ? bagels : []),
+    ...(Array.isArray(menus) ? menus : []),
+    ...(Array.isArray(boissons) ? boissons : []),
+    ...(Array.isArray(desserts) ? desserts : []),
+    ...(Array.isArray(tacos) ? tacos : []),
+    ...(Array.isArray(sandwitchs_froids) ? sandwitchs_froids : []),
+    ...(Array.isArray(salades) ? salades : []),
+    ...(Array.isArray(pates) ? pates : []),
+    ...(Array.isArray(supplements) ? supplements : []) // Si tu veux complètement retirer cette ligne, tu peux
+  ];
 
   if (produits.length === 0) {
     return res.status(400).json({ message: 'Votre panier est vide.' });
@@ -82,7 +80,6 @@ const produits = [
   }
 
   try {
-    // Vérifie si le client existe déjà
     let { data: existingClient, error } = await supabase
       .from('clients')
       .select('id')
@@ -103,13 +100,10 @@ const produits = [
       existingClient = newClient;
     }
 
-    // Génération du numéro de commande unique avec compteur incrémental par jour
     const now = new Date();
-
     const day = String(now.getDate()).padStart(2, '0');
     const month = String(now.getMonth() + 1).padStart(2, '0');
     const year = now.getFullYear();
-
     const dateDebut = `${year}-${month}-${day}T00:00:00Z`;
     const dateFin = `${year}-${month}-${day}T23:59:59Z`;
 
@@ -123,7 +117,6 @@ const produits = [
 
     const compteur = String((count || 0) + 1).padStart(3, '0');
     const numero_cmd = `CMD-${day}${month}${year}-${compteur}`;
-
     console.log('Numéro de commande généré :', numero_cmd);
 
     const lineItems = [];
@@ -143,22 +136,6 @@ const produits = [
         },
         quantity: quantiteProduit,
       });
-
-      if (Array.isArray(item.supplements) && item.supplements.length > 0) {
-        for (const supp of item.supplements) {
-          const quantiteSupp = supp.quantite ? parseInt(supp.quantite, 10) : quantiteProduit;
-          lineItems.push({
-            price_data: {
-              currency: 'eur',
-              product_data: {
-                name: `Supplément : ${supp.nom || 'supplément'}`,
-              },
-              unit_amount: Math.round(parseFloat(supp.prix || 0) * 100),
-            },
-            quantity: quantiteSupp,
-          });
-        }
-      }
     }
 
     const session = await stripe.checkout.sessions.create({
