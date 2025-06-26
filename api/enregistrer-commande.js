@@ -41,7 +41,7 @@ export default async function handler(req, res) {
   }
 
   // Extraction des données
-  const { client, pizzas, boissons, burgers, desserts, menus, bagels, tacos, pates, sandwitchs_froids, salades } = req.body;
+  const { client, pizzas, boissons, burgers, desserts, menus, bagels, tacos, pates, sandwitchs_froids, sandwitchs_chauds, salades } = req.body;
 
   // Validation des données client
   if (!client || !client.name || !client.email) {
@@ -63,6 +63,7 @@ export default async function handler(req, res) {
     ...(Array.isArray(desserts) ? desserts : []),
     ...(Array.isArray(tacos) ? tacos : []),
     ...(Array.isArray(sandwitchs_froids) ? sandwitchs_froids : []),
+    ...(Array.isArray(sandwitchs_chauds) ? sandwitchs_chauds : []),
     ...(Array.isArray(salades) ? salades : []),
     ...(Array.isArray(pates) ? pates : [])
   ];
