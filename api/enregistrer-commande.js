@@ -137,19 +137,24 @@ const lineItems = produits.map(item => {
     ).join('');
   }
 
-  return {
-    price_data: {
-      currency: 'eur',
-      product_data: {
-        name: `${item.nom}${item.taille ? ` (${item.taille})` : ''}`,
-        images: item.image ? [item.image] : [],
-        description: description || undefined,
-      },
-      unit_amount: Math.round(item.prix * 100), // Prix FINAL (déjà inclus suppléments)
+return {
+  price_data: {
+    currency: 'eur',
+    product_data: {
+      name: `${item.nom}${item.taille ? ` (${item.taille})` : ''}`.trim(),
+      images: item.image 
+        ? [resizeImageUrl(item.image, 400, 400)] // Fonction de redimensionnement (exemple)
+        : ['https://etoile-gourmande.fr/placeholder-400x400.jpg'], // Image par défaut carrée
+      description: [
+        item.description,
+        item.supplements?.length > 0 && 'Suppléments :',
+        ...(item.supplements?.map(s => `• ${s.nom}`) || [])
+      ].filter(Boolean).join('\n') || undefined,
     },
-    quantity: quantiteProduit,
-  };
-});
+    unit_amount: Math.round(item.prix * 100),
+  },
+  quantity: quantiteProduit,
+};
     
 
     // Création session Stripe
