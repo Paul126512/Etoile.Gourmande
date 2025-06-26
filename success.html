@@ -76,19 +76,12 @@
   </style>
 </head>
 <body>
+
+  
+
   <div class="confirmation-card" id="confirmation-card">
     <!-- Contenu généré par JavaScript -->
-  </div>
-
-
-
-
-
-
-
-
-
-
+</div>
 
 <script>
   document.addEventListener('DOMContentLoaded', async () => {
@@ -115,28 +108,44 @@
     let commandeDetails = { pizzas: [], boissons: [] };
 
     panierPizzas.forEach(pizza => {
+      // Prix de base sans suppléments
       let prix = pizza.prix;
       let supplements = [];
 
+      // Gestion des suppléments (affichage seulement)
       if (pizza.supplements?.length > 0 && !(pizza.supplements.length === 1 && pizza.supplements[0].id === 'aucun')) {
         supplements = pizza.supplements.map(sup => ({ nom: sup.nom, prix: sup.prix }));
-        prix += pizza.supplements.reduce((acc, sup) => acc + sup.prix, 0);
+        
+        // On ajoute les suppléments à l'affichage mais pas au prix
+        itemsHtml += `
+          <div class="order-item">
+            <span>${pizza.nom} (${pizza.taille || 'standard'})</span>
+            <span>${prix.toFixed(2)}€</span>
+          </div>
+          ${pizza.supplements.map(sup => `
+            <div class="supplement-item">
+              <span>+ ${sup.nom}</span>
+              <span>+${sup.prix.toFixed(2)}€</span>
+            </div>
+          `).join('')}
+        `;
+      } else {
+        itemsHtml += `
+          <div class="order-item">
+            <span>${pizza.nom} (${pizza.taille || 'standard'})</span>
+            <span>${prix.toFixed(2)}€</span>
+          </div>
+        `;
       }
 
-      total += prix;
-      itemsHtml += `
-        <div class="order-item">
-          <span>${pizza.nom} (${pizza.taille || 'standard'})</span>
-          <span>${prix.toFixed(2)}€</span>
-        </div>
-      `;
+      total += prix; // On n'ajoute que le prix de base
 
       commandeDetails.pizzas.push({
         nom: pizza.nom,
         taille: pizza.taille,
         prix: pizza.prix,
         supplements: supplements,
-        prix_total: prix
+        prix_total: prix // On enregistre seulement le prix de base
       });
     });
 
@@ -158,7 +167,7 @@
       });
     });
 
-    // **Appel à l'API pour récupérer l'orderId**
+    // Récupération du numéro de commande depuis l'API
     let orderNum;
     try {
       const response = await fetch('/api/orderManager');
@@ -167,7 +176,6 @@
       orderNum = data.orderId;
     } catch (error) {
       console.error('Erreur orderManager API:', error);
-      // fallback : générer un orderNum localement si API échoue
       const now = new Date();
       orderNum = `CMD-${String(now.getDate()).padStart(2,'0')}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}`;
     }
