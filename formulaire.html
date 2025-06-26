@@ -581,9 +581,10 @@ const commandeData = {
     boissons: panier.filter(item => item.type === 'boisson'),
     desserts: panier.filter(item => item.type === 'dessert'),
     tacos: panier.filter(item => item.type === 'tacos'),
-    pates: panier.filter(item => item.type === 'pates'), // ← AJOUT ICI
-    sandwitchs_froids: panier.filter(item => item.type === 'sandwitchs_froids'), // ←  ICI LES sandwitchs
-    salades: panier.filter(item => item.type === 'salades'), // ← SALADES
+    pates: panier.filter(item => item.type === 'pates'), // ← ICI LES PATES
+    sandwitchs_froids: panier.filter(item => item.type === 'sandwitchs_froids'), // ←  ICI LES SANDWITCHS FROIDS
+    sandwitchs_froids: panier.filter(item => item.type === 'sandwitchs_chauds'), // ←  ICI LES sandwitchs chauds
+    salades: panier.filter(item => item.type === 'salades'), // ← ICI LES SALADES
     supplements: panier.flatMap(item => item.supplements || []),
     total: panier.reduce((sum, item) => sum + (item.prix * item.quantite), 0)
 };
