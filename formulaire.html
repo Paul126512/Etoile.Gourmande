@@ -497,6 +497,7 @@ button[type="submit"].valid {
                             item.type === 'pates' ? 'Pates' :
                             item.type === 'salades' ? 'Salade' : 
                             item.type === 'sandwitchs_froids' ? 'Sandwich Froid' :
+                            item.type === 'sandwitchs_chauds' ? 'Sandwich Chaud' :
                             item.type === 'menu' ? 'Menu' :
                             item.type === 'boisson' ? 'Boisson' :
                             item.type === 'dessert' ? 'Dessert' :
@@ -584,11 +585,7 @@ const commandeData = {
     sandwitchs_froids: panier.filter(item => item.type === 'sandwitchs_froids'), // ←  ICI LES sandwitchs
     salades: panier.filter(item => item.type === 'salades'), // ← SALADES
     supplements: panier.flatMap(item => item.supplements || []),
-    total: panier.reduce((sum, item) => {
-    const supplementTotal = (item.supplements || []).reduce((s, sup) => s + sup.prix, 0);
-    return sum + ((item.prix + supplementTotal) * item.quantite);
-}, 0)
-
+    total: panier.reduce((sum, item) => sum + (item.prix * item.quantite), 0)
 };
 
 
