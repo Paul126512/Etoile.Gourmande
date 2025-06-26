@@ -124,24 +124,33 @@ export default async function handler(req, res) {
     const numero_cmd = `CMD-${day}${month}${year}-${compteur}`;
 
     // Préparation des lineItems Stripe sans suppléments
-    const lineItems = [];
+// Préparation des lineItems Stripe (affichage des suppléments en description)
+const lineItems = produits.map(item => {
+  const quantiteProduit = parseInt(item.quantite || 1, 10);
+  let description = item.description || '';
 
-    for (const item of produits) {
-      const quantiteProduit = parseInt(item.quantite || 1, 10);
+  // Ajout des suppléments à la description SEULEMENT
+  if (item.supplements?.length > 0) {
+    description += (description ? '\n\n' : '') + 'Suppléments inclus :';
+    description += item.supplements.map(sup => 
+      `\n• ${sup.nom}`
+    ).join('');
+  }
 
-      lineItems.push({
-        price_data: {
-          currency: 'eur',
-          product_data: {
-            name: `${item.nom} ${item.taille ? `(${item.taille})` : ''}`.trim(),
-            images: item.image ? [item.image] : ['https://via.placeholder.com/150?text=Produit'],
-            description: item.description || undefined,
-          },
-          unit_amount: Math.round(parseFloat(item.prix) * 100), // prix avec suppléments inclus
-        },
-        quantity: quantiteProduit,
-      });
-    }
+  return {
+    price_data: {
+      currency: 'eur',
+      product_data: {
+        name: `${item.nom}${item.taille ? ` (${item.taille})` : ''}`,
+        images: item.image ? [item.image] : [],
+        description: description || undefined,
+      },
+      unit_amount: Math.round(item.prix * 100), // Prix FINAL (déjà inclus suppléments)
+    },
+    quantity: quantiteProduit,
+  };
+});
+    
 
     // Création session Stripe
     const session = await stripe.checkout.sessions.create({
