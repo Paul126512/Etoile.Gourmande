@@ -31,8 +31,9 @@ export default async function handler(req, res) {
   }
 
   const {
-    client, pizzas, boissons, burgers, desserts, supplements,
+    client, pizzas, boissons, burgers, desserts,
     menus, bagels, tacos, pates, sandwitchs_froids, salades
+    // On NE récupère plus les suppléments ici pour éviter double comptage
   } = req.body;
 
   if (!client || !client.name || !client.email) {
@@ -45,6 +46,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ message: 'Adresse email invalide.' });
   }
 
+  // On concatène uniquement les produits avec leur prix final (incluant suppléments)
   const produits = [
     ...(Array.isArray(pizzas) ? pizzas : []),
     ...(Array.isArray(burgers) ? burgers : []),
@@ -56,7 +58,7 @@ export default async function handler(req, res) {
     ...(Array.isArray(sandwitchs_froids) ? sandwitchs_froids : []),
     ...(Array.isArray(salades) ? salades : []),
     ...(Array.isArray(pates) ? pates : []),
-    ...(Array.isArray(supplements) ? supplements : []) // Si tu veux complètement retirer cette ligne, tu peux
+    // SUPPLÉMENTS retirés volontairement ici !
   ];
 
   if (produits.length === 0) {
@@ -121,25 +123,24 @@ export default async function handler(req, res) {
 
     const lineItems = [];
 
-for (const item of produits) {
-  const quantiteProduit = parseInt(item.quantite || 1, 10);
+    for (const item of produits) {
+      const quantiteProduit = parseInt(item.quantite || 1, 10);
 
-  lineItems.push({
-    price_data: {
-      currency: 'eur',
-      product_data: {
-        name: `${item.nom} ${item.taille ? `(${item.taille})` : ''}`.trim(),
-        images: item.image ? [item.image] : ['https://via.placeholder.com/150?text=Produit'],
-        description: item.description || undefined,
-      },
-      unit_amount: Math.round(parseFloat(item.prix) * 100),
-    },
-    quantity: quantiteProduit,
-  });
+      lineItems.push({
+        price_data: {
+          currency: 'eur',
+          product_data: {
+            name: `${item.nom} ${item.taille ? `(${item.taille})` : ''}`.trim(),
+            images: item.image ? [item.image] : ['https://via.placeholder.com/150?text=Produit'],
+            description: item.description || undefined,
+          },
+          unit_amount: Math.round(parseFloat(item.prix) * 100),
+        },
+        quantity: quantiteProduit,
+      });
 
-  // 👇 On ne gère plus les suppléments ici
-}
-
+      // On ne traite PAS les suppléments ici (car déjà inclus dans les produits)
+    }
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
