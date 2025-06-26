@@ -850,6 +850,7 @@ function afficherPanier() {
           item.type === 'pates' ? 'Pâtes' : 
           item.type === 'salades' ? 'Salade' : 
           item.type === 'sandwitchs_froids' ? 'Sandwich Froid' :
+          item.type === 'sandwitchs_chauds' ? 'Sandwich Chaud' :
           'Autre'
         }</p>
         <p>Prix unitaire : ${item.prix.toFixed(2)} €</p>
