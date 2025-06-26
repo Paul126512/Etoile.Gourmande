@@ -121,22 +121,25 @@ export default async function handler(req, res) {
 
     const lineItems = [];
 
-    for (const item of produits) {
-      const quantiteProduit = parseInt(item.quantite || 1, 10);
+for (const item of produits) {
+  const quantiteProduit = parseInt(item.quantite || 1, 10);
 
-      lineItems.push({
-        price_data: {
-          currency: 'eur',
-          product_data: {
-            name: `${item.nom} ${item.taille ? `(${item.taille})` : ''}`.trim(),
-            images: item.image ? [item.image] : ['https://via.placeholder.com/150?text=Produit'],
-            description: item.description || undefined,
-          },
-          unit_amount: Math.round(parseFloat(item.prix) * 100),
-        },
-        quantity: quantiteProduit,
-      });
-    }
+  lineItems.push({
+    price_data: {
+      currency: 'eur',
+      product_data: {
+        name: `${item.nom} ${item.taille ? `(${item.taille})` : ''}`.trim(),
+        images: item.image ? [item.image] : ['https://via.placeholder.com/150?text=Produit'],
+        description: item.description || undefined,
+      },
+      unit_amount: Math.round(parseFloat(item.prix) * 100),
+    },
+    quantity: quantiteProduit,
+  });
+
+  // 👇 On ne gère plus les suppléments ici
+}
+
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
