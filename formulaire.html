@@ -581,13 +581,14 @@ const commandeData = {
     boissons: panier.filter(item => item.type === 'boisson'),
     desserts: panier.filter(item => item.type === 'dessert'),
     tacos: panier.filter(item => item.type === 'tacos'),
-    pates: panier.filter(item => item.type === 'pates'), // ← ICI LES PATES
-    sandwitchs_froids: panier.filter(item => item.type === 'sandwitchs_froids'), // ←  ICI LES SANDWITCHS FROIDS
-    sandwitchs_froids: panier.filter(item => item.type === 'sandwitchs_chauds'), // ←  ICI LES sandwitchs chauds
-    salades: panier.filter(item => item.type === 'salades'), // ← ICI LES SALADES
+    pates: panier.filter(item => item.type === 'pates'),
+    sandwitchs_froids: panier.filter(item => item.type === 'sandwitchs_froids'), // ✅ correct
+    sandwitchs_chauds: panier.filter(item => item.type === 'sandwitchs_chauds'), // ✅ FIX ici
+    salades: panier.filter(item => item.type === 'salades'),
     supplements: panier.flatMap(item => item.supplements || []),
     total: panier.reduce((sum, item) => sum + (item.prix * item.quantite), 0)
 };
+
 
 
             const response = await fetch('/api/enregistrer-commande', {
