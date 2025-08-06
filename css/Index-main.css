@@ -1872,3 +1872,33 @@ body.scrolled .right-arrow {
         }
     }
 }
+
+
+
+  /* Cacher la bannière pour toutes les largeurs ≤ 830px */
+  @media (max-width: 830px) {
+    #dev-banner {
+      display: none !important;
+    }
+  }
+
+  /* Cacher la bannière si largeur EXACTE 790px */
+  @media (width: 790px) {
+    #dev-banner {
+      display: none !important;
+    }
+  }
+
+  /* Cacher la bannière si largeur EXACTE 830px */
+  @media (width: 830px) {
+    #dev-banner {
+      display: none !important;
+    }
+  }
+
+  /* Cacher la bannière si résolution EXACTE 838x850 */
+  @media (width: 838px) and (height: 850px) {
+    #dev-banner {
+      display: none !important;
+    }
+  }
