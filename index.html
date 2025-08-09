@@ -152,7 +152,6 @@
                 <span class="phone-number">09 84 54 48 86</span>
                 <div class="decor-line"></div>
                 <img src="images/logo/blé.png" class="wheat-icon" alt="Logo de Blé" />
->
             </div>
 
             <p class="intro-text">
@@ -212,6 +211,10 @@ burger.addEventListener('click', () => {
     nav.classList.toggle('active');
 });
 </script>
+
+
+
+
 
 
 
@@ -277,6 +280,131 @@ burger.addEventListener('click', () => {
     </div>
 </div>
 
+
+
+
+<!-- Version mobile uniquement -->
+<div class="cookie-banner-mobile" id="cookieBannerMobile">
+<span class="cookie-close-mobile" id="cookieCloseMobile">×</span>
+
+    <div class="cookie-content">
+        <h3 class="cookie-title">Confidentialité</h3>
+        <p class="cookie-text">
+            Nous utilisons des cookies pour améliorer votre expérience.
+            <a href="policy.html" class="privacy-link">Plus d'infos</a>.
+        </p>
+        <div class="cookie-buttons">
+            <button class="cookie-btn cookie-btn-decline" id="cookieDeclineMobile">Refuser</button>
+            <button class="cookie-btn cookie-btn-accept" id="cookieAcceptMobile">Accepter</button>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+<script>
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const bannerMobile = document.getElementById('cookieBannerMobile');
+    const btnAcceptMobile = document.getElementById('cookieAcceptMobile');
+    const btnDeclineMobile = document.getElementById('cookieDeclineMobile');
+    const closeMobile = document.getElementById('cookieCloseMobile');
+
+    // Fonction pour afficher la bannière mobile si pas de prefs
+    function showBanner() {
+        bannerMobile.style.display = 'flex';
+        setTimeout(() => {
+            bannerMobile.style.opacity = '1';
+        }, 50);
+    }
+
+    // Fonction cacher la bannière mobile
+    function hideBanner() {
+        bannerMobile.style.opacity = '0';
+        setTimeout(() => {
+            bannerMobile.style.display = 'none';
+        }, 300);
+    }
+
+    // Charger préférences depuis localStorage
+    function getPreferences() {
+        const prefsStr = localStorage.getItem('cookiePreferences');
+        if (!prefsStr) return null;
+        try {
+            return JSON.parse(prefsStr);
+        } catch {
+            return null;
+        }
+    }
+
+    // Sauvegarder préférences dans localStorage + cookie HTTP
+    function savePreferences(prefs) {
+        localStorage.setItem('cookiePreferences', JSON.stringify(prefs));
+        document.cookie = `cookiePreferences=${encodeURIComponent(JSON.stringify(prefs))}; path=/; max-age=${60*60*24*365}; SameSite=Lax;`;
+        loadScriptsBasedOnPreferences(prefs);
+    }
+
+    // Charger ou décharger scripts selon prefs (exemple analytics)
+    function loadScriptsBasedOnPreferences(prefs) {
+        if (prefs.analytics) {
+            if (!document.getElementById('script-analytics')) {
+                const script = document.createElement('script');
+                script.id = 'script-analytics';
+                script.src = 'https://etoile-gourmande-one.vercel.app/analytics.js';
+                document.head.appendChild(script);
+            }
+        } else {
+            const oldScript = document.getElementById('script-analytics');
+            if (oldScript) oldScript.remove();
+        }
+    }
+
+    // Initialisation au chargement
+    const prefs = getPreferences();
+    if (!prefs) {
+        showBanner();
+    } else {
+        loadScriptsBasedOnPreferences(prefs);
+        // Cache banner mobile si prefs déjà définies
+        bannerMobile.style.display = 'none';
+    }
+
+    // Événements
+    btnAcceptMobile.addEventListener('click', function(e) {
+        e.preventDefault();
+        savePreferences({
+            essential: true,
+            analytics: true,
+            marketing: true
+        });
+        hideBanner();
+    });
+
+    btnDeclineMobile.addEventListener('click', function(e) {
+        e.preventDefault();
+        savePreferences({
+            essential: true,
+            analytics: false,
+            marketing: false
+        });
+        hideBanner();
+    });
+
+    closeMobile.addEventListener('click', function(e) {
+        e.preventDefault();
+        hideBanner();
+    });
+});
+
+
+
+</script>
 
 
 
