@@ -197,6 +197,26 @@
             border: 1px solid var(--noir);
         }
         
+        .status.en-preparation {
+            border-color: #FF9800;
+            color: #FF9800;
+        }
+        
+        .status.expedie {
+            border-color: #2196F3;
+            color: #2196F3;
+        }
+        
+        .status.livre {
+            border-color: #4CAF50;
+            color: #4CAF50;
+        }
+        
+        .status.annule {
+            border-color: #F44336;
+            color: #F44336;
+        }
+        
         .error {
             color: #D32F2F;
             text-align: center;
@@ -284,6 +304,16 @@
             letter-spacing: 1px;
         }
         
+        .debug-info {
+            margin-top: 30px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-left: 4px solid #ccc;
+            font-family: monospace;
+            font-size: 12px;
+            display: none;
+        }
+        
         @media (max-width: 768px) {
             .container {
                 padding: 40px 20px;
@@ -344,7 +374,7 @@
         </div>
         
         <div class="search-form">
-            <input type="email" id="email-input" placeholder="Votre adresse email">
+            <input type="email" id="email-input" placeholder="Votre adresse email" autocomplete="email">
             <button onclick="searchOrder()">
                 <i class="fas fa-search"></i> Rechercher
             </button>
@@ -392,33 +422,48 @@
                 — L'équipe L'étoile Gourmande —
             </div>
         </div>
+        
+        <div class="debug-info" id="debug-info"></div>
     </div>
 
     <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Configuration Supabase
         const supabaseUrl = 'https://hawlnecxjfdhgnbltovh.supabase.co';
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhhd2xuZWN4amZkaGduYmx0b3ZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk1NjQ1NTcsImV4cCI6MjA2NTE0MDU1N30.j4_ZR22bV7acZabBIduYhoLZlITwRYu6ToBF8MYvj5o';
-        window.supabase = supabase.createClient(supabaseUrl, supabaseKey);
         
+        try {
+            window.supabase = supabase.createClient(supabaseUrl, supabaseKey);
+            console.log("Supabase client initialisé avec succès");
+        } catch (error) {
+            console.error("Erreur d'initialisation de Supabase:", error);
+            showError("Erreur technique lors de l'initialisation. Veuillez recharger la page.");
+        }
+        
+        // Gestion de l'appui sur Entrée dans le champ email
         document.getElementById('email-input').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 searchOrder();
             }
         });
+        
+        // Vérification de l'URL pour un paramètre email
+        const urlParams = new URLSearchParams(window.location.search);
+        const emailParam = urlParams.get('email');
+        if (emailParam) {
+            document.getElementById('email-input').value = emailParam;
+            setTimeout(searchOrder, 500); // Lancer la recherche après un court délai
+        }
     });
 
     async function searchOrder() {
-        if (!window.supabase) {
-            showError('Erreur technique, veuillez recharger la page');
-            return;
-        }
-
         const email = document.getElementById('email-input').value.trim();
         const errorElement = document.getElementById('error-message');
         const loadingElement = document.getElementById('loading');
         const orderCard = document.getElementById('order-card');
+        const debugInfo = document.getElementById('debug-info');
         
-        resetUI(errorElement, orderCard, loadingElement);
+        resetUI(errorElement, orderCard, loadingElement, debugInfo);
         
         if (!email) {
             showError('Veuillez entrer une adresse email');
@@ -432,7 +477,15 @@
         
         try {
             loadingElement.style.display = 'block';
-            const { data, error } = await window.supabase
+            
+            // Vérification que Supabase est bien initialisé
+            if (!window.supabase) {
+                throw new Error("Client Supabase non initialisé");
+            }
+            
+            console.log("Recherche des commandes pour l'email:", email);
+            
+            const { data, error, status, statusText } = await window.supabase
                 .from('orders')
                 .select('*')
                 .eq('email', email)
@@ -440,7 +493,14 @@
             
             loadingElement.style.display = 'none';
             
-            if (error) throw error;
+            if (error) {
+                console.error("Erreur Supabase:", error);
+                showError(`Erreur technique: ${error.message}`);
+                return;
+            }
+            
+            console.log("Réponse Supabase - Status:", status, "Data:", data);
+            
             if (!data || data.length === 0) {
                 showError('Aucune commande trouvée pour cet email');
                 return;
@@ -451,19 +511,28 @@
             
         } catch (error) {
             console.error('Erreur:', error);
-            showError('Erreur lors de la recherche de votre commande');
+            showError(`Erreur lors de la recherche: ${error.message}`);
             loadingElement.style.display = 'none';
+            
+            // Afficher les informations de débogage
+            debugInfo.textContent = `Erreur: ${error.message}\nStack: ${error.stack}`;
+            debugInfo.style.display = 'block';
         }
     }
 
-    function resetUI(errorElement, orderCard, loadingElement) {
+    function resetUI(errorElement, orderCard, loadingElement, debugInfo) {
         errorElement.textContent = '';
         errorElement.style.display = 'none';
         orderCard.style.display = 'none';
         loadingElement.style.display = 'none';
+        if (debugInfo) {
+            debugInfo.textContent = '';
+            debugInfo.style.display = 'none';
+        }
     }
 
-    function showError(message, errorElement = document.getElementById('error-message')) {
+    function showError(message) {
+        const errorElement = document.getElementById('error-message');
         errorElement.textContent = message;
         errorElement.style.display = 'block';
     }
@@ -477,31 +546,48 @@
 
         const formatDate = (dateString) => {
             if (!dateString) return 'N/A';
-            const date = new Date(dateString);
-            return date.toLocaleDateString('fr-FR', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-            });
+            try {
+                const date = new Date(dateString);
+                return isNaN(date.getTime()) ? 'Date invalide' : date.toLocaleDateString('fr-FR', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            } catch (e) {
+                return 'Format de date invalide';
+            }
         };
 
         const formatPrice = (price) => {
-            return price ? `${parseFloat(price).toFixed(2).replace('.', ',')} €` : 'N/A';
+            if (!price && price !== 0) return 'N/A';
+            const num = parseFloat(price);
+            return isNaN(num) ? 'Prix invalide' : `${num.toFixed(2).replace('.', ',')} €`;
         };
 
-        document.getElementById('order-number').textContent = order.numero_cmd || 'CMD-' + (order.id || '');
-        document.getElementById('order-date').textContent = formatDate(order.created_at);
+        document.getElementById('order-number').textContent = order.numero_cmd || order.id || 'N/A';
+        document.getElementById('order-date').textContent = formatDate(order.created_at || order.date);
         
         const statusElement = document.getElementById('order-status');
-        statusElement.textContent = order.status || 'En préparation';
-        statusElement.className = 'status';
+        const status = order.status || 'en préparation';
+        statusElement.textContent = status;
         
-        document.getElementById('order-total').textContent = formatPrice(order.total_price || order.total);
+        // Appliquer une classe CSS en fonction du statut
+        statusElement.className = 'status';
+        if (status.toLowerCase().includes('préparation') || status.toLowerCase().includes('preparation')) {
+            statusElement.classList.add('en-preparation');
+        } else if (status.toLowerCase().includes('expédié') || status.toLowerCase().includes('expedie')) {
+            statusElement.classList.add('expedie');
+        } else if (status.toLowerCase().includes('livré') || status.toLowerCase().includes('livre')) {
+            statusElement.classList.add('livre');
+        } else if (status.toLowerCase().includes('annulé') || status.toLowerCase().includes('annule')) {
+            statusElement.classList.add('annule');
+        }
+        
+        document.getElementById('order-total').textContent = formatPrice(order.total_price || order.total || order.prix_total);
 
-        // Afficher le prénom à la place du nom
-        document.getElementById('client-firstname').textContent = order.prenom || order.name || 'Non spécifié';
+        document.getElementById('client-firstname').textContent = order.prenom || order.firstname || order.name || 'Non spécifié';
         document.getElementById('client-email').textContent = order.email || 'Non spécifié';
 
         displayProducts(order);
@@ -511,39 +597,57 @@
         const productsElement = document.getElementById('order-products');
         productsElement.innerHTML = '';
 
-        if (!order.produits) {
+        if (!order.produits && !order.products && !order.items) {
             productsElement.innerHTML = '<div class="no-products">Aucun détail produit disponible</div>';
             return;
         }
 
         try {
-            const produits = typeof order.produits === 'string' 
-                ? JSON.parse(order.produits) 
-                : order.produits;
-
+            // Essayer différents formats de données produits
+            let produits = order.produits || order.products || order.items;
+            
+            if (typeof produits === 'string') {
+                produits = JSON.parse(produits);
+            }
+            
             if (Array.isArray(produits)) {
                 produits.forEach(item => addProductItem(item));
             } 
             else if (typeof produits === 'object') {
+                // Si c'est un objet unique (pas un tableau)
                 if (produits.quantity || produits.name || produits.nom) {
                     addProductItem(produits);
                 } else {
-                    Object.values(produits).forEach(item => addProductItem(item));
+                    // Si c'est un objet avec plusieurs produits comme propriétés
+                    Object.values(produits).forEach(item => {
+                        if (item && typeof item === 'object') {
+                            addProductItem(item);
+                        }
+                    });
                 }
+            } else {
+                productsElement.innerHTML = '<div class="no-products">Format des produits non reconnu</div>';
             }
 
         } catch (e) {
-            console.error("Erreur produits:", e);
-            productsElement.innerHTML = '<div class="error">Erreur d\'affichage des produits</div>';
+            console.error("Erreur d'affichage des produits:", e);
+            productsElement.innerHTML = '<div class="error">Erreur d\'affichage des détails produits</div>';
+            
+            // Afficher les données brutes pour débogage
+            const debugInfo = document.getElementById('debug-info');
+            debugInfo.textContent = `Erreur produits: ${e.message}\nDonnées: ${JSON.stringify(order.produits || order.products || order.items, null, 2)}`;
+            debugInfo.style.display = 'block';
         }
 
         function addProductItem(item) {
+            if (!item) return;
+            
             const productDiv = document.createElement('div');
             productDiv.className = 'product-item';
             
-            const productName = item.nom || item.name || 'Produit';
-            const quantity = item.quantity || 1;
-            const price = item.price ? `${parseFloat(item.price).toFixed(2).replace('.', ',')} €` : '';
+            const productName = item.nom || item.name || 'Produit sans nom';
+            const quantity = item.quantity || item.quantite || 1;
+            const price = item.price ? `${parseFloat(item.price).toFixed(2).replace('.', ',')} €` : (item.prix ? `${parseFloat(item.prix).toFixed(2).replace('.', ',')} €` : '');
             const description = item.description || item.desc || '';
             
             productDiv.innerHTML = `
