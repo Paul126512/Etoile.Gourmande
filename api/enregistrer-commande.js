@@ -109,8 +109,10 @@ export default async function handler(req, res) {
     }
 
     // Génération du numéro de commande
-    const now = new Date();
-    const dateStr = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`;
+const now = new Date();
+// Convertir en fuseau horaire français (UTC+1 ou UTC+2)
+const nowFrance = new Date(now.toLocaleString("fr-FR", { timeZone: "Europe/Paris" }));
+const dateStr = `${nowFrance.getFullYear()}${String(nowFrance.getMonth() + 1).padStart(2, '0')}${String(nowFrance.getDate()).padStart(2, '0')}`;
     
     const { count } = await supabase
       .from('orders')
@@ -177,3 +179,4 @@ export default async function handler(req, res) {
     });
   }
 }
+
