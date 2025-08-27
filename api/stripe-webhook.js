@@ -7,12 +7,25 @@ const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY
 
 export const config = {
   api: {
-    bodyParser: false,  // IMPORTANT pour récupérer le raw body
+    bodyParser: false, // IMPORTANT pour récupérer le raw body
   },
 };
 
+// ✅ Fonction utilitaire pour générer un préfixe de date JJMMAAAA
+function getDatePrefix() {
+  const now = new Date();
+  if (isNaN(now.getTime())) {
+    console.error("Date invalide:", now);
+    return "00000000"; // fallback en cas de bug
+  }
+  const dd = String(now.getDate()).padStart(2, '0');
+  const mm = String(now.getMonth() + 1).padStart(2, '0');
+  const yyyy = String(now.getFullYear());
+  return `${dd}${mm}${yyyy}`;
+}
+
 export default async function handler(req, res) {
-  console.log('Webhook handler démarré');
+  console.log('📩 Webhook Stripe reçu');
 
   // 1. Méthode POST uniquement
   if (req.method !== 'POST') {
@@ -20,21 +33,19 @@ export default async function handler(req, res) {
     return res.status(405).end('Method Not Allowed');
   }
 
-  // 2. Récupérer la signature Stripe dans le header
+  // 2. Signature Stripe
   const sig = req.headers['stripe-signature'];
   if (!sig) {
     console.error('⚠️ Pas de signature Stripe dans les headers');
     return res.status(400).end('Missing Stripe signature');
   }
-  console.log('Signature Stripe reçue:', sig);
 
-  // 3. Lire le corps brut (raw body)
+  // 3. Lire le corps brut
   let buf;
   try {
     buf = await buffer(req);
-    console.log('Buffer brut reçu, taille:', buf.length);
+    console.log('📦 Buffer brut reçu, taille:', buf.length);
     if (buf.length === 0) {
-      console.warn('⚠️ Buffer vide reçu !');
       return res.status(400).end('Empty request body');
     }
   } catch (err) {
@@ -42,69 +53,74 @@ export default async function handler(req, res) {
     return res.status(400).end('Invalid request body');
   }
 
-  // 4. Vérifier signature webhook Stripe
+  // 4. Vérifier la signature webhook Stripe
   let event;
   try {
     event = stripe.webhooks.constructEvent(buf, sig, process.env.STRIPE_WEBHOOK_SECRET.trim());
-    console.log('Webhook Stripe validé:', event.type);
+    console.log('✅ Webhook Stripe validé:', event.type);
   } catch (err) {
-    console.error('⚠️ Signature webhook invalide:', err.message);
-    console.log('Payload brut:', buf.toString('utf8'));
+    console.error('❌ Signature webhook invalide:', err.message);
     return res.status(400).end(`Webhook Error: ${err.message}`);
   }
 
-  // 5. Gérer l'événement
+  // 5. Gestion de l'événement checkout.session.completed
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object;
-    console.log('Session Stripe ID:', session.id);
+    console.log('💳 Session Stripe ID:', session.id);
 
     if (session.payment_status !== 'paid') {
-      console.log(`Paiement non finalisé pour session ${session.id}, status: ${session.payment_status}`);
+      console.log(`⚠️ Paiement non finalisé pour session ${session.id}, status: ${session.payment_status}`);
       return res.status(200).end('Paiement non finalisé');
     }
 
-    // 6. Récupérer la commande dans Supabase
-    let order;
     try {
-      const { data, error } = await supabase
+      // Récupérer la commande associée dans Supabase
+      const { data: order, error } = await supabase
         .from('orders')
         .select('*')
         .eq('stripe_session_id', session.id)
         .maybeSingle();
 
       if (error) {
-        console.error('Erreur récupération commande:', error);
+        console.error('❌ Erreur récupération commande:', error);
         return res.status(500).end('Erreur récupération commande');
       }
 
-      order = data;
+      if (!order) {
+        console.warn(`⚠️ Commande non trouvée pour session Stripe ${session.id}`);
+        return res.status(404).end('Commande non trouvée');
+      }
+
+      console.log('📝 Commande trouvée:', order);
+
+      // (Optionnel) régénérer numero_cmd si absent ou invalide
+      let updatedFields = { status: 'completed' };
+      if (!order.numero_cmd || order.numero_cmd.includes("NaN")) {
+        const datePrefix = getDatePrefix();
+        updatedFields.numero_cmd = `CMD-${datePrefix}-001`;
+        console.log('🔄 Numero_cmd régénéré:', updatedFields.numero_cmd);
+      }
+
+      // Mettre à jour la commande
+      const { error: updateError } = await supabase
+        .from('orders')
+        .update(updatedFields)
+        .eq('stripe_session_id', session.id);
+
+      if (updateError) {
+        console.error('❌ Erreur mise à jour commande Supabase:', updateError);
+        return res.status(500).end('Erreur mise à jour commande');
+      }
+
+      console.log(`✅ Commande ${session.id} mise à jour en "completed"`);
+      return res.status(200).end('Commande mise à jour');
     } catch (e) {
-      console.error('Erreur dans la récupération de la commande:', e);
+      console.error('❌ Erreur dans la gestion de la commande:', e);
       return res.status(500).end('Erreur serveur');
     }
-
-    if (!order) {
-      console.warn(`Commande non trouvée pour session Stripe ${session.id}`);
-      return res.status(404).end('Commande non trouvée pour cette session Stripe');
-    }
-
-    console.log('Commande trouvée:', order);
-
-    // 7. Mettre à jour la commande en statut "completed"
-    const { error: updateError } = await supabase
-      .from('orders')
-      .update({ status: 'completed' })
-      .eq('stripe_session_id', session.id);
-
-    if (updateError) {
-      console.error('Erreur mise à jour commande Supabase:', updateError);
-      return res.status(500).end('Erreur mise à jour commande');
-    }
-
-    console.log(`Commande Stripe session ${session.id} mise à jour en "completed" ✅`);
-    return res.status(200).end('Commande mise à jour');
-  } else {
-    console.log('Événement Stripe ignoré:', event.type);
-    return res.status(200).end('Événement ignoré');
   }
+
+  // 6. Autres événements ignorés
+  console.log('ℹ️ Événement Stripe ignoré:', event.type);
+  return res.status(200).end('Événement ignoré');
 }
