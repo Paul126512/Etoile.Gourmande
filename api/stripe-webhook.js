@@ -1,97 +1,86 @@
-import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
-import { buffer } from 'micro';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: '2023-10-16' });
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
 
-export const config = {
-  api: {
-    bodyParser: false, // nécessaire pour Stripe
-  },
-};
-
-// Fonction pour générer le préfixe de date JJMMAAAA
+// Génère le préfixe date JJMMAAAA
 function getDatePrefix() {
   const now = new Date();
-  if (isNaN(now.getTime())) {
-    console.error("Date invalide:", now);
-    return "00000000";
-  }
+  if (isNaN(now.getTime())) return "00000000";
   const dd = String(now.getDate()).padStart(2, '0');
   const mm = String(now.getMonth() + 1).padStart(2, '0');
   const yyyy = String(now.getFullYear());
   return `${dd}${mm}${yyyy}`;
 }
 
+// Génère un numero_cmd unique pour le jour
+async function generateOrderNumber() {
+  const datePrefix = getDatePrefix();
+  const likePattern = `CMD-${datePrefix}-%`;
+
+  const { data, error } = await supabase
+    .from('orders')
+    .select('numero_cmd')
+    .ilike('numero_cmd', likePattern);
+
+  if (error) {
+    console.error('Erreur récupération commandes:', error);
+    return `CMD-${datePrefix}-001`; // fallback sûr
+  }
+
+  let maxCount = 0;
+  if (data && data.length > 0) {
+    data.forEach(order => {
+      const parts = order.numero_cmd.split('-');
+      const lastPart = parts[parts.length - 1];
+      const count = parseInt(lastPart, 10);
+      if (!isNaN(count) && count > maxCount) maxCount = count;
+    });
+  }
+
+  const newCount = maxCount + 1;
+  const formattedCount = String(newCount).padStart(3, '0');
+
+  return `CMD-${datePrefix}-${formattedCount}`;
+}
+
 export default async function handler(req, res) {
-  // Vérifie la méthode POST
   if (req.method !== 'POST') {
-    return res.status(405).end('Method Not Allowed');
+    return res.status(405).json({ error: 'Method Not Allowed' });
   }
 
-  const sig = req.headers['stripe-signature'];
-  if (!sig) {
-    console.error('Pas de signature Stripe');
-    return res.status(400).end('Missing Stripe signature');
-  }
-
-  let event;
   try {
-    const buf = await buffer(req);
-    event = stripe.webhooks.constructEvent(buf, sig, process.env.STRIPE_WEBHOOK_SECRET.trim());
+    const { client_id, email, name, produits, total_price } = req.body;
+
+    if (!client_id || !email || !produits || !total_price) {
+      return res.status(400).json({ error: 'Données manquantes' });
+    }
+
+    const numero_cmd = await generateOrderNumber();
+
+    const { data, error } = await supabase
+      .from('orders')
+      .insert([{
+        client_id,
+        email,
+        name,
+        produits,
+        total_price,
+        status: 'awaiting_payment',
+        numero_cmd,
+        created_at: new Date()
+      }])
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Erreur création commande:', error);
+      return res.status(500).json({ error: 'Erreur serveur création commande' });
+    }
+
+    return res.status(200).json({ order: data });
+
   } catch (err) {
-    console.error('Signature webhook invalide:', err.message);
-    return res.status(400).end(`Webhook Error: ${err.message}`);
-  }
-
-  // Répond rapidement à Stripe
-  res.status(200).end('ok');
-
-  // Traite en arrière-plan
-  if (event.type === 'checkout.session.completed') {
-    const session = event.data.object;
-
-    (async () => {
-      try {
-        const { data: order, error } = await supabase
-          .from('orders')
-          .select('*')
-          .eq('stripe_session_id', session.id)
-          .maybeSingle();
-
-        if (error) {
-          console.error('Erreur récupération commande:', error);
-          return;
-        }
-
-        if (!order) {
-          console.warn(`Commande non trouvée pour session ${session.id}`);
-          return;
-        }
-
-        const updatedFields = { status: 'completed' };
-
-        // Si numero_cmd absent ou invalide, régénère
-        if (!order.numero_cmd || order.numero_cmd.includes("NaN")) {
-          const datePrefix = getDatePrefix();
-          updatedFields.numero_cmd = `CMD-${datePrefix}-001`;
-        }
-
-        const { error: updateError } = await supabase
-          .from('orders')
-          .update(updatedFields)
-          .eq('stripe_session_id', session.id);
-
-        if (updateError) {
-          console.error('Erreur mise à jour commande:', updateError);
-          return;
-        }
-
-        console.log(`Commande ${session.id} mise à jour en arrière-plan`);
-      } catch (err) {
-        console.error('Erreur traitement commande:', err);
-      }
-    })();
+    console.error('Erreur endpoint création commande:', err);
+    return res.status(500).json({ error: 'Erreur serveur' });
   }
 }
