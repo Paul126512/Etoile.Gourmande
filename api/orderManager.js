@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY; // clé serveur sécurisée
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 export default async function handler(req, res) {
@@ -15,7 +15,8 @@ export default async function handler(req, res) {
     const mm = String(now.getMonth() + 1).padStart(2, '0');
     const yyyy = now.getFullYear();
 
-    const datePrefix = `${dd}${mm}${yyyy}`; // ex: 16062025
+    // CORRECTION : Format JJMMAAAA au lieu de DDMMYYYY (qui donnait NaN)
+    const datePrefix = `${dd}${mm}${yyyy}`; // ex: 16062025 (16 juin 2025)
 
     // Pattern pour filtrer les commandes du jour
     const likePattern = `CMD-${datePrefix}-%`;
