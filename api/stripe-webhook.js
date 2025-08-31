@@ -49,12 +49,16 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { client_id, email, name, produits, total_price } = req.body;
+    const { client_id, email, name, produits, total_price, status } = req.body;
 
     if (!client_id || !email || !produits || !total_price) {
       return res.status(400).json({ error: 'Données manquantes' });
     }
 
+    // Permet de passer un statut depuis le front ou utiliser awaiting_payment par défaut
+    const orderStatus = status || 'awaiting_payment';
+
+    // Crée le numero_cmd uniquement pour une nouvelle commande
     const numero_cmd = await generateOrderNumber();
 
     const { data, error } = await supabase
@@ -65,7 +69,7 @@ export default async function handler(req, res) {
         name,
         produits,
         total_price,
-        status: 'awaiting_payment',
+        status: orderStatus,
         numero_cmd,
         created_at: new Date()
       }])
