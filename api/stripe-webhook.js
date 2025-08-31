@@ -37,10 +37,13 @@ export default async function handler(req, res) {
       .update({ status: 'completed' })
       .eq('email', email)
       .eq('total_price', total);
+      .eq('numero_cmd', numero_cmd);
 
+    
     if (error) console.error('Erreur mise à jour commande:', error);
     else console.log('Commande mise à jour:', data);
   }
 
   res.status(200).json({ received: true });
 }
+
