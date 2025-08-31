@@ -4,12 +4,12 @@ const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY
 
 // Génère le préfixe date JJMMAAAA
 function getDatePrefix() {
-  const now = new Date();
-  if (isNaN(now.getTime())) return "00000000";
-  const dd = String(now.getDate()).padStart(2, '0');
-  const mm = String(now.getMonth() + 1).padStart(2, '0');
-  const yyyy = String(now.getFullYear());
-  return `${dd}${mm}${yyyy}`;
+ const now = new Date();
+const dd = String(now.getUTCDate()).padStart(2, '0');
+const mm = String(now.getUTCMonth() + 1).padStart(2, '0');
+const yyyy = String(now.getUTCFullYear());
+return `${dd}${mm}${yyyy}`;
+
 }
 
 // Génère un numero_cmd unique pour le jour
@@ -88,3 +88,4 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Erreur serveur' });
   }
 }
+
