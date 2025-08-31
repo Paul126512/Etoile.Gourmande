@@ -25,25 +25,24 @@ export default async function handler(req, res) {
 
   // Vérifie le type d'événement Stripe
   if (event.type === 'checkout.session.completed') {
-    const session = event.data.object;
-    const email = session.customer_email;
-    const total = session.amount_total / 100; // converti en euros
+  const session = event.data.object;
+  const email = session.customer_email;
+  const total = session.amount_total / 100; // en euros
+  const numero_cmd = session.metadata.numero_cmd; // <- récupère le numero_cmd
 
-    console.log(`Paiement réussi pour ${email}, total ${total}€`);
+  console.log(`Paiement réussi pour ${email}, total ${total}€, commande ${numero_cmd}`);
 
-    // Met à jour la commande correspondante dans Supabase
-    const { data, error } = await supabase
-      .from('orders')
-      .update({ status: 'completed' })
-      .eq('email', email)
-      .eq('total_price', total);
-      .eq('numero_cmd', numero_cmd);
+  const { data, error } = await supabase
+    .from('orders')
+    .update({ status: 'completed' })
+    .eq('numero_cmd', numero_cmd); // <- filtre uniquement sur la commande précise
 
-    
-    if (error) console.error('Erreur mise à jour commande:', error);
-    else console.log('Commande mise à jour:', data);
-  }
+  if (error) console.error('Erreur mise à jour commande:', error);
+  else console.log('Commande mise à jour:', data);
+}
+
 
   res.status(200).json({ received: true });
 }
+
 
