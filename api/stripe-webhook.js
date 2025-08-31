@@ -1,91 +1,46 @@
+// pages/api/stripe-webhook.js
+import { buffer } from 'micro';
+import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
 
-// Génère le préfixe date JJMMAAAA
-function getDatePrefix() {
- const now = new Date();
-const dd = String(now.getUTCDate()).padStart(2, '0');
-const mm = String(now.getUTCMonth() + 1).padStart(2, '0');
-const yyyy = String(now.getUTCFullYear());
-return `${dd}${mm}${yyyy}`;
-
-}
-
-// Génère un numero_cmd unique pour le jour
-async function generateOrderNumber() {
-  const datePrefix = getDatePrefix();
-  const likePattern = `CMD-${datePrefix}-%`;
-
-  const { data, error } = await supabase
-    .from('orders')
-    .select('numero_cmd')
-    .ilike('numero_cmd', likePattern);
-
-  if (error) {
-    console.error('Erreur récupération commandes:', error);
-    return `CMD-${datePrefix}-001`; // fallback sûr
-  }
-
-  let maxCount = 0;
-  if (data && data.length > 0) {
-    data.forEach(order => {
-      const parts = order.numero_cmd.split('-');
-      const lastPart = parts[parts.length - 1];
-      const count = parseInt(lastPart, 10);
-      if (!isNaN(count) && count > maxCount) maxCount = count;
-    });
-  }
-
-  const newCount = maxCount + 1;
-  const formattedCount = String(newCount).padStart(3, '0');
-
-  return `CMD-${datePrefix}-${formattedCount}`;
-}
+// Désactive le parsing automatique pour les webhooks
+export const config = { api: { bodyParser: false } };
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method Not Allowed' });
+  if (req.method !== 'POST') return res.status(405).end();
+
+  const sig = req.headers['stripe-signature'];
+  const buf = await buffer(req);
+
+  let event;
+  try {
+    event = stripe.webhooks.constructEvent(buf.toString(), sig, process.env.STRIPE_WEBHOOK_SECRET);
+  } catch (err) {
+    console.error('Erreur signature webhook Stripe:', err);
+    return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
-  try {
-    const { client_id, email, name, produits, total_price, status } = req.body;
+  // Vérifie le type d'événement Stripe
+  if (event.type === 'checkout.session.completed') {
+    const session = event.data.object;
+    const email = session.customer_email;
+    const total = session.amount_total / 100; // converti en euros
 
-    if (!client_id || !email || !produits || !total_price) {
-      return res.status(400).json({ error: 'Données manquantes' });
-    }
+    console.log(`Paiement réussi pour ${email}, total ${total}€`);
 
-    // Permet de passer un statut depuis le front ou utiliser awaiting_payment par défaut
-    const orderStatus = status || 'awaiting_payment';
-
-    // Crée le numero_cmd uniquement pour une nouvelle commande
-    const numero_cmd = await generateOrderNumber();
-
+    // Met à jour la commande correspondante dans Supabase
     const { data, error } = await supabase
       .from('orders')
-      .insert([{
-        client_id,
-        email,
-        name,
-        produits,
-        total_price,
-        status: orderStatus,
-        numero_cmd,
-        created_at: new Date()
-      }])
-      .select()
-      .single();
+      .update({ status: 'completed' })
+      .eq('email', email)
+      .eq('total_price', total);
 
-    if (error) {
-      console.error('Erreur création commande:', error);
-      return res.status(500).json({ error: 'Erreur serveur création commande' });
-    }
-
-    return res.status(200).json({ order: data });
-
-  } catch (err) {
-    console.error('Erreur endpoint création commande:', err);
-    return res.status(500).json({ error: 'Erreur serveur' });
+    if (error) console.error('Erreur mise à jour commande:', error);
+    else console.log('Commande mise à jour:', data);
   }
-}
 
+  res.status(200).json({ received: true });
+}
