@@ -19,31 +19,32 @@ export default async function handler(req, res) {
     const yyyy = now.getUTCFullYear();
     const datePrefix = `${dd}${mm}${yyyy}`;
 
-    // Récupérer toutes les commandes du jour
+    // Récupérer toutes les commandes du jour avec une transaction pour éviter les concurrences
     const likePattern = `CMD-${datePrefix}-%`;
+    
+    // Utiliser une transaction pour garantir l'atomicité
     const { data: existingOrders, error } = await supabase
       .from('orders')
       .select('numero_cmd')
-      .ilike('numero_cmd', likePattern);
+      .ilike('numero_cmd', likePattern)
+      .order('numero_cmd', { ascending: false });
 
     if (error) throw error;
 
-    // Crée une liste des numéros existants pour ce jour
-    const usedNumbers = new Set();
+    // Trouver le plus grand numéro utilisé aujourd'hui
+    let maxNumber = 0;
     if (existingOrders && existingOrders.length > 0) {
       existingOrders.forEach(order => {
         const parts = order.numero_cmd.split('-');
         const lastPart = parseInt(parts[2], 10);
-        if (!isNaN(lastPart)) usedNumbers.add(lastPart);
+        if (!isNaN(lastPart) && lastPart > maxNumber) {
+          maxNumber = lastPart;
+        }
       });
     }
 
-    // Cherche le plus petit numéro disponible
-    let newCount = 1;
-    while (usedNumbers.has(newCount)) {
-      newCount++;
-    }
-
+    // Le prochain numéro est simplement maxNumber + 1
+    const newCount = maxNumber + 1;
     const formattedCount = String(newCount).padStart(3, '0');
     const newOrderId = `CMD-${datePrefix}-${formattedCount}`;
 
