@@ -23,6 +23,21 @@ const ALLOWED_ORIGINS = [
   'https://etoile-gourmande-one.vercel.app'
 ];
 
+// Fonction pour obtenir un numéro de commande unique
+async function getOrderNumber() {
+  try {
+    const response = await fetch(`${process.env.SITE_URL}/api/orderManager`);
+    if (!response.ok) {
+      throw new Error(`Erreur API orderManager: ${response.status}`);
+    }
+    const data = await response.json();
+    return data.orderId;
+  } catch (error) {
+    console.error('Erreur lors de la génération du numéro de commande:', error);
+    throw new Error('Impossible de générer un numéro de commande unique');
+  }
+}
+
 export default async function handler(req, res) {
   // Gestion des CORS
   const origin = req.headers.origin;
@@ -108,19 +123,8 @@ export default async function handler(req, res) {
       existingClient = newClient;
     }
 
-    // Génération du numéro de commande
-const now = new Date();
-// Convertir en fuseau horaire français (UTC+1 ou UTC+2)
-const nowFrance = new Date(now.toLocaleString("fr-FR", { timeZone: "Europe/Paris" }));
-const dateStr = `${nowFrance.getFullYear()}${String(nowFrance.getMonth() + 1).padStart(2, '0')}${String(nowFrance.getDate()).padStart(2, '0')}`;
-    
-    const { count } = await supabase
-      .from('orders')
-      .select('*', { count: 'exact', head: true })
-      .gte('created_at', `${dateStr.slice(0, 4)}-${dateStr.slice(4, 6)}-${dateStr.slice(6, 8)}T00:00:00Z`)
-      .lte('created_at', `${dateStr.slice(0, 4)}-${dateStr.slice(4, 6)}-${dateStr.slice(6, 8)}T23:59:59Z`);
-
-    const numero_cmd = `CMD-${dateStr.slice(6, 8)}${dateStr.slice(4, 6)}${dateStr.slice(0, 4)}-${String((count || 0) + 1).padStart(3, '0')}`;
+    // Génération du numéro de commande via l'API dédiée
+    const numero_cmd = await getOrderNumber();
 
     // Préparation des articles pour Stripe
     const lineItems = produits.map(item => {
@@ -149,7 +153,7 @@ const dateStr = `${nowFrance.getFullYear()}${String(nowFrance.getMonth() + 1).pa
       line_items: lineItems,
       mode: 'payment',
       success_url: `${process.env.SITE_URL}/success.html?session_id={CHECKOUT_SESSION_ID}`,
-     cancel_url: `${process.env.SITE_URL}/cancel.html`,
+      cancel_url: `${process.env.SITE_URL}/cancel.html`,
       customer_email: email,
       metadata: { client_id: existingClient.id, numero_cmd },
       shipping_address_collection: { allowed_countries: ['FR'] },
@@ -167,7 +171,33 @@ const dateStr = `${nowFrance.getFullYear()}${String(nowFrance.getMonth() + 1).pa
       stripe_session_id: session.id,
     });
 
-    if (orderError) throw orderError;
+    if (orderError) {
+      // Si l'erreur est une violation de contrainte d'unicité, on réessaie avec un nouveau numéro
+      if (orderError.code === '23505' && orderError.constraint === 'unique_numero_cmd') {
+        console.warn('Numéro de commande en double détecté, régénération...');
+        const newNumeroCmd = await getOrderNumber();
+        
+        // Nouvelle tentative avec le nouveau numéro
+        const { error: retryError } = await supabase.from('orders').insert({
+          numero_cmd: newNumeroCmd,
+          client_id: existingClient.id,
+          email,
+          name,
+          produits,
+          total_price: totalCents / 100,
+          status: 'awaiting_payment',
+          stripe_session_id: session.id,
+        });
+        
+        if (retryError) throw retryError;
+        
+        return res.status(200).json({ 
+          paymentUrl: session.url, 
+          numero_cmd: newNumeroCmd 
+        });
+      }
+      throw orderError;
+    }
 
     return res.status(200).json({ paymentUrl: session.url, numero_cmd });
 
@@ -179,4 +209,3 @@ const dateStr = `${nowFrance.getFullYear()}${String(nowFrance.getMonth() + 1).pa
     });
   }
 }
-
