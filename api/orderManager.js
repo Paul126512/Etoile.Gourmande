@@ -1,5 +1,4 @@
 import { createClient } from '@supabase/supabase-js';
-import { randomUUID } from 'crypto'; // pour générer un suffixe unique
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
@@ -15,7 +14,6 @@ export default async function handler(req, res) {
     const now = new Date();
     if (isNaN(now.getTime())) return res.status(500).json({ error: 'Date invalide' });
 
-    // Préfixe JJMMAAAA
     const dd = String(now.getUTCDate()).padStart(2, '0');
     const mm = String(now.getUTCMonth() + 1).padStart(2, '0');
     const yyyy = now.getUTCFullYear();
@@ -30,26 +28,41 @@ export default async function handler(req, res) {
 
     if (error) throw error;
 
-    // Calculer le dernier numéro du jour
+    // Trouver le maxCount déjà utilisé
     let maxCount = 0;
-    if (data.length > 0) {
+    if (data && data.length > 0) {
       data.forEach(order => {
-        const lastPart = parseInt(order.numero_cmd.split('-')[2], 10);
+        const parts = order.numero_cmd.split('-');
+        const lastPart = parseInt(parts[2], 10);
         if (!isNaN(lastPart) && lastPart > maxCount) maxCount = lastPart;
       });
     }
 
-    // Nouveau compteur
-    const formattedCount = String(maxCount + 1).padStart(3, '0');
+    // Boucle retry pour éviter les doublons
+    let formattedCount;
+    let newOrderId;
+    let exists = true;
 
-    // Générer un suffixe unique pour éviter les doublons
-    const uniqueSuffix = randomUUID().split('-')[0]; // exemple: '9f1c3a4b'
+    while (exists) {
+      formattedCount = String(maxCount + 1).padStart(3, '0');
+      newOrderId = `CMD-${datePrefix}-${formattedCount}`;
 
-    const newOrderId = `CMD-${datePrefix}-${formattedCount}-${uniqueSuffix}`;
+      const { data: checkData } = await supabase
+        .from('orders')
+        .select('numero_cmd')
+        .eq('numero_cmd', newOrderId)
+        .single();
 
-    res.status(200).json({ orderId: newOrderId });
+      if (!checkData) {
+        exists = false; // numéro disponible
+      } else {
+        maxCount++;
+      }
+    }
+
+    return res.status(200).json({ orderId: newOrderId });
   } catch (err) {
     console.error('Erreur orderManager API:', err);
-    res.status(500).json({ error: 'Erreur serveur lors de la génération du numéro de commande' });
+    return res.status(500).json({ error: 'Erreur serveur lors de la génération du numéro de commande' });
   }
 }
