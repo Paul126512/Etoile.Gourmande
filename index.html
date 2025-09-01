@@ -57,19 +57,21 @@
   <link rel="manifest" href="/site.webmanifest">
   
   <!-- Content-Security-Policy corrigée -->
-  <meta http-equiv="Content-Security-Policy" content="
-    default-src 'self';
-    script-src 'self' 'unsafe-inline' https://trusted.cdn.com https://www.googletagmanager.com https://www.clarity.ms https://va.vercel-scripts.com;
-    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
-    font-src 'self' https://fonts.gstatic.com;
-    img-src 'self' data: https://images.trustedsource.com;
-    connect-src 'self' https://api.trustedsource.com https://region1.analytics.google.com https://stats.g.doubleclick.net https://www.clarity.ms https://vitals.vercel-insights.com;
-    frame-src 'none';
-    object-src 'none';
-    base-uri 'self';
-    form-action 'self';
-    upgrade-insecure-requests;
-  ">
+<meta http-equiv="Content-Security-Policy" content="
+  default-src 'self';
+  script-src 'self' 'unsafe-inline' https://trusted.cdn.com https://www.googletagmanager.com https://www.clarity.ms https://c.clarity.ms https://va.vercel-scripts.com;
+  style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+  font-src 'self' https://fonts.gstatic.com;
+  img-src 'self' data: https://images.trustedsource.com;
+  connect-src 'self' https://api.trustedsource.com https://region1.analytics.google.com https://stats.g.doubleclick.net https://www.clarity.ms https://c.clarity.ms https://region1.clarity.ms https://vitals.vercel-insights.com;
+  frame-src 'none';
+  object-src 'none';
+  base-uri 'self';
+  form-action 'self';
+  upgrade-insecure-requests;
+">
+
+  
 
   <!-- Vercel Analytics -->
   <script>
@@ -678,6 +680,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
  </body>
 </html>
+
 
 
 
