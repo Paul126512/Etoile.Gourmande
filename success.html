@@ -94,13 +94,7 @@
 
 
 
-
-
-
-
-  
-
-<script>
+    <script>
   document.addEventListener('DOMContentLoaded', async () => {
     const card = document.getElementById('confirmation-card');
     const panierPizzas = JSON.parse(localStorage.getItem('panier')) || [];
@@ -124,6 +118,7 @@
     let itemsHtml = '';
     let commandeDetails = { pizzas: [], boissons: [] };
 
+    // calcul pizzas
     panierPizzas.forEach(pizza => {
       const quantite = pizza.quantite || 1;
       const prixUnitaire = pizza.prix;
@@ -166,6 +161,7 @@
       });
     });
 
+    // calcul boissons
     panierBoissons.forEach(boisson => {
       const prixTotal = boisson.prix * boisson.quantite;
       total += prixTotal;
@@ -184,16 +180,21 @@
       });
     });
 
+    // ✅ numéro de commande uniquement depuis orderManager
     let orderNum;
     try {
       const response = await fetch('/api/orderManager');
       if (!response.ok) throw new Error('Erreur lors de la récupération du numéro de commande');
       const data = await response.json();
-      orderNum = data.orderId;
+      orderNum = data.orderId; // <-- c’est lui qu’on affiche et qu’on enregistre
     } catch (error) {
       console.error('Erreur orderManager API:', error);
-      const now = new Date();
-      orderNum = `CMD-${String(now.getDate()).padStart(2,'0')}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}`;
+      card.innerHTML = `
+        <h1>ERREUR</h1>
+        <p>Impossible de récupérer le numéro de commande.</p>
+        <button class="btn" onclick="window.location.href='index.html'">RETOUR À L'ACCUEIL</button>
+      `;
+      return;
     }
 
     const now = new Date();
@@ -203,8 +204,8 @@
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhhd2xuZWN4amZkaGduYmx0b3ZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk1NjQ1NTcsImV4cCI6MjA2NTE0MDU1N30.j4_ZR22bV7acZabBIduYhoLZlITwRYu6ToBF8MYvj5o',
-          'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhhd2xuZWN4amZkaGduYmx0b3ZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk1NjQ1NTcsImV4cCI6MjA2NTE0MDU1N30.j4_ZR22bV7acZabBIduYhoLZlITwRYu6ToBF8MYvj5o',
+          'apikey': 'TON_API_KEY',
+          'Authorization': 'Bearer TON_JWT',
           'Prefer': 'return=representation'
         },
         body: JSON.stringify({
@@ -240,8 +241,8 @@
       card.innerHTML = `
         <h1>CONFIRMATION DE LA COMMANDE</h1>
         <div class="error-message">
-          Votre commande a été enregistrée (n°${orderNum})<br>
-          Conservez ce numéro de commande: <strong>${orderNum}</strong>.
+          Votre commande a bien été enregistrée.<br>
+          Numéro: <strong>${orderNum}</strong>
         </div>
         <div class="order-details">
           <h2>RÉCAPITULATIF</h2>
@@ -259,5 +260,12 @@
   });
 </script>
 
+
+
+
+
+
+
   </body>
 </html>
+
