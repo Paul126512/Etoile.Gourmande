@@ -21,44 +21,31 @@ export default async function handler(req, res) {
 
     // Récupérer toutes les commandes du jour
     const likePattern = `CMD-${datePrefix}-%`;
-    const { data, error } = await supabase
+    const { data: existingOrders, error } = await supabase
       .from('orders')
       .select('numero_cmd')
       .ilike('numero_cmd', likePattern);
 
     if (error) throw error;
 
-    // Trouver le maxCount déjà utilisé
-    let maxCount = 0;
-    if (data && data.length > 0) {
-      data.forEach(order => {
+    // Crée une liste des numéros existants pour ce jour
+    const usedNumbers = new Set();
+    if (existingOrders && existingOrders.length > 0) {
+      existingOrders.forEach(order => {
         const parts = order.numero_cmd.split('-');
         const lastPart = parseInt(parts[2], 10);
-        if (!isNaN(lastPart) && lastPart > maxCount) maxCount = lastPart;
+        if (!isNaN(lastPart)) usedNumbers.add(lastPart);
       });
     }
 
-    // Boucle retry pour éviter les doublons
-    let formattedCount;
-    let newOrderId;
-    let exists = true;
-
-    while (exists) {
-      formattedCount = String(maxCount + 1).padStart(3, '0');
-      newOrderId = `CMD-${datePrefix}-${formattedCount}`;
-
-      const { data: checkData } = await supabase
-        .from('orders')
-        .select('numero_cmd')
-        .eq('numero_cmd', newOrderId)
-        .single();
-
-      if (!checkData) {
-        exists = false; // numéro disponible
-      } else {
-        maxCount++;
-      }
+    // Cherche le plus petit numéro disponible
+    let newCount = 1;
+    while (usedNumbers.has(newCount)) {
+      newCount++;
     }
+
+    const formattedCount = String(newCount).padStart(3, '0');
+    const newOrderId = `CMD-${datePrefix}-${formattedCount}`;
 
     return res.status(200).json({ orderId: newOrderId });
   } catch (err) {
