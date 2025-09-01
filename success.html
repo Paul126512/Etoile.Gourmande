@@ -3,253 +3,419 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Confirmation</title>
+  <title>Confirmation de Commande - Étoile Gourmande</title>
   <style>
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+    :root {
+      --primary-color: #d4af37;
+      --secondary-color: #8b0000;
+      --background-color: #fff9e6;
+      --text-color: #333;
+      --light-color: #f5f5f5;
+      --border-color: #ddd;
     }
-    body {
-      font-family: 'Helvetica Neue', Arial, sans-serif;
-      background: white;
-      color: black;
+    
+    * {
+      box-sizing: border-box;
       margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      line-height: 1.6;
       padding: 20px;
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      animation: fadeIn 0.6s ease-out;
     }
-    .confirmation-card {
+    
+    .container {
+      max-width: 800px;
       width: 100%;
-      max-width: 500px;
-      border: 2px solid black;
-      padding: 30px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+    
+    header {
+      background: var(--secondary-color);
+      color: white;
+      padding: 20px;
       text-align: center;
     }
-    h1 {
-      font-weight: 300;
-      letter-spacing: 2px;
-      margin-bottom: 20px;
+    
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: var(--primary-color);
     }
-    .empty-message {
-      padding: 40px 0;
-      font-style: italic;
+    
+    .content {
+      padding: 30px;
     }
+    
+    .order-confirmation {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
     .order-number {
-      font-family: monospace;
-      font-size: 1.2rem;
+      background-color: var(--light-color);
+      padding: 15px;
+      border-radius: 5px;
       margin: 20px 0;
-      padding: 10px;
-      border: 1px dashed black;
+      font-family: monospace;
+      font-size: 18px;
+      border: 1px dashed var(--border-color);
     }
+    
     .order-details {
       margin: 30px 0;
       text-align: left;
     }
+    
     .order-item {
       display: flex;
       justify-content: space-between;
       padding: 10px 0;
-      border-bottom: 1px solid #eee;
+      border-bottom: 1px solid var(--border-color);
     }
+    
+    .supplement-item {
+      padding-left: 20px;
+      font-size: 0.9em;
+      color: #666;
+    }
+    
     .total {
       font-weight: bold;
       text-align: right;
       margin-top: 20px;
       padding-top: 10px;
-      border-top: 1px solid black;
+      border-top: 2px solid var(--border-color);
+      font-size: 1.2em;
     }
-    .btn {
-      background: black;
-      color: white;
-      border: none;
-      padding: 12px 25px;
+    
+    .customer-info {
+      background-color: var(--light-color);
+      padding: 15px;
+      border-radius: 5px;
+      margin: 20px 0;
+    }
+    
+    .actions {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
       margin-top: 30px;
-      cursor: pointer;
     }
+    
+    .btn {
+      padding: 12px 25px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    .btn-secondary {
+      background-color: var(--secondary-color);
+      color: white;
+    }
+    
+    .btn:hover {
+      opacity: 0.9;
+      transform: translateY(-2px);
+    }
+    
     .thank-you {
+      text-align: center;
       margin-top: 30px;
       font-style: italic;
+      color: #666;
+    }
+    
+    .error-message {
+      background-color: #ffebee;
+      color: #c62828;
+      padding: 15px;
+      border-radius: 5px;
+      margin: 20px 0;
+      text-align: center;
+    }
+    
+    .loading {
+      text-align: center;
+      padding: 40px;
+    }
+    
+    .spinner {
+      border: 4px solid rgba(0, 0, 0, 0.1);
+      border-left-color: var(--primary-color);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    @media (max-width: 600px) {
+      .container {
+        margin: 10px;
+      }
+      
+      .content {
+        padding: 20px;
+      }
+      
+      .actions {
+        flex-direction: column;
+      }
     }
   </style>
 </head>
 <body>
-
-  
-
-  <div class="confirmation-card" id="confirmation-card">
-    <!-- Contenu généré par JavaScript -->
-</div>
-
-
-
-
-
-
-
-
-  
-
-<script>
-  document.addEventListener('DOMContentLoaded', async () => {
-    const card = document.getElementById('confirmation-card');
-    const panierPizzas = JSON.parse(localStorage.getItem('panier')) || [];
-    const panierBoissons = JSON.parse(localStorage.getItem('boissons')) || [];
-    const prenom = localStorage.getItem('prenomCommande') || '';
-    const email = localStorage.getItem('emailCommande') || '';
-
-    if (panierPizzas.length === 0 && panierBoissons.length === 0) {
-      card.innerHTML = `
-        <h1>ERREUR</h1>
-        <div class="empty-message">
-          Aucune commande trouvée.<br>
-          Votre panier était vide.
+  <div class="container">
+    <header>
+      <div class="logo">ÉTOILE GOURMANDE</div>
+      <h1>Confirmation de Commande</h1>
+    </header>
+    
+    <div class="content">
+      <div id="confirmation-content">
+        <div class="loading">
+          <div class="spinner"></div>
+          <p>Traitement de votre commande...</p>
         </div>
-        <button class="btn" onclick="window.location.href='index.html'">RETOUR À L'ACCUEIL</button>
-      `;
-      return;
-    }
+      </div>
+    </div>
+  </div>
 
-    let total = 0;
-    let itemsHtml = '';
-    let commandeDetails = { pizzas: [], boissons: [] };
-
-    panierPizzas.forEach(pizza => {
-      const quantite = pizza.quantite || 1;
-      const prixUnitaire = pizza.prix;
-      const prixTotal = prixUnitaire * quantite;
-      let supplements = [];
-
-      if (pizza.supplements?.length > 0 && !(pizza.supplements.length === 1 && pizza.supplements[0].id === 'aucun')) {
-        supplements = pizza.supplements.map(sup => ({ nom: sup.nom, prix: sup.prix }));
-
-        itemsHtml += `
-          <div class="order-item">
-            <span>${pizza.nom} (${pizza.taille || 'standard'}) × ${quantite}</span>
-            <span>${prixTotal.toFixed(2)}€</span>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const confirmationContent = document.getElementById('confirmation-content');
+      
+      // Récupération des données du panier et des informations client
+      const panierPizzas = JSON.parse(localStorage.getItem('panier')) || [];
+      const panierBoissons = JSON.parse(localStorage.getItem('boissons')) || [];
+      const prenom = localStorage.getItem('prenomCommande') || '';
+      const email = localStorage.getItem('emailCommande') || '';
+      
+      // Vérification si le panier est vide
+      if (panierPizzas.length === 0 && panierBoissons.length === 0) {
+        confirmationContent.innerHTML = `
+          <div class="error-message">
+            <h2>ERREUR</h2>
+            <p>Aucune commande trouvée. Votre panier était vide.</p>
           </div>
-          ${pizza.supplements.map(sup => `
-            <div class="supplement-item">
-              <span>+ ${sup.nom}</span>
-              <span>+${sup.prix.toFixed(2)}€</span>
-            </div>
-          `).join('')}
-        `;
-      } else {
-        itemsHtml += `
-          <div class="order-item">
-            <span>${pizza.nom} (${pizza.taille || 'standard'}) × ${quantite}</span>
-            <span>${prixTotal.toFixed(2)}€</span>
+          <div class="actions">
+            <button class="btn btn-primary" onclick="window.location.href='index.html'">RETOUR À L'ACCUEIL</button>
           </div>
         `;
+        return;
       }
-
-      total += prixTotal;
-
-      commandeDetails.pizzas.push({
-        nom: pizza.nom,
-        taille: pizza.taille,
-        prix: prixUnitaire,
-        quantite: quantite,
-        supplements: supplements,
-        prix_total: prixTotal
-      });
+      
+      try {
+        // Calcul du total et préparation des détails de la commande
+        let total = 0;
+        let itemsHtml = '';
+        let commandeDetails = { pizzas: [], boissons: [] };
+        
+        // Traitement des pizzas
+        panierPizzas.forEach(pizza => {
+          const quantite = pizza.quantite || 1;
+          const prixUnitaire = pizza.prix;
+          const prixTotal = prixUnitaire * quantite;
+          let supplements = [];
+          
+          itemsHtml += `
+            <div class="order-item">
+              <span>${pizza.nom} (${pizza.taille || 'standard'}) × ${quantite}</span>
+              <span>${prixTotal.toFixed(2)}€</span>
+            </div>
+          `;
+          
+          if (pizza.supplements?.length > 0 && !(pizza.supplements.length === 1 && pizza.supplements[0].id === 'aucun')) {
+            supplements = pizza.supplements.map(sup => ({ nom: sup.nom, prix: sup.prix }));
+            
+            pizza.supplements.forEach(sup => {
+              itemsHtml += `
+                <div class="supplement-item">
+                  <span>+ ${sup.nom}</span>
+                  <span>+${sup.prix.toFixed(2)}€</span>
+                </div>
+              `;
+              total += sup.prix;
+            });
+          }
+          
+          total += prixTotal;
+          
+          commandeDetails.pizzas.push({
+            nom: pizza.nom,
+            taille: pizza.taille,
+            prix: prixUnitaire,
+            quantite: quantite,
+            supplements: supplements,
+            prix_total: prixTotal
+          });
+        });
+        
+        // Traitement des boissons
+        panierBoissons.forEach(boisson => {
+          const prixTotal = boisson.prix * boisson.quantite;
+          total += prixTotal;
+          itemsHtml += `
+            <div class="order-item">
+              <span>${boisson.nom} × ${boisson.quantite}</span>
+              <span>${prixTotal.toFixed(2)}€</span>
+            </div>
+          `;
+          
+          commandeDetails.boissons.push({
+            nom: boisson.nom,
+            quantite: boisson.quantite,
+            prix_unitaire: boisson.prix,
+            prix_total: prixTotal
+          });
+        });
+        
+        // Récupération d'un numéro de commande unique
+        let orderNum;
+        try {
+          const response = await fetch('/api/orderManager');
+          if (!response.ok) throw new Error('Erreur lors de la récupération du numéro de commande');
+          const data = await response.json();
+          orderNum = data.orderId;
+        } catch (error) {
+          console.error('Erreur orderManager API:', error);
+          // Fallback si l'API n'est pas disponible
+          const now = new Date();
+          orderNum = `CMD-${String(now.getDate()).padStart(2,'0')}${String(now.getMonth()+1).padStart(2,'0')}${now.getFullYear()}-${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}`;
+        }
+        
+        const now = new Date();
+        
+        // Enregistrement de la commande dans la base de données
+        try {
+          const response = await fetch('https://votre-domain.supabase.co/rest/v1/orders', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'apikey': 'VOTRE_CLE_API_SUPABASE',
+              'Authorization': 'Bearer VOTRE_JWT_SUPABASE',
+              'Prefer': 'return=representation'
+            },
+            body: JSON.stringify({
+              numero_cmd: orderNum,
+              prenom: prenom,
+              email: email,
+              total_price: total,
+              details: commandeDetails,
+              statut: 'en_attente',
+              date_commande: now.toISOString()
+            })
+          });
+          
+          if (!response.ok) throw new Error("Erreur lors de l'enregistrement");
+          
+          // Affichage de la confirmation de commande
+          confirmationContent.innerHTML = `
+            <div class="order-confirmation">
+              <h2>CONFIRMATION DE COMMANDE</h2>
+              <p>Votre commande a été enregistrée avec succès</p>
+            </div>
+            
+            ${prenom || email ? `
+            <div class="customer-info">
+              ${prenom ? `<p><strong>Client:</strong> ${prenom}</p>` : ''}
+              ${email ? `<p><strong>Email:</strong> ${email}</p>` : ''}
+            </div>
+            ` : ''}
+            
+            <div class="order-number">
+              Votre numéro de commande: <strong>${orderNum}</strong>
+            </div>
+            
+            <div class="order-details">
+              <h3>RÉCAPITULATIF DE VOTRE COMMANDE</h3>
+              ${itemsHtml}
+              <div class="total">TOTAL: ${total.toFixed(2)}€</div>
+            </div>
+            
+            <div class="thank-you">
+              <p>Merci pour votre commande. Un email de confirmation a été envoyé à votre adresse.</p>
+              <p>Conservez précieusement votre numéro de commande: <strong>${orderNum}</strong></p>
+            </div>
+            
+            <div class="actions">
+              <button class="btn btn-primary" onclick="window.print()">IMPRIMER</button>
+              <button class="btn btn-secondary" onclick="window.location.href='index.html'">RETOUR À L'ACCUEIL</button>
+            </div>
+          `;
+        } catch (error) {
+          console.error("Erreur Supabase:", error);
+          // Mode dégradé - affichage sans enregistrement en base
+          confirmationContent.innerHTML = `
+            <div class="order-confirmation">
+              <h2>CONFIRMATION DE COMMANDE</h2>
+              <p>Votre commande a été enregistrée (n°${orderNum})</p>
+            </div>
+            
+            <div class="order-number">
+              Conservez ce numéro de commande: <strong>${orderNum}</strong>
+            </div>
+            
+            <div class="order-details">
+              <h3>RÉCAPITULATIF</h3>
+              ${itemsHtml}
+              <div class="total">TOTAL: ${total.toFixed(2)}€</div>
+            </div>
+            
+            <div class="error-message">
+              <p>Note: En raison d'un problème technique, votre commande n'a pas pu être enregistrée dans notre système. Veuillez contacter notre service client avec votre numéro de commande.</p>
+            </div>
+            
+            <div class="actions">
+              <button class="btn btn-primary" onclick="window.print()">IMPRIMER</button>
+              <button class="btn btn-secondary" onclick="window.location.href='index.html'">RETOUR À L'ACCUEIL</button>
+            </div>
+          `;
+        }
+      } catch (error) {
+        console.error("Erreur générale:", error);
+        confirmationContent.innerHTML = `
+          <div class="error-message">
+            <h2>ERREUR</h2>
+            <p>Une erreur s'est produite lors du traitement de votre commande. Veuillez réessayer ou contacter notre service client.</p>
+          </div>
+          <div class="actions">
+            <button class="btn btn-primary" onclick="window.location.href='index.html'">RETOUR À L'ACCUEIL</button>
+          </div>
+        `;
+      } finally {
+        // Nettoyage du localStorage
+        localStorage.removeItem('panier');
+        localStorage.removeItem('boissons');
+        localStorage.removeItem('prenomCommande');
+        localStorage.removeItem('emailCommande');
+      }
     });
-
-    panierBoissons.forEach(boisson => {
-      const prixTotal = boisson.prix * boisson.quantite;
-      total += prixTotal;
-      itemsHtml += `
-        <div class="order-item">
-          <span>${boisson.nom} × ${boisson.quantite}</span>
-          <span>${prixTotal.toFixed(2)}€</span>
-        </div>
-      `;
-
-      commandeDetails.boissons.push({
-        nom: boisson.nom,
-        quantite: boisson.quantite,
-        prix_unitaire: boisson.prix,
-        prix_total: prixTotal
-      });
-    });
-
-    let orderNum;
-    try {
-      const response = await fetch('/api/orderManager');
-      if (!response.ok) throw new Error('Erreur lors de la récupération du numéro de commande');
-      const data = await response.json();
-      orderNum = data.orderId;
-    } catch (error) {
-      console.error('Erreur orderManager API:', error);
-      const now = new Date();
-      orderNum = `CMD-${String(now.getDate()).padStart(2,'0')}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}`;
-    }
-
-    const now = new Date();
-
-    try {
-      const response = await fetch('https://dtkcxmmedsinbdacrbmt.supabase.co/rest/v1/orders', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhhd2xuZWN4amZkaGduYmx0b3ZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk1NjQ1NTcsImV4cCI6MjA2NTE0MDU1N30.j4_ZR22bV7acZabBIduYhoLZlITwRYu6ToBF8MYvj5o',
-          'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhhd2xuZWN4amZkaGduYmx0b3ZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk1NjQ1NTcsImV4cCI6MjA2NTE0MDU1N30.j4_ZR22bV7acZabBIduYhoLZlITwRYu6ToBF8MYvj5o',
-          'Prefer': 'return=representation'
-        },
-        body: JSON.stringify({
-          numero_cmd: orderNum,
-          prenom: prenom,
-          email: email,
-          total_price: total,
-          details: commandeDetails,
-          statut: 'en_attente',
-          date_commande: now.toISOString()
-        })
-      });
-
-      if (!response.ok) throw new Error("Erreur lors de l'enregistrement");
-
-      card.innerHTML = `
-        <h1>CONFIRMATION</h1>
-        ${prenom ? `<p>Client: <strong>${prenom}</strong></p>` : ''}
-        ${email ? `<p>${email}</p>` : ''}
-        <div class="order-number">${orderNum}</div>
-        <div class="order-details">
-          <h2>VOTRE COMMANDE</h2>
-          ${itemsHtml}
-          <div class="total">TOTAL: ${total.toFixed(2)}€</div>
-        </div>
-        <div class="thank-you">
-          Merci pour votre commande. Votre numéro de suivi est <strong>${orderNum}</strong>.
-        </div>
-        <button class="btn" onclick="window.location.href='index.html'">RETOUR À L'ACCUEIL</button>
-      `;
-    } catch (error) {
-      console.error("Erreur Supabase:", error);
-      card.innerHTML = `
-        <h1>CONFIRMATION DE LA COMMANDE</h1>
-        <div class="error-message">
-          Votre commande a été enregistrée (n°${orderNum})<br>
-          Conservez ce numéro de commande: <strong>${orderNum}</strong>.
-        </div>
-        <div class="order-details">
-          <h2>RÉCAPITULATIF</h2>
-          ${itemsHtml}
-          <div class="total">TOTAL: ${total.toFixed(2)}€</div>
-        </div>
-        <button class="btn" onclick="window.location.href='index.html'">RETOUR À L'ACCUEIL</button>
-      `;
-    } finally {
-      localStorage.removeItem('panier');
-      localStorage.removeItem('boissons');
-      localStorage.removeItem('prenomCommande');
-      localStorage.removeItem('emailCommande');
-    }
-  });
-</script>
-
-  </body>
+  </script>
+</body>
 </html>
