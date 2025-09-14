@@ -19,10 +19,8 @@ export default async function handler(req, res) {
     const yyyy = now.getUTCFullYear();
     const datePrefix = `${dd}${mm}${yyyy}`;
 
-    // Récupérer toutes les commandes du jour avec une transaction pour éviter les concurrences
+    // Récupérer toutes les commandes du jour
     const likePattern = `CMD-${datePrefix}-%`;
-    
-    // Utiliser une transaction pour garantir l'atomicité
     const { data: existingOrders, error } = await supabase
       .from('orders')
       .select('numero_cmd')
@@ -43,10 +41,14 @@ export default async function handler(req, res) {
       });
     }
 
-    // Le prochain numéro est simplement maxNumber + 1
+    // Le prochain numéro est maxNumber + 1
     const newCount = maxNumber + 1;
     const formattedCount = String(newCount).padStart(3, '0');
-    const newOrderId = `CMD-${datePrefix}-${formattedCount}`;
+
+    // Ajouter un petit suffixe aléatoire pour éviter les doublons
+    const randomSuffix = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+
+    const newOrderId = `CMD-${datePrefix}-${formattedCount}-${randomSuffix}`;
 
     return res.status(200).json({ orderId: newOrderId });
   } catch (err) {
