@@ -48,7 +48,7 @@ Ce site web est en cours de développement pour permettre aux clients de **comma
 - **Backend** : Node.js (Express)
 - **Base de données** : JSON local / SupaBase
 - **Paiement** : Stripe 
-- **Déploiement** : https://l-etoile-gourmande.vercel.app
+- **Déploiement** : https://etoile-gourmande-one.vercel.app/
 
 ---
 
