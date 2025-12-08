@@ -2,90 +2,85 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
   <url>
-    <loc>https://etoile-gourmande-one.vercel.app/</loc> 
-    <lastmod>2025-09-01</lastmod>
+    <loc>https://etoile-gourmande-one.vercel.app/</loc>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
 
   <url>
     <loc>https://etoile-gourmande-one.vercel.app/pizza.html</loc>
-    <lastmod>2025-09-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
+
   <url>
     <loc>https://etoile-gourmande-one.vercel.app/burgers.html</loc>
-    <lastmod>2025-09-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
+
   <url>
     <loc>https://etoile-gourmande-one.vercel.app/tacos.html</loc>
-    <lastmod>2025-09-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
+
   <url>
     <loc>https://etoile-gourmande-one.vercel.app/Pates.html</loc>
-    <lastmod>2025-09-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
+
   <url>
     <loc>https://etoile-gourmande-one.vercel.app/NosDessert.html</loc>
-    <lastmod>2025-09-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://etoile-gourmande-one.vercel.app/Salades.html</loc>
-    <lastmod>2025-09-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
+
   <url>
     <loc>https://etoile-gourmande-one.vercel.app/Sandwitchs-froids.html</loc>
-    <lastmod>2025-09-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
+
   <url>
     <loc>https://etoile-gourmande-one.vercel.app/bagels.html</loc>
-    <lastmod>2025-09-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
+
   <url>
     <loc>https://etoile-gourmande-one.vercel.app/boissons.html</loc>
-    <lastmod>2025-09-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
-  
+
   <url>
     <loc>https://etoile-gourmande-one.vercel.app/base-creme.html</loc>
-    <lastmod>2025-09-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+
   <url>
     <loc>https://etoile-gourmande-one.vercel.app/base-sauce.html</loc>
-    <lastmod>2025-09-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <url>
     <loc>https://etoile-gourmande-one.vercel.app/Contact.html</loc>
-    <lastmod>2025-09-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+
   <url>
     <loc>https://etoile-gourmande-one.vercel.app/formulaire.html</loc>
-    <lastmod>2025-09-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
