@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/Index-main.css">
-  
+
   <!-- Site Propriétaire Google -->
   <meta name="google-site-verification" content="kkE1IPAzFOVgXOh0dqj2kweKNqliJkjzjuUbe_lcsUw" />
 
@@ -18,7 +18,6 @@
   
   <!-- META DESCRIPTION OPTIMISÉE  -->
   <meta name="description" content="Boulangerie-pâtisserie L'Étoile Gourmande à Saint-Maur-des-Fossés. Pains frais, viennoiseries, pâtisseries, sandwiches et snacking. Commande en ligne pour retrait en magasin.">
-  
   
   <meta name="author" content="L'Étoile Gourmande">
 
@@ -74,32 +73,29 @@
   }
   </script>
   
-  
-  <!-- Vercel Analytics -->
+  <!-- Vercel Analytics seulement -->
   <script>
     window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
   </script>
   <script defer src="https://va.vercel-scripts.com/v1/script.js"></script>
 
-
-  
-<style>
-  #dev-banner {
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    width: 300px;
-    background-color: #f8d7da;
-    color: #721c24;
-    padding: 12px 16px;
-    border-left: 4px solid #f5c6cb;
-    border-radius: 8px;
-    font-size: 14px;
-    font-family: sans-serif;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    z-index: 9999;
-  }
-</style>
+  <style>
+    #dev-banner {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      width: 300px;
+      background-color: #f8d7da;
+      color: #721c24;
+      padding: 12px 16px;
+      border-left: 4px solid #f5c6cb;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: sans-serif;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      z-index: 9999;
+    }
+  </style>
 
 </head>
 
@@ -135,7 +131,9 @@
         </ul>
     </nav>
 </header>
+
 <div id="top"></div> <!-- En haut de page -->
+
 <section class="hero">
     <div class="hero-gallery"></div>
     
@@ -146,24 +144,19 @@
             <div>✻</div>
         </div>
 
-
-
-    
-        <h1 class="title">L'Étoile Gourmande</h1> 
-
+        <h1 class="title">L'Étoile Gourmande</h1>
 
         <br>
         <div style="border: 0px solid; width: 300px; margin: auto;">
             <div class="subtitle">Pâtisserie  I Snacking</div>
 
             <div class="decor">
-             <img src="images/logo/blé.png" class="right-icon" alt="Logo de blé" />
+                <img src="images/logo/blé.png" class="right-icon" alt="Épi de blé - Boulangerie L'Étoile Gourmande" />
                 <div class="decor-line"></div>
                 <meta name="format-detection" content="telephone=no">
-
                 <span class="phone-number">09 84 54 48 86</span>
                 <div class="decor-line"></div>
-                <img src="images/logo/blé.png" class="wheat-icon" alt="Logo de Blé" />
+                <img src="images/logo/blé.png" class="wheat-icon" alt="Épi de blé - Boulangerie L'Étoile Gourmande" />
             </div>
 
             <p class="intro-text">
@@ -175,382 +168,47 @@
             </p>
         </div>
 
-      <!-- Flèche du bas (visible seulement en bas de page) -->
-<!-- Flèche centrale (toujours visible) -->
-<a href="#bottom" class="scroll-arrow center-arrow">↓</a>
-
-<!-- Flèche droite (apparaît au scroll) -->
-<a href="#top" class="scroll-arrow right-arrow">↑</a>
-
-<!-- Ancres -->
-
+        <!-- Flèches de navigation -->
+        <a href="#bottom" class="scroll-arrow center-arrow">↓</a>
+        <a href="#top" class="scroll-arrow right-arrow">↑</a>
 
         <script>
-// Détection du scroll
-window.addEventListener('scroll', function() {
-  if (window.scrollY > 300) { // Seuil d'apparition (300px)
-    document.body.classList.add('scrolled');
-  } else {
-    document.body.classList.remove('scrolled');
-  }
-});
+            // Détection du scroll
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 300) {
+                    document.body.classList.add('scrolled');
+                } else {
+                    document.body.classList.remove('scrolled');
+                }
+            });
 
-// Animation fluide
-document.querySelectorAll('.scroll-arrow').forEach(arrow => {
-  arrow.addEventListener('click', function(e) {
-    e.preventDefault();
-    const target = this.getAttribute('href');
-    document.querySelector(target).scrollIntoView({
-      behavior: 'smooth'
-    });
-  });
-});
-
+            // Animation fluide
+            document.querySelectorAll('.scroll-arrow').forEach(arrow => {
+                arrow.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = this.getAttribute('href');
+                    document.querySelector(target).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
         </script>
-
-
     </div>
 </section>
-        
 
-
-        <script>
-        
-        const burger = document.getElementById('burger-menu');
-const nav = document.getElementById('main-nav');
-
-burger.addEventListener('click', () => {
-    nav.classList.toggle('active');
-});
+<script>
+    // Menu burger simple
+    const burger = document.getElementById('burger-menu');
+    const nav = document.getElementById('main-nav');
+    
+    if (burger && nav) {
+        burger.addEventListener('click', () => {
+            nav.classList.toggle('active');
+        });
+    }
 </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 <div id="bottom"></div> <!-- En bas de page -->
-<div class="cookie-banner" id="cookieBanner">
-    <span class="cookie-close" id="cookieClose"></span>
-    <div class="cookie-content" id="cookieMain">
-        <h3 class="cookie-title">Confidentialité</h3>
-        <p class="cookie-text">
-            Nous utilisons des cookies pour le site et votre expérience.
-            <a href="policy.html" class="privacy-link">Plus d'infos</a>.
-        </p>
-        <div class="cookie-buttons">
-            <button id="cookieSettings" class="cookie-btn cookie-btn-settings">Paramètres</button>
-            <button class="cookie-btn cookie-btn-accept" id="cookieAccept">Accepter</button>
-        </div>
-    </div>
-
-    <div class="cookie-settings" id="cookieSettingsPanel" style="display:none;">
-        <h3 class="cookie-title">Gestion des cookies</h3>
-        
-        <!-- Cookies essentiels -->
-        <div class="cookie-option">
-            <div class="cookie-option-header">
-                <span>Essentiels</span>
-                <label class="cookie-toggle">
-                    <input type="checkbox" checked disabled>
-                    <span class="cookie-toggle-slider"></span>
-                </label>
-            </div>
-            <p class="cookie-option-desc">Fonctionnement du site</p>
-        </div>
-        
-        <!-- Cookies analytiques -->
-        <div class="cookie-option">
-            <div class="cookie-option-header">
-                <span>Analytiques</span>
-                <label class="cookie-toggle">
-                    <input type="checkbox" id="analyticsCookies">
-                    <span class="cookie-toggle-slider"></span>
-                </label>
-            </div>
-            <p class="cookie-option-desc">Analyse d'usage</p>
-        </div>
-        
-        <!-- Cookies marketing -->
-        <div class="cookie-option">
-            <div class="cookie-option-header">
-                <span>Marketing</span>
-                <label class="cookie-toggle">
-                    <input type="checkbox" id="marketingCookies">
-                    <span class="cookie-toggle-slider"></span>
-                </label>
-            </div>
-            <p class="cookie-option-desc">Publicités</p>
-        </div>
-        
-        <div class="cookie-buttons">
-            <button class="cookie-btn cookie-btn-back" id="cookieBack">Retour</button>
-            <button class="cookie-btn cookie-btn-save" id="cookieSave">Valider</button>
-        </div>
-    </div>
-</div>
-
-
-
-
-
-
-
-
-
-
-<script>
-
-  document.addEventListener('DOMContentLoaded', function() {
-    const bannerMobile = document.getElementById('cookieBannerMobile');
-    const btnAcceptMobile = document.getElementById('cookieAcceptMobile');
-    const btnDeclineMobile = document.getElementById('cookieDeclineMobile');
-    const closeMobile = document.getElementById('cookieCloseMobile');
-
-    // Fonction pour afficher la bannière mobile si pas de prefs
-    function showBanner() {
-        bannerMobile.style.display = 'flex';
-        setTimeout(() => {
-            bannerMobile.style.opacity = '1';
-        }, 50);
-    }
-
-    // Fonction cacher la bannière mobile
-    function hideBanner() {
-        bannerMobile.style.opacity = '0';
-        setTimeout(() => {
-            bannerMobile.style.display = 'none';
-        }, 300);
-    }
-
-    // Charger préférences depuis localStorage
-    function getPreferences() {
-        const prefsStr = localStorage.getItem('cookiePreferences');
-        if (!prefsStr) return null;
-        try {
-            return JSON.parse(prefsStr);
-        } catch {
-            return null;
-        }
-    }
-
-    // Sauvegarder préférences dans localStorage + cookie HTTP
-    function savePreferences(prefs) {
-        localStorage.setItem('cookiePreferences', JSON.stringify(prefs));
-        document.cookie = `cookiePreferences=${encodeURIComponent(JSON.stringify(prefs))}; path=/; max-age=${60*60*24*365}; SameSite=Lax;`;
-        loadScriptsBasedOnPreferences(prefs);
-    }
-
-    // Charger ou décharger scripts selon prefs (exemple analytics)
-    function loadScriptsBasedOnPreferences(prefs) {
-        if (prefs.analytics) {
-            if (!document.getElementById('script-analytics')) {
-                const script = document.createElement('script');
-                script.id = 'script-analytics';
-                script.src = 'https://etoile-gourmande-one.vercel.app/analytics.js';
-                document.head.appendChild(script);
-            }
-        } else {
-            const oldScript = document.getElementById('script-analytics');
-            if (oldScript) oldScript.remove();
-        }
-    }
-
-    // Initialisation au chargement
-    const prefs = getPreferences();
-    if (!prefs) {
-        showBanner();
-    } else {
-        loadScriptsBasedOnPreferences(prefs);
-        // Cache banner mobile si prefs déjà définies
-        bannerMobile.style.display = 'none';
-    }
-
-    // Événements
-    btnAcceptMobile.addEventListener('click', function(e) {
-        e.preventDefault();
-        savePreferences({
-            essential: true,
-            analytics: true,
-            marketing: true
-        });
-        hideBanner();
-    });
-
-    btnDeclineMobile.addEventListener('click', function(e) {
-        e.preventDefault();
-        savePreferences({
-            essential: true,
-            analytics: false,
-            marketing: false
-        });
-        hideBanner();
-    });
-
-    closeMobile.addEventListener('click', function(e) {
-        e.preventDefault();
-        hideBanner();
-    });
-});
-
-
-
-</script>
-
-
-
-
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const cookieBanner = document.getElementById('cookieBanner');
-    const cookieMain = document.getElementById('cookieMain');
-    const cookieSettingsPanel = document.getElementById('cookieSettingsPanel');
-    const cookieAccept = document.getElementById('cookieAccept');
-    const cookieSettings = document.getElementById('cookieSettings');
-    const cookieBack = document.getElementById('cookieBack');
-    const cookieSave = document.getElementById('cookieSave');
-    const cookieClose = document.getElementById('cookieClose');
-
-    // Fonction pour afficher la bannière et/ou charger préférences
-    function initPreferences(prefs) {
-        if (!prefs) {
-            // Pas de prefs, afficher la bannière
-          if (cookieBanner) {
-  cookieBanner.style.display = 'block';
-}
-            setTimeout(() => {
-                cookieBanner.style.opacity = '1';
-            }, 100);
-        } else {
-            // On stocke en localStorage et on charge les scripts
-            localStorage.setItem('cookiePreferences', JSON.stringify(prefs));
-            loadScriptsBasedOnPreferences(prefs);
-        }
-    }
-
-    // On commence par essayer de récupérer prefs côté serveur via fetch API
-    fetch('/api/check-cookies')
-        .then(res => res.json())
-        .then(data => {
-            if (data.prefs) {
-                initPreferences(data.prefs);
-            } else {
-                // Pas de prefs côté serveur, on regarde localStorage
-                const localPrefs = JSON.parse(localStorage.getItem('cookiePreferences'));
-                initPreferences(localPrefs);
-            }
-        })
-        .catch(() => {
-            // En cas d’erreur fetch, fallback localStorage
-            const localPrefs = JSON.parse(localStorage.getItem('cookiePreferences'));
-            initPreferences(localPrefs);
-        });
-
-    // Ouvre le panneau de réglages
-    cookieSettings.addEventListener('click', function(e) {
-        e.preventDefault();
-        cookieMain.style.display = 'none';
-        cookieSettingsPanel.style.display = 'block';
-
-        // Mettre à jour les cases à cocher avec la valeur actuelle
-        const prefs = JSON.parse(localStorage.getItem('cookiePreferences')) || { analytics: false, marketing: false };
-        document.getElementById('analyticsCookies').checked = prefs.analytics || false;
-        document.getElementById('marketingCookies').checked = prefs.marketing || false;
-    });
-
-    // Retour au panneau principal
-    cookieBack.addEventListener('click', function(e) {
-        e.preventDefault();
-        cookieSettingsPanel.style.display = 'none';
-        cookieMain.style.display = 'block';
-    });
-
-    // Acceptation complète (tout coché)
-    cookieAccept.addEventListener('click', function(e) {
-        e.preventDefault();
-        savePreferences({
-            essential: true,
-            analytics: true,
-            marketing: true
-        });
-        hideBanner();
-    });
-
-    // Sauvegarder depuis les réglages personnalisés
-    cookieSave.addEventListener('click', function(e) {
-        e.preventDefault();
-        savePreferences({
-            essential: true,
-            analytics: document.getElementById('analyticsCookies').checked,
-            marketing: document.getElementById('marketingCookies').checked
-        });
-        hideBanner();
-    });
-
-    // Fermer la bannière sans sauvegarder (considérer comme refus ?)
-    cookieClose.addEventListener('click', function(e) {
-        e.preventDefault();
-        hideBanner();
-    });
-
-    // Fonction pour sauvegarder dans localStorage + cookie HTTP
-    function savePreferences(prefs) {
-        localStorage.setItem('cookiePreferences', JSON.stringify(prefs));
-
-        // Cookie HTTP valable 1 an, path=/ pour tout le site, SameSite=Lax pour sécurité
-        document.cookie = `cookiePreferences=${encodeURIComponent(JSON.stringify(prefs))}; path=/; max-age=${60*60*24*365}; SameSite=Lax;`;
-
-        loadScriptsBasedOnPreferences(prefs);
-    }
-
-    // Cacher la bannière doucement
-    function hideBanner() {
-        cookieBanner.style.opacity = '0';
-        setTimeout(() => {
-            cookieBanner.style.display = 'none';
-        }, 300);
-    }
-
-    // Chargement conditionnel des scripts
-    function loadScriptsBasedOnPreferences(prefs) {
-        console.log('Préférences cookies:', prefs);
-
-        if (prefs.analytics) {
-            if (!document.getElementById('script-analytics')) {
-                const script = document.createElement('script');
-                script.id = 'script-analytics';
-                script.src = 'https://etoile-gourmande-one.vercel.app/analytics.js';
-                document.head.appendChild(script);
-            }
-        } else {
-            const oldScript = document.getElementById('script-analytics');
-            if (oldScript) oldScript.remove();
-        }
-
-        
-    }
-});
-</script>
-
-
-
-
-
-
-
-
-
-
 
 <section class="image-categories" id="nos-creations">
     <h2 class="category-title">Nos Créations</h2>
@@ -575,7 +233,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <img src="images/Sandwitchs/Sandwitch.png" alt="Sandwitch Chaud" />
             <span>Sandwitchs Chauds</span>
         </div>
-          <div class="image-category" onclick="location.href='Sandwitchs-froids.html'">
+        <div class="image-category" onclick="location.href='Sandwitchs-froids.html'">
             <img src="images/Sandwitchs/Sandwitchs-chauds.png" alt="Sandwitch-froids" />
             <span>Sandwitchs Froids</span>
         </div>
@@ -583,65 +241,57 @@ document.addEventListener('DOMContentLoaded', function() {
             <img src="images/Salades/Salades.png" alt="Salade" />
             <span>Salades</span>
         </div>
-          <div class="image-category" onclick="location.href='Pates.html'">
+        <div class="image-category" onclick="location.href='Pates.html'">
             <img src="images/Pates/Pates.png" alt="Pates" />
             <span>Pâtes</span>
         </div>
-    </div> <!-- fermeture correcte ici -->
+    </div>
 </section>
 
-
-
-
-
-<script src="index.js"></script>
-
 <footer class="modern-footer">
-  <div class="footer-wrapper">
-    <!-- Boutons principaux -->
-    <div class="footer-buttons">
-      <a href="#" class="main-btn">L'étoile Gourmande</a>
-      <a href="suivi-commande.html" class="second-btn">Suivi de commande</a>
+    <div class="footer-wrapper">
+        <!-- Boutons principaux -->
+        <div class="footer-buttons">
+            <a href="#" class="main-btn">L'étoile Gourmande</a>
+            <a href="suivi-commande.html" class="second-btn">Suivi de commande</a>
+        </div>
+
+        <!-- Liens principaux -->
+        <div class="footer-links">
+            <div class="link-group">
+                <h4>Nos créations</h4>
+                <ul>
+                    <li><a href="Sandwitchs-chaud.html">Nos Sandwitchs chauds</a></li>
+                    <li><a href="Sandwitchs-froids.html">Nos Sandwitchs froids</a></li>
+                </ul>
+            </div>
+
+            <div class="link-group">
+                <h4>Nos partenaires</h4>
+                <ul>
+                    <li><a href="https://www.ubereats.com/fr/store/letoile-gourmande/ZojpspdwX6qUsyPGGn-4LQ?diningMode=DELIVERY&pl=JTdCJTIyYWRkcmVzcyUyMiUzQSUyMjExJTIwUnVlJTIwUGllcnJlJTIwQnJvc3NvbGV0dGUlMjIlMkMlMjJyZWZlcmVuY2UlMjIlM0ElMjJDaElKYWN4U3ZnZ1M1a2NSZlBCaWN5WVd3X1klMjIlMkMlMjJyZWZlcmVuY2VUeXBlJTIyJTNBJTIyZ29vZ2xlX3BsYWNlcyUyMiUyQyUyMmxhdGl0dWRlJTIyJTNBNDguODU1OTk1NiUyQyUyMmxvbmdpdHVkZSUyMiUzQTIuNTM0NzU5MyU3RA%3D%3D&utm_campaign=CM2508147-search-free-nonbrand-google-pas_e_all_acq_Global&utm_medium=search-free-nonbrand&utm_source=google-pas">Uber Eats</a></li>
+                    <li><a href="#">Deliveroo</a></li>
+                </ul>
+            </div>
+
+            <div class="link-group">
+                <h4>Informations</h4>
+                <ul>
+                    <li><a href="Contact.html">Contact</a></li>
+                    <li><a href="Contact.html">Horaires</a></li>
+                </ul>
+            </div>
+        </div>
     </div>
 
-    <!-- Liens principaux -->
-    <div class="footer-links">
-      <div class="link-group">
-        <h4>Nos créations</h4>
-        <ul>
-          <li><a href="Sandwitchs-chaud.html">Nos Sandwitchs chauds</a></li>
-          <li><a href="Sandwitchs-froids.html">Nos Sandwitchs froids</a></li>
-        </ul>
-      </div>
-
-      <div class="link-group">
-        <h4>Nos partenaires</h4>
-        <ul>
-          <li><a href="https://www.ubereats.com/fr/store/letoile-gourmande/ZojpspdwX6qUsyPGGn-4LQ?diningMode=DELIVERY&pl=JTdCJTIyYWRkcmVzcyUyMiUzQSUyMjExJTIwUnVlJTIwUGllcnJlJTIwQnJvc3NvbGV0dGUlMjIlMkMlMjJyZWZlcmVuY2UlMjIlM0ElMjJDaElKYWN4U3ZnZ1M1a2NSZlBCaWN5WVd3X1klMjIlMkMlMjJyZWZlcmVuY2VUeXBlJTIyJTNBJTIyZ29vZ2xlX3BsYWNlcyUyMiUyQyUyMmxhdGl0dWRlJTIyJTNBNDguODU1OTk1NiUyQyUyMmxvbmdpdHVkZSUyMiUzQTIuNTM0NzU5MyU3RA%3D%3D&utm_campaign=CM2508147-search-free-nonbrand-google-pas_e_all_acq_Global&utm_medium=search-free-nonbrand&utm_source=google-pas">Uber Eats</a></li>
-          <li><a href="#">Deliveroo</a></li>
-        </ul>
-      </div>
-
-      <div class="link-group">
-        <h4>Informations</h4>
-        <ul>
-          <li><a href="Contact.html">Contact</a></li>
-          <li><a href="Contact.html">Horaires</a></li>
-        </ul>
-      </div>
-    </div>
-
-<!-- Mentions légales -->
-  <footer class="footerr" role="contentinfo">
-    <div class="footer-legal">
-      <p>© 2025 L'Etoile Gourmande | <a href="mention.legales.html" aria-label="Mentions légales">Mentions légales</a> | <a href="policy.html" aria-label="Politique de confidentialité">Politique de confidentialité</a></p>
-    </div>
-  </footer>
-
+    <footer class="footerr" role="contentinfo">
+        <div class="footer-legal">
+            <p>© 2025 L'Etoile Gourmande | <a href="mention.legales.html" aria-label="Mentions légales">Mentions légales</a> | <a href="policy.html" aria-label="Politique de confidentialité">Politique de confidentialité</a></p>
+        </div>
+    </footer>
 </footer>
   
 
- </body>
+
+  </body>
 </html>
-
-
