@@ -425,7 +425,9 @@ document.addEventListener('DOMContentLoaded', function() {
     function initPreferences(prefs) {
         if (!prefs) {
             // Pas de prefs, afficher la bannière
-            cookieBanner.style.display = 'block';
+          if (cookieBanner) {
+  cookieBanner.style.display = 'block';
+}
             setTimeout(() => {
                 cookieBanner.style.opacity = '1';
             }, 100);
@@ -638,17 +640,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 </footer>
   
-<script>
-  (function() {
-    const t = document.createElement('script');
-    t.src = 'https://vitals.vercel-insights.com/v1/script.js?' + Date.now();
-    t.dataset.vercelDsn = 'https://vitals.vercel-insights.com/v1/vitals';
-    t.dataset.vercelOrigin = window.location.origin;
-    t.crossOrigin = 'anonymous';
-    t.defer = true;  <!-- AJOUTE CETTE LIGNE -->
-    document.body.appendChild(t);
-  })();
-</script>
+
  </body>
 </html>
+
 
