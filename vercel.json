@@ -10,6 +10,15 @@
         {
           "key": "Vercel-CDN-Cache-Control",
           "value": "public, max-age=3600"
+        },
+         CES DEUX LIGNES  Google Search Console ↓
+        {
+          "key": "X-Robots-Tag",
+          "value": "index, follow"
+        },
+        {
+          "key": "Googlebot",
+          "value": "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
         }
       ]
     }
