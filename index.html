@@ -15,17 +15,29 @@
 
   <!-- Métas de base -->
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <meta name="description" content="Boulangerie L'Étoile Gourmande">
-  <meta name="keywords" content="boulangerie, pain frais, pâtisserie, viennoiserie, artisan, L'Étoile Gourmande, snacking, Saint-Maur-des-Fossés, commande en ligne, retrait en magasin">
+  
+  <!-- META DESCRIPTION OPTIMISÉE  -->
+  <meta name="description" content="Boulangerie-pâtisserie L'Étoile Gourmande à Saint-Maur-des-Fossés. Pains frais, viennoiseries, pâtisseries, sandwiches et snacking. Commande en ligne pour retrait en magasin.">
+  
+  
   <meta name="author" content="L'Étoile Gourmande">
 
-  <!-- Réseaux sociaux -->
-  <meta property="og:title" content="Boulangerie L'Étoile Gourmande">
-  <meta property="og:description" content="boulangerie, pain frais, pâtisserie, viennoiserie, artisan, L'Étoile Gourmande, snacking, Saint-Maur-des-Fossés, produits frais, commande en ligne, retrait en magasin">
+  <!-- Réseaux sociaux optimisés -->
+  <meta property="og:title" content="Boulangerie L'Étoile Gourmande - Saint-Maur-des-Fossés">
+  <meta property="og:description" content="Découvrez notre boulangerie-pâtisserie à Saint-Maur-des-Fossés. Pains frais, viennoiseries, pâtisseries et snacking. Commandez en ligne !">
   <meta property="og:type" content="website">
+  <meta property="og:url" content="https://etoile-gourmande-one.vercel.app">
+  <meta property="og:image" content="https://etoile-gourmande-one.vercel.app/images/logo/logo-halal.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="fr_FR">
+  <meta property="og:site_name" content="L'Étoile Gourmande">
+  
+  <!-- Twitter Cards optimisées -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Boulangerie L'Étoile Gourmande">
-  <meta name="twitter:description" content="Pains, viennoiseries">
+  <meta name="twitter:description" content="Boulangerie-pâtisserie à Saint-Maur-des-Fossés. Pains frais, viennoiseries, pâtisseries et snacking. Commandez en ligne pour retrait en magasin.">
+  <meta name="twitter:image" content="https://etoile-gourmande-one.vercel.app/images/logo/logo-halal.png">
 
   <!-- Favicon Apple (iOS) -->
   <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon.png">
@@ -39,9 +51,28 @@
   <!-- Favicon ICO (racine) -->
   <link rel="icon" href="favicon.ico" sizes="any">
   
-  <link rel="manifest" href="/site.webmanifest">
-  
   <link rel="canonical" href="https://etoile-gourmande-one.vercel.app" />
+  
+  <!-- Schema.org pour boulangerie -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Bakery",
+    "name": "L'Étoile Gourmande",
+    "description": "Boulangerie-pâtisserie à Saint-Maur-des-Fossés",
+    "url": "https://etoile-gourmande-one.vercel.app",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "30 Rue du Four",
+      "addressLocality": "Saint-Maur-des-Fossés",
+      "addressCountry": "FR"
+    },
+    "telephone": "09 84 54 48 86",
+    "servesCuisine": "French Bakery",
+    "priceRange": "€",
+    "image": "https://etoile-gourmande-one.vercel.app/images/logo/logo-halal.png"
+  }
+  </script>
   
   <!-- Content-Security-Policy  -->
  <meta http-equiv="Content-Security-Policy" content="
@@ -58,21 +89,11 @@
   upgrade-insecure-requests;
 ">
 
-  
-
   <!-- Vercel Analytics -->
   <script>
     window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
   </script>
   <script defer src="https://va.vercel-scripts.com/v1/script.js"></script>
-
-   <!-- Google Search Console -->
-  <meta name="robots" content="index, follow">
-
-
-
-
-  
 
 <style>
   #dev-banner {
@@ -92,7 +113,7 @@
   }
 </style>
 
-
+</head>
 
 <body>
   
@@ -645,3 +666,4 @@ document.addEventListener('DOMContentLoaded', function() {
   </script>
  </body>
 </html>
+
