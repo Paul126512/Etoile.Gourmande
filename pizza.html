@@ -1,29 +1,30 @@
+<!DOCTYPE html>
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- SEO PRINCIPAL -->
-    <title>L'ETOILE GOURMANDE I Pizza</title>
-    <meta name="description" content="Découvrez nos pizzas artisanales : base tomate san marzano ou base crème fraîche maison. Choisissez la saveur parfaite chez L'Étoile Gourmande.">
-    <meta name="keywords" content="pizza, pizza base tomate, pizza base crème, pizzeria, étoile gourmande, livraison pizza, restaurant, pizzas artisanales">
+    <title>Pizzas</title>
+    <meta name="description" content="Découvrez nos pizzas artisanales : base tomate san marzano ou base crème fraîche maison. Préparées avec des ingrédients frais et de qualité.">
 
     <!-- CANONICAL -->
     <link rel="canonical" href="https://etoile-gourmande-one.vercel.app/pizza.html">
 
-    <!-- OPEN GRAPH (FACEBOOK / INSTAGRAM / MESSENGER) -->
-    <meta property="og:title" content="Nos Pizzas — Base Tomate & Base Crème | L'Étoile Gourmande">
-    <meta property="og:description" content="Choisissez entre nos pizzas base tomate ou base crème, préparées avec des ingrédients frais et de qualité.">
+    <!-- OPEN GRAPH -->
+    <meta property="og:title" content="Pizzas Artisanales — L'Étoile Gourmande">
+    <meta property="og:description" content="Choisissez entre nos pizzas base tomate ou base crème, préparées avec des ingrédients frais.">
     <meta property="og:image" content="https://images.unsplash.com/photo-1593504049359-74330189a345?auto=format&fit=crop&w=1350&q=80">
     <meta property="og:url" content="https://etoile-gourmande-one.vercel.app/pizza.html">
     <meta property="og:type" content="website">
 
     <!-- TWITTER CARD -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Nos Pizzas — L'Étoile Gourmande">
-    <meta name="twitter:description" content="Base tomate ou base crème ? Découvrez nos pizzas artisanales.">
+    <meta name="twitter:title" content="Pizzas Artisanales | L'Étoile Gourmande">
+    <meta name="twitter:description" content="Des pizzas base tomate ou base crème, réalisées avec soin dans notre pizzeria.">
     <meta name="twitter:image" content="https://images.unsplash.com/photo-1593504049359-74330189a345?auto=format&fit=crop&w=1350&q=80">
 
-    <!-- DONNÉES STRUCTURÉES JSON-LD (GOOGLE) -->
+    <!-- JSON-LD SANS ADRESSE / TÉLÉPHONE / HORAIRES -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -31,26 +32,19 @@
       "name": "L'Étoile Gourmande",
       "image": "https://images.unsplash.com/photo-1593504049359-74330189a345?auto=format&fit=crop&w=1350&q=80",
       "url": "https://etoile-gourmande-one.vercel.app",
-      "servesCuisine": "Pizza, Tacos, Burgers",
+      "servesCuisine": ["Pizza", "Tacos", "Burgers"],
       "menu": "https://etoile-gourmande-one.vercel.app/pizza.html",
-      "description": "Pizzas artisanales base tomate ou base crème, préparées avec des produits frais.",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "Votre adresse ici",
-        "addressLocality": "Votre ville",
-        "postalCode": "00000",
-        "addressCountry": "FR"
-      }
+      "description": "Pizzas artisanales préparées avec des ingrédients frais, disponibles en base tomate ou base crème."
     }
     </script>
 
-    <!-- STYLES + FONTS -->
+    <!-- FONTS -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 
+    <!-- STYLES (Ton CSS complet d’origine) -->
     <style>
-        /* === VARIABLES & RESET === */
         :root {
             --noir: #111;
             --blanc: #f9f9f9;
@@ -98,12 +92,11 @@
         .logo {
             font-size: 1.5rem;
             font-weight: 700;
-            transition: transform 0.9s cubic-bezier(0.2, 0.7, 0.3, 1.1), 
-            opacity 0.3s ease;
+            transition: transform 0.9s cubic-bezier(0.2, 0.7, 0.3, 1.1), opacity 0.3s ease;
             transform-origin: center;
         }
 
-        /* === MENU BURGER === */
+        /* Burger menu */
         .burger {
             display: none;
             cursor: pointer;
@@ -118,7 +111,6 @@
             transition: all 0.3s ease;
         }
 
-        /* Navigation */
         nav {
             display: flex;
         }
@@ -152,7 +144,7 @@
             width: 100%;
         }
 
-        /* === HERO DUAL SECTION === */
+        /* === HERO DUAL === */
         .hero-dual {
             display: flex;
             height: 100vh;
@@ -211,7 +203,6 @@
             font-size: 1rem;
             margin-bottom: 25px;
             font-weight: 300;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.8);
         }
 
         .btn {
@@ -232,27 +223,20 @@
         }
 
         .tomato-side {
-            background: url('https://images.unsplash.com/photo-1593504049359-74330189a345?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') center/cover no-repeat;
+            background: url('https://images.unsplash.com/photo-1593504049359-74330189a345?auto=format&fit=crop&w=1350&q=80') center/cover no-repeat;
         }
 
         .cream-side {
-            background: url('https://images.unsplash.com/photo-1590947132387-155cc02f3212?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') center/cover no-repeat;
+            background: url('https://images.unsplash.com/photo-1590947132387-155cc02f3212?auto=format&fit=crop&w=1350&q=80') center/cover no-repeat;
         }
 
-        /* === VERSION MOBILE === */
+        /* === MOBILE === */
         @media (max-width: 768px) {
-            header {
-                padding: 15px 5%;
-            }
+            header { padding: 15px 5%; }
 
-            .logo {
-                font-size: 1.3rem;
-            }
+            .logo { font-size: 1.3rem; }
 
-            /* Menu Burger */
-            .burger {
-                display: block;
-            }
+            .burger { display: block; }
 
             nav {
                 position: fixed;
@@ -268,9 +252,7 @@
                 z-index: 100;
             }
 
-            nav.open {
-                left: 0;
-            }
+            nav.open { left: 0; }
 
             nav ul {
                 flex-direction: column;
@@ -278,7 +260,6 @@
                 text-align: center;
             }
 
-            /* Hero Section */
             .hero-dual {
                 flex-direction: column;
                 height: auto;
@@ -288,69 +269,35 @@
             .pizza-side {
                 width: 100% !important;
                 height: 50vh;
-                min-height: 50vh;
-            }
-
-            .side-title {
-                font-size: 2rem;
-            }
-
-            .side-description {
-                font-size: 0.9rem;
-            }
-
-            .btn {
-                padding: 10px 25px;
-                font-size: 0.9rem;
             }
         }
 
-        /* Animation du burger */
+        /* Burger animation */
         .burger.active div:nth-child(1) {
             transform: rotate(-45deg) translate(-5px, 6px);
         }
-
-        .burger.active div:nth-child(2) {
-            opacity: 0;
-        }
-
+        .burger.active div:nth-child(2) { opacity: 0; }
         .burger.active div:nth-child(3) {
             transform: rotate(45deg) translate(-5px, -6px);
         }
 
         .logo:hover {
-            scale: 1.05;
-             transform: scale(1.05); /* Animation plus fluide que 'scale' */
+            transform: scale(1.05);
         }
-        /* Animation mobile - tout en restant subtile */
-@media (hover: hover) and (pointer: fine) {
-    .logo:hover {
-        transform: scale(1.05);
-    }
-}
-
-/* Alternative pour appareils tactiles */
-@media (hover: none) {
-    .logo:active {
-        transform: scale(1.03);
-        transition-duration: 0.2s;
-    }
-}
-
-        
     </style>
 </head>
+
 <body>
     <header>
-   <!-- Remplacez votre div par ce lien -->
-<a href="index.html" class="logo" id="logo-bouton">L'ETOILE GOURMANDE</a>
-        <div class="burger" id="burger">
+        <a href="index.html" class="logo" id="logo-bouton">L'ETOILE GOURMANDE</a>
+
+        <div class="burger" id="burger" aria-label="Menu mobile" aria-expanded="false">
             <div></div>
             <div></div>
             <div></div>
         </div>
 
-        <nav id="nav">
+        <nav id="nav" aria-label="Navigation principale">
             <ul>
                 <li><a href="burgers.html">Nos Burgers</a></li>
                 <li><a href="tacos.html">Nos Tacos</a></li>
@@ -361,35 +308,37 @@
         </nav>
     </header>
 
+    <!-- H1 caché mais utile pour SEO -->
+    <h1 style="display:none;">Pizzas Artisanales Base Tomate & Base Crème | L'Étoile Gourmande</h1>
+
     <section class="hero-dual" id="concept">
         <div class="pizza-side tomato-side active">
             <div class="side-content">
                 <h2 class="side-title">Base Tomate</h2>
-                <p class="side-description">Sauce san marzano, mozzarella di bufala, basilic frais</p>
+                <p class="side-description">Sauce San Marzano, mozzarella di bufala, basilic frais.</p>
                 <a href="base-sauce.html" class="btn">Découvrir</a>
             </div>
         </div>
-        
+
         <div class="pizza-side cream-side">
             <div class="side-content">
                 <h2 class="side-title">Base Crème</h2>
-                <p class="side-description">Crème fraîche maison, champignons, jambon cru</p>
+                <p class="side-description">Crème fraîche maison, champignons, jambon cru.</p>
                 <a href="base-creme.html" class="btn">Découvrir</a>
             </div>
         </div>
     </section>
 
     <script>
-        // Menu Burger
         const burger = document.getElementById('burger');
         const nav = document.getElementById('nav');
-        
+
         burger.addEventListener('click', () => {
             burger.classList.toggle('active');
             nav.classList.toggle('open');
         });
 
-        // Hero Slider
+        // Slider hero
         document.addEventListener('DOMContentLoaded', function() {
             const pizzaSides = document.querySelectorAll('.pizza-side');
             let currentIndex = 0;
@@ -412,12 +361,9 @@
                 }
             }
 
-            // Interactions
             pizzaSides.forEach((side, index) => {
                 side.addEventListener('click', function() {
-                    if (isMobile) {
-                        activateSide(index);
-                    }
+                    if (isMobile) activateSide(index);
                 });
 
                 if (!isMobile) {
@@ -430,23 +376,9 @@
                 }
             });
 
-            // Initialisation
             activateSide(0);
             startSlider();
-
-            // Redimensionnement
-            window.addEventListener('resize', function() {
-                const newIsMobile = window.innerWidth <= 768;
-                if (isMobile !== newIsMobile) {
-                    clearInterval(interval);
-                    if (!newIsMobile) {
-                        startSlider();
-                    }
-                }
-            });
         });
     </script>
-</body>
+  </body>
 </html>
-
-
