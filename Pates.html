@@ -790,179 +790,39 @@ document.getElementById('fermer-panier').addEventListener('click', function() {
 </script>
 
 
+    
+<!-- Panier flottant -->
+<div id="panier-flottant" class="panier-flottant">
+  <div class="header-panier">
+    <h3>Votre Panier</h3>
+    <button id="fermer-panier" class="fermer-panier">×</button>
+  </div>
+  <div id="contenu-panier" class="contenu-panier">
+    <ul id="liste-panier"></ul>
+    <div class="total-panier">
+      <strong>Total : <span id="total">0.00</span> €</strong>
+    </div>
+    <button class="btn-commander">Commander</button>
+  </div>
+</div>
 
+<!-- Icône toggle pour ouvrir le panier -->
+<button class="toggle" id="toggle-panier">
+  🛒 <span id="compteur-panier">0</span>
+</button>
 
-<script>
-
-
-  const boutonsAjouter = document.querySelectorAll('.produit button');
-const compteurPanier = document.getElementById('compteur-panier');
-const listePanier = document.getElementById('liste-panier');
-const totalElement = document.getElementById('total');
-const panierFlottant = document.getElementById('panier-flottant');
-const togglePanier = document.querySelector('.toggle');
-const fermerPanier = document.getElementById('fermer-panier');
-
-let panier = JSON.parse(localStorage.getItem('panier')) || [];
-
-// Normaliser la quantité pour chaque produit
-panier = panier.map(item => ({
-  ...item,
-  quantite: item.quantite || 1
-}));
-
-// Fonction pour trouver un produit identique dans le panier
-function trouverProduitIdentique(nom, prix, type, supplements) {
-  return panier.find(item => 
-    item.nom === nom && 
-    item.prix === prix && 
-    item.type === type && 
-    JSON.stringify(item.supplements) === JSON.stringify(supplements)
-  );
-}
-
-// Ajouter au panier
-boutonsAjouter.forEach(bouton => {
-  bouton.addEventListener('click', () => {
-    const produitElement = bouton.closest('.produit');
-    const nom = produitElement.querySelector('h3').textContent.trim();
-    const typeProduit = produitElement.getAttribute('data-type'); // Récupère le type depuis l'élément
-
-    const selectTaille = produitElement.querySelector('select.taille-select');
-    let prix;
-    let type;
-
-    if (selectTaille) {
-      const optionChoisie = selectTaille.options[selectTaille.selectedIndex];
-      prix = parseFloat(optionChoisie.getAttribute('data-price'));
-      type = 'pizza';
-    } else {
-      const prixElement = produitElement.querySelector('.prix-produit');
-      prix = parseFloat(prixElement.getAttribute('data-price'));
-      type = typeProduit || 'autre'; // Utilise le type de l'élément ou 'autre' par défaut
-    }
-
-    const image = produitElement.querySelector('img').src;
-
-    const produitExistant = trouverProduitIdentique(nom, prix, type, []);
-
-    if (produitExistant) {
-      produitExistant.quantite += 1;
-      showToast(`Quantité augmentée pour ${nom}`, "ajout");
-    } else {
-      const produit = {
-        id: Date.now(),
-        nom,
-        prix,
-        image,
-        type,
-        supplements: [],
-        quantite: 1
-      };
-      panier.push(produit);
-      showToast(`Produit ajouté : ${nom}`, "ajout");
-    }
-
-    localStorage.setItem('panier', JSON.stringify(panier));
-    afficherPanier();
-  });
-});
-
-// Afficher le panier
-function afficherPanier() {
-  listePanier.innerHTML = '';
-  let total = 0;
-
-  panier.forEach(item => {
-    if (typeof item.prix !== 'number' || isNaN(item.prix)) {
-      console.error(`Prix non valide pour ${item.nom} :`, item.prix);
-      item.prix = 0;
-    }
-
-    const li = document.createElement('li');
-    li.classList.add('article-panier');
-
-    const details = document.createElement('div');
-    details.classList.add('details-panier');
-    details.innerHTML = `
-      <img src="${item.image}" alt="${item.nom}" />
-      <div>
-        <h4>${item.nom} × ${item.quantite}</h4>
-        <p>Type : ${
-          item.type === 'pizza' ? 'Pizza' :
-          item.type === 'burger' ? 'Burger' :
-          item.type === 'bagel' ? 'Bagel' :
-          item.type === 'tacos' ? 'Tacos' :
-          item.type === 'pates' ? 'Pâtes' : 
-          item.type === 'salades' ? 'Salade' : 
-          item.type === 'sandwitchs_froids' ? 'Sandwich Froid' :
-          item.type === 'sandwitchs_chauds' ? 'Sandwich Chaud' :
-          'Autre'
-        }</p>
-        <p>Prix unitaire : ${item.prix.toFixed(2)} €</p>
-        <p>Prix total : ${(item.prix * item.quantite).toFixed(2)} €</p>
-      </div>
-    `;
-
-    const boutonSupprimer = document.createElement('button');
-    boutonSupprimer.textContent = '×';
-    boutonSupprimer.classList.add('supprimer');
-    boutonSupprimer.addEventListener('click', () => {
-      panier = panier.filter(p => p.id !== item.id);
-      localStorage.setItem('panier', JSON.stringify(panier));
-      afficherPanier();
-      showToast(`Produit supprimé : ${item.nom}`, "suppression");
-    });
-
-    li.appendChild(details);
-    li.appendChild(boutonSupprimer);
-    listePanier.appendChild(li);
-
-    const sousTotal = item.prix * item.quantite;
-    if (!isNaN(sousTotal)) {
-      total += sousTotal;
-    } else {
-      console.error(`Sous-total invalide pour ${item.nom}:`, sousTotal);
-    }
-  });
-
-  compteurPanier.textContent = panier.reduce((acc, item) => acc + item.quantite, 0);
-  totalElement.textContent = isNaN(total) ? '0.00' : total.toFixed(2);
-}
-
-// Toggle panier flottant
-togglePanier.addEventListener('click', () => {
-  document.getElementById('contenu-panier').classList.toggle('ouvert');
-});
-
-fermerPanier.addEventListener('click', () => {
-  panierFlottant.classList.remove('ouvert');
-});
-
-// Initialisation
-afficherPanier();
-
-
-// --- Toast Notification ---
-
-function showToast(message = "Produit ajouté au panier", type = "ajout") {
-  const toast = document.getElementById('toast-notification');
-  toast.textContent = message;
-
-  toast.className = `toast show ${type}`;
-
-  setTimeout(() => {
-    toast.classList.remove('show', 'ajout', 'suppression');
-  }, 2500);
-}
+<!-- Toast notification -->
+<div id="toast-notification" class="toast"></div>
 
 
 
-      </script>
+
+    
      </div>
     </div>
   </body>
 </html>
+
 
 
 
