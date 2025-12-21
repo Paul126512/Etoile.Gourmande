@@ -40,7 +40,6 @@
   <meta name="twitter:image" content="https://etoile-gourmande-one.vercel.app/images/pates-twitter.jpg">
 
 <style>
- 
 /* === Reset et base === */
 * {
   box-sizing: border-box;
@@ -55,13 +54,15 @@ body {
   margin: 0;
   padding: 0;
   line-height: 1.6;
+  position: relative;
+  min-height: 100vh;
 }
 
 .toast {
   position: fixed;
   bottom: 20px;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%) translateY(20px);
   background-color: #000000;
   color: #fff;
   padding: 12px 24px;
@@ -70,15 +71,14 @@ body {
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s ease, transform 0.3s ease;
-  z-index: 1000;
+  z-index: 10000;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
 .toast.show {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
 }
-
-
 
 /* === Structure globale === */
 .container {
@@ -87,6 +87,7 @@ body {
   padding: 40px 20px;
   background-color: white;
   box-shadow: 0 0 30px rgba(0,0,0,0.05);
+  position: relative;
 }
 
 /* === Typographie élégante === */
@@ -170,6 +171,7 @@ h1:after {
   display: flex;
   flex-direction: column;
   height: 100%;
+  position: relative;
 }
 
 .produit:hover {
@@ -214,28 +216,10 @@ h1:after {
   flex: 1;
   font-weight: 300;
   line-height: 1.7;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  
-  /* Version standard moderne */
   display: -webkit-box;
-  display: -moz-box;
-  display: -ms-flexbox;
-  display: -webkit-flex;
-  display: flex;
-  
-  /* Limite de lignes avec préfixes et version standard */
   -webkit-line-clamp: 4;
-  -moz-line-clamp: 4;
-  line-clamp: 4;
-  
-  /* Orientation du box layout */
   -webkit-box-orient: vertical;
-  -moz-box-orient: vertical;
-  box-orient: vertical;
-  
-  /* Alternative pour certains navigateurs */
-  max-height: calc(1.7em * 4); /* line-height × nombre de lignes */
+  overflow: hidden;
 }
 
 .prix-produit {
@@ -267,6 +251,8 @@ h1:after {
   text-transform: uppercase;
   text-decoration: none;
   display: inline-block;
+  width: 100%;
+  margin-top: auto;
 }
 
 .produit button::before {
@@ -291,12 +277,6 @@ h1:after {
   left: 0;
 }
 
-.produit button span {
-  position: relative;
-  z-index: 2;
-  text-decoration: none;
-}
-
 /* === Panier flottant === */
 #panier-flottant {
   position: fixed;
@@ -304,8 +284,6 @@ h1:after {
   right: 30px;
   z-index: 1000;
 }
-
-
 
 #panier-flottant button.toggle {
   background: white;
@@ -330,7 +308,6 @@ h1:after {
 }
 
 /* === Contenu panier === */
-
 #contenu-panier {
   position: absolute;
   top: 100%;
@@ -340,17 +317,18 @@ h1:after {
   box-shadow: 0 10px 30px rgba(0,0,0,0.15);
   padding: 20px;
   opacity: 0;
-  pointer-events: none;
+  visibility: hidden;
   transform: translateY(-20px);
   transition: all 0.3s ease;
   max-height: 400px;
   display: flex;
   flex-direction: column;
+  z-index: 1001;
 }
 
 #contenu-panier.ouvert {
   opacity: 1;
-  pointer-events: auto;
+  visibility: visible;
   transform: translateY(0);
 }
 
@@ -360,15 +338,23 @@ h1:after {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  color: #111;
 }
 
 #fermer-panier {
   background: none;
   border: none;
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   color: #999;
   cursor: pointer;
   transition: color 0.3s ease;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
 }
 
 #fermer-panier:hover {
@@ -379,28 +365,49 @@ h1:after {
   flex: 1;
   overflow-y: auto;
   margin: 0;
-  padding: 10px;
+  padding: 10px 0;
   list-style: none;
-  border-top: 1px solid #ccc;
-  border-bottom: 1px solid #ccc;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+  max-height: 250px;
 }
 
+.article-panier {
+  display: flex;
+  align-items: flex-start;
+  padding: 10px 0;
+  border-bottom: 1px solid #f0f0f0;
+  position: relative;
+}
 
+.article-panier:last-child {
+  border-bottom: none;
+}
 
-
-#liste-panier img {
+.article-panier img {
   width: 60px;
-  height: 40px;
+  height: 60px;
   object-fit: cover;
-  margin-right: 12px;
   border-radius: 4px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  vertical-align: middle;
-  transition: transform 0.3s ease;
+  margin-right: 10px;
 }
 
-#liste-panier img:hover {
-  transform: scale(1.05);
+.article-panier .details-panier {
+  flex: 1;
+  min-width: 0;
+}
+
+.article-panier h4 {
+  font-size: 0.9rem;
+  margin-bottom: 5px;
+  color: #111;
+  font-weight: 500;
+}
+
+.article-panier p {
+  font-size: 0.8rem;
+  color: #666;
+  margin-bottom: 3px;
 }
 
 .supprimer {
@@ -409,47 +416,51 @@ h1:after {
   color: #e74c3c;
   cursor: pointer;
   font-weight: bold;
-  font-size: 2rem;
+  font-size: 1.2rem;
   transition: color 0.3s ease;
-  margin-left: 200px;
-  position: relative;
-  top: -80px;
+  position: absolute;
+  right: 0;
+  top: 10px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
 }
 
 .supprimer:hover {
   color: #c0392b;
 }
 
-.article-panier:not(:last-child) {
-  border-bottom: 1px solid #eee;
-  padding-bottom: 10px;
-  margin-bottom: 10px;
-}
-
 /* === Total panier === */
-#total {
-  font-size: 1.2rem;
-  text-align: right;
-  font-weight: 400;
-  margin-top: 15px;
+.total-fixe {
+  margin-top: 20px;
   padding-top: 15px;
-  border-top: 1px solid #eee;
+  border-top: 2px solid #eee;
+  text-align: center;
 }
 
-/* === Bouton valider === */
+.total-fixe p {
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+  color: #111;
+  font-weight: 500;
+}
+
 #valider-commande {
   width: 100%;
   background-color: #000;
   color: #fff;
   border: none;
   padding: 15px;
-  margin-top: 20px;
   font-size: 1rem;
   text-transform: uppercase;
   letter-spacing: 1px;
   cursor: pointer;
   transition: all 0.3s ease;
   border: 2px solid #000;
+  font-weight: 500;
 }
 
 #valider-commande:hover {
@@ -457,64 +468,24 @@ h1:after {
   color: #000;
 }
 
-#valider-commande:disabled {
-  background-color: #ccc;
-  border-color: #ccc;
-  cursor: not-allowed;
-}
-
 /* === Bouton retour === */
 .bouton-retour {
   display: inline-block;
   margin-bottom: 30px;
-  padding: 8px 15px;
+  padding: 10px 20px;
   background-color: transparent;
   color: #333;
   text-decoration: none;
   border: 1px solid #333;
   font-size: 0.9rem;
   transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
+  font-weight: 500;
 }
 
 .bouton-retour:hover {
   background-color: #333;
   color: white;
-}
-
-.bouton-retour:hover::before {
-  content: "→";
-  position: absolute;
-  left: -15px;
-  transition: all 0.3s ease;
-}
-
-.bouton-retour:hover {
-  padding-left: 25px;
-  padding-right: 10px;
-}
-
-/* === Animations === */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.produit:nth-child(1) { animation-delay: 0.1s; }
-.produit:nth-child(2) { animation-delay: 0.2s; }
-.produit:nth-child(3) { animation-delay: 0.3s; }
-.produit:nth-child(4) { animation-delay: 0.4s; }
-.produit:nth-child(5) { animation-delay: 0.5s; }
-
-@keyframes pop-panier {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.1); }
-  100% { transform: scale(1); }
-}
-
-.bouton-panier-pop {
-  animation: pop-panier 0.3s ease;
+  transform: translateX(-5px);
 }
 
 /* === Responsive === */
@@ -526,284 +497,325 @@ h1:after {
   .liste-produits {
     grid-template-columns: 1fr;
     gap: 30px;
+    padding: 0 10px;
   }
   
   .produit {
-    max-width: 400px;
-    margin: 0 auto;
+    max-width: 100%;
   }
   
   #panier-flottant {
-    top: auto;
-    bottom: 20px;
+    top: 20px;
     right: 20px;
-  }
-#contenu-panier {
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(-20px);
-  transition: all 0.3s ease;
-}
-
-#contenu-panier.ouvert {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateY(0);
-}
-
-  
-}
-
-
-
-
-
-
-/* Version mobile - Alignement à droite */
-@media (max-width: 767px) {
-  .container .container { /* Cible spécifiquement le conteneur du bouton */
-    text-align: right; /* Aligne le bouton à droite */
-    padding-right: 15px; /* Marge intérieure pour respiration */
+    left: auto;
   }
   
-  .bouton-retour {
-    margin-left: auto; /* Pousse le bouton vers la droite */
-    display: inline-flex; /* Pour mieux gérer l'icône */
-    align-items: center;
-    padding: 5px 10px 7px 20px; /* Ajustement du padding */
-  }
-  
-  .bouton-retour:hover {
-    padding-left: 25px; /* Ajustement hover mobile */
-    padding-right: 15px;
-  }
-  
-  .bouton-retour::before {
-  
-    margin-right: 8px;
-    position: static; /* Reset de la position absolute */
-  }
-}
-
-
-
-
-/* Version mobile */
-@media (max-width: 768px) {
   #contenu-panier {
-    position: fixed; /* Changé de absolute à fixed pour mobile */
-    top: 110px; /* Positionné un peu plus bas que le header */
-    right: 20px; /* Décalé un peu de la droite */
-    width: 90%; /* Largeur plus adaptée à l'écran */
-    max-width: 350px; /* Mais pas plus large que la version desktop */
-    max-height: 70vh; /* Hauteur relative à la vue */
-    z-index: 1000; /* S'assure qu'il est au-dessus des autres éléments */
-    background: white;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.15); /* Ombre plus légère */
-    padding: 15px;
-
-    overflow-y: auto; /* Permet le scroll si contenu trop long */
+    width: calc(100vw - 40px);
+    max-width: 350px;
+    right: 0;
+    left: auto;
   }
+  
+  h1 {
+    font-size: 2rem;
+  }
+  
+  .section-title {
+    font-size: 1.1rem;
+    margin: 40px 0 30px;
+  }
+}
 
-  #contenu-panier.ouvert {
+@media (max-width: 480px) {
+  #panier-flottant {
+    top: 15px;
+    right: 15px;
+  }
+  
+  #panier-flottant button.toggle {
+    padding: 10px 15px;
+    font-size: 0.8rem;
+  }
+  
+  #contenu-panier {
+    width: calc(100vw - 30px);
+  }
+  
+  .produit-contenu {
+    padding: 20px;
+  }
+  
+  .produit button {
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+}
+
+/* Animation pour le panier */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
     opacity: 1;
-    pointer-events: auto;
     transform: translateY(0);
   }
-
-  #contenu-panier h3 {
-    font-size: 1rem; /* Taille de police légèrement réduite */
-    margin-bottom: 15px;
-    position: sticky; /* Garde le titre visible lors du scroll */
-    top: 0;
-    background: white;
-    padding-bottom: 10px;
-  }
 }
 
-
-
-
-
-
-/* Version mobile - Panier à gauche avec animation inversée */
-@media (max-width: 767px) {
-  #panier-flottant {
-    left: 20px !important; /* Position fixe à gauche */
-    right: auto !important;
-    transform: none !important;
-    top: 60px !important;
-  }
-
-
-
-
-
-  /* Ajustement du bouton toggle */
-  #panier-flottant button.toggle {
-    width: auto;
-    padding: 11px 20px;
-
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  }  
+.article-panier {
+  animation: slideIn 0.3s ease;
 }
-
-
-
-
-
-
 </style>
-
-
-
-<script>
-  document.querySelector('.toggle').addEventListener('click', function() {
-  document.getElementById('panier-flottant').classList.toggle('active');
-});
-
-document.getElementById('fermer-panier').addEventListener('click', function() {
-  document.getElementById('panier-flottant').classList.remove('active');
-});
-
-
-
-</script>
 
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
 <body>
   <div class="container">
     <div class="container">
-  <a href="index.html" class="bouton-retour">
-    ← Retour 
-  </a>
-  <!-- Le reste de ton contenu... -->
-</div>
+      <a href="index.html" class="bouton-retour">← Retour</a>
+    </div>
 
-    <h1>NOS Pâtes </h1>
+    <h1>NOS PÂTES</h1>
     <p class="sous-titre"></p>
 
     <h2 class="section-title">Nos créations</h2>
     
-<div class="liste-produits">
-  <!-- Pâtes Carbonara -->
-  <div class="produit" id="Carbonara" data-type="pates">
-    <img src="images/Pates/Carbonara.png" alt="Pâtes Carbonara" class="image-produit" />
-    <div class="produit-contenu">
-      <h3>Pâtes Carbonara</h3>
-      <p class="description-produit">Penne, crème fraîche, jambon, fromage</p>
-      <p class="prix-produit" data-price="5.00">5,00 €</p>
-      <button class="btn-ajouter" aria-label="Ajouter Pâtes Carbonara au panier">Ajouter au panier</button>
+    <div class="liste-produits">
+      <!-- Pâtes Carbonara -->
+      <div class="produit" id="Carbonara" data-type="pates">
+        <img src="images/Pates/Carbonara.png" alt="Pâtes Carbonara" class="image-produit" />
+        <div class="produit-contenu">
+          <h3>Pâtes Carbonara</h3>
+          <p class="description-produit">Penne, crème fraîche, jambon, fromage</p>
+          <p class="prix-produit" data-price="5.00">5,00 €</p>
+          <button class="btn-ajouter" aria-label="Ajouter Pâtes Carbonara au panier">Ajouter au panier</button>
+        </div>
+      </div>
+
+      <!-- Pâtes Chef -->
+      <div class="produit" id="Chef" data-type="pates">
+        <img src="images/Pates/Chef.png" alt="Pâtes Chef" class="image-produit" />
+        <div class="produit-contenu">
+          <h3>Pâtes Chef</h3>
+          <p class="description-produit">Penne au poulet, crème fraîche, fromage</p>
+          <p class="prix-produit" data-price="5.00">5,00 €</p>
+          <button class="btn-ajouter" aria-label="Ajouter Pâtes Chef au panier">Ajouter au panier</button>
+        </div>
+      </div>
+
+      <!-- Pâtes 4 fromages -->
+      <div class="produit" id="4_fromages" data-type="pates">
+        <img src="images/Pates/4_fromages_p.png" alt="Pâtes 4 fromages" class="image-produit" />
+        <div class="produit-contenu">
+          <h3>Pâtes 4 fromages</h3>
+          <p class="description-produit">Penne 4 fromages</p>
+          <p class="prix-produit" data-price="5.00">5,00 €</p>
+          <button class="btn-ajouter" aria-label="Ajouter Pâtes 4 fromages au panier">Ajouter au panier</button>
+        </div>
+      </div>
+
+      <!-- Pâtes Saumon -->
+      <div class="produit" id="Saumon" data-type="pates">
+        <img src="images/Pates/Saumon.png" alt="Pâtes Saumon" class="image-produit" />
+        <div class="produit-contenu">
+          <h3>Pâtes Saumon</h3>
+          <p class="description-produit">Penne au saumon, crème fraîche, fromage</p>
+          <p class="prix-produit" data-price="5.00">5,00 €</p>
+          <button class="btn-ajouter" aria-label="Ajouter Pâtes Saumon au panier">Ajouter au panier</button>
+        </div>
+      </div>
+
+      <!-- Pâtes Bolognaise -->
+      <div class="produit" id="Bolognaise" data-type="pates">
+        <img src="images/Pates/Bolognaise.png" alt="Pâtes Bolognaise" class="image-produit" />
+        <div class="produit-contenu">
+          <h3>Pâtes Bolognaise</h3>
+          <p class="description-produit">Penne, sauce tomate, viande hachée, fromage</p>
+          <p class="prix-produit" data-price="5.00">5,00 €</p>
+          <button class="btn-ajouter" aria-label="Ajouter Pâtes Bolognaise au panier">Ajouter au panier</button>
+        </div>
+      </div>
     </div>
+
+    <!-- Panier Flottant -->
+    <div id="panier-flottant">
+      <button class="toggle">
+        <span>Panier</span>
+        <span id="compteur-panier">0</span>
+      </button>
+
+      <div id="contenu-panier">
+        <h3>
+          Votre sélection
+          <button id="fermer-panier" aria-label="Fermer le panier">×</button>
+        </h3>
+
+        <ul id="liste-panier"></ul>
+
+        <div class="total-fixe">
+          <p>Total : <span id="total">0</span> €</p>
+          <a href="Card.html">
+            <button id="valider-commande">Voir le panier</button>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast notification -->
+    <div id="toast-notification" class="toast"></div>
   </div>
 
-  <!-- Pâtes Chef -->
-  <div class="produit" id="Chef" data-type="pates">
-    <img src="images/Pates/Chef.png" alt="Pâtes Chef" class="image-produit" />
-    <div class="produit-contenu">
-      <h3>Pâtes Chef</h3>
-      <p class="description-produit">Penne au poulet, crème fraîche, fromage</p>
-      <p class="prix-produit" data-price="5.00">5,00 €</p>
-      <button class="btn-ajouter" aria-label="Ajouter Pâtes Chef au panier">Ajouter au panier</button>
-    </div>
-  </div>
-
-  <!-- Pâtes 4 fromages -->
-  <div class="produit" id="4_fromages" data-type="pates">
-    <img src="images/Pates/4_fromages_p.png" alt="Pâtes 4 fromages" class="image-produit" />
-    <div class="produit-contenu">
-      <h3>Pâtes 4 fromages</h3>
-      <p class="description-produit">Penne 4 fromages</p>
-      <p class="prix-produit" data-price="5.00">5,00 €</p>
-      <button class="btn-ajouter" aria-label="Ajouter Pâtes 4 fromages au panier">Ajouter au panier</button>
-    </div>
-  </div>
-
-  <!-- Pâtes Saumon -->
-  <div class="produit" id="Saumon" data-type="pates">
-    <img src="images/Pates/Saumon.png" alt="Pâtes Saumon" class="image-produit" />
-    <div class="produit-contenu">
-      <h3>Pâtes Saumon</h3>
-      <p class="description-produit">Penne au saumon, crème fraîche, fromage</p>
-      <p class="prix-produit" data-price="5.00">5,00 €</p>
-      <button class="btn-ajouter" aria-label="Ajouter Pâtes Saumon au panier">Ajouter au panier</button>
-    </div>
-  </div>
-
-  <!-- Pâtes Bolognaise -->
-  <div class="produit" id="Bolognaise" data-type="pates">
-    <img src="images/Pates/Bolognaise.png" alt="Pâtes Bolognaise" class="image-produit" />
-    <div class="produit-contenu">
-      <h3>Pâtes Bolognaise</h3>
-      <p class="description-produit">Penne, sauce tomate, viande hachée, fromage</p>
-      <p class="prix-produit" data-price="5.00">5,00 €</p>
-      <button class="btn-ajouter" aria-label="Ajouter Pâtes Bolognaise au panier">Ajouter au panier</button>
-    </div>
-  </div>
-</div>
-
-<div id="toast-notification" class="toast">Produit ajouté au panier</div>
-
-
-
-
-
-<!-- === Panier Flottant === -->
-
-<div id="panier-flottant">
-  <button class="toggle">
-    <span>Panier</span>
-    <span id="compteur-panier">0</span>
-  </button>
-
-  <div id="contenu-panier">
-    <h3>
-      Votre sélection
-      <button id="fermer-panier" aria-label="Fermer le panier"></button>
-    </h3>
-
-    <ul id="liste-panier"></ul>
-
-    <div class="total-fixe">
-      <p>Total : <span id="total">0</span> €</p>
-      <a href="Card.html">
-        <button id="valider-commande">Voir le panier</button>
-      </a>
-    </div>
-  </div>
-</div>
-
-
-
-
-
-<script>
-  document.querySelector('.toggle').addEventListener('click', function() {
-  document.getElementById('panier-flottant').classList.toggle('active');
-});
-
-document.getElementById('fermer-panier').addEventListener('click', function() {
-  document.getElementById('panier-flottant').classList.remove('active');
-});
-
-</script>
-
-
-
-<!-- Toast notification -->
-<div id="toast-notification" class="toast"></div>
-
-
-
-
+  <script>
+  // Gestion du panier
+  document.addEventListener('DOMContentLoaded', function() {
+    // Variables principales
+    const boutonsAjouter = document.querySelectorAll('.btn-ajouter');
+    const compteurPanier = document.getElementById('compteur-panier');
+    const listePanier = document.getElementById('liste-panier');
+    const totalElement = document.getElementById('total');
+    const togglePanier = document.querySelector('.toggle');
+    const fermerPanier = document.getElementById('fermer-panier');
+    const contenuPanier = document.getElementById('contenu-panier');
+    const toast = document.getElementById('toast-notification');
     
-     </div>
-    </div>
-  </body>
+    // Charger le panier depuis localStorage
+    let panier = JSON.parse(localStorage.getItem('panier')) || [];
+    
+    // Initialiser les quantités
+    panier = panier.map(item => ({
+      ...item,
+      quantite: item.quantite || 1
+    }));
+    
+    // Fonction pour trouver un produit identique
+    function trouverProduitIdentique(nom, prix, type) {
+      return panier.find(item => 
+        item.nom === nom && 
+        item.prix === prix && 
+        item.type === type
+      );
+    }
+    
+    // Fonction pour afficher le toast
+    function showToast(message, type = 'ajout') {
+      toast.textContent = message;
+      toast.className = 'toast show';
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2000);
+    }
+    
+    // Fonction pour mettre à jour le panier
+    function afficherPanier() {
+      if (!listePanier) return;
+      
+      listePanier.innerHTML = '';
+      let total = 0;
+      
+      panier.forEach(item => {
+        // Calcul du sous-total
+        const sousTotal = item.prix * item.quantite;
+        total += sousTotal;
+        
+        // Création de l'élément
+        const li = document.createElement('li');
+        li.className = 'article-panier';
+        
+        li.innerHTML = `
+          <img src="${item.image}" alt="${item.nom}" />
+          <div class="details-panier">
+            <h4>${item.nom}</h4>
+            <p>Quantité: ${item.quantite}</p>
+            <p>${(item.prix).toFixed(2)} € × ${item.quantite} = ${sousTotal.toFixed(2)} €</p>
+          </div>
+        `;
+        
+        // Bouton supprimer
+        const btnSupprimer = document.createElement('button');
+        btnSupprimer.className = 'supprimer';
+        btnSupprimer.innerHTML = '×';
+        btnSupprimer.onclick = function() {
+          panier = panier.filter(p => p.id !== item.id);
+          localStorage.setItem('panier', JSON.stringify(panier));
+          afficherPanier();
+          showToast(`${item.nom} retiré du panier`, 'suppression');
+        };
+        
+        li.appendChild(btnSupprimer);
+        listePanier.appendChild(li);
+      });
+      
+      // Mettre à jour le compteur et le total
+      if (compteurPanier) {
+        const totalItems = panier.reduce((sum, item) => sum + item.quantite, 0);
+        compteurPanier.textContent = totalItems;
+      }
+      
+      if (totalElement) {
+        totalElement.textContent = total.toFixed(2);
+      }
+    }
+    
+    // Ajouter des événements aux boutons
+    boutonsAjouter.forEach(btn => {
+      btn.addEventListener('click', function() {
+        const produit = this.closest('.produit');
+        const nom = produit.querySelector('h3').textContent.trim();
+        const prix = parseFloat(produit.querySelector('.prix-produit').getAttribute('data-price'));
+        const image = produit.querySelector('img').src;
+        const type = produit.getAttribute('data-type');
+        
+        // Vérifier si le produit existe déjà
+        const produitExistant = trouverProduitIdentique(nom, prix, type);
+        
+        if (produitExistant) {
+          produitExistant.quantite++;
+          showToast(`${nom} - quantité augmentée`);
+        } else {
+          const nouveauProduit = {
+            id: Date.now(),
+            nom,
+            prix,
+            image,
+            type,
+            quantite: 1
+          };
+          panier.push(nouveauProduit);
+          showToast(`${nom} ajouté au panier`);
+        }
+        
+        // Sauvegarder et mettre à jour
+        localStorage.setItem('panier', JSON.stringify(panier));
+        afficherPanier();
+      });
+    });
+    
+    // Gérer l'ouverture/fermeture du panier
+    if (togglePanier) {
+      togglePanier.addEventListener('click', function() {
+        contenuPanier.classList.toggle('ouvert');
+      });
+    }
+    
+    if (fermerPanier) {
+      fermerPanier.addEventListener('click', function() {
+        contenuPanier.classList.remove('ouvert');
+      });
+    }
+    
+    // Fermer le panier en cliquant à l'extérieur
+    document.addEventListener('click', function(event) {
+      const isClickInside = contenuPanier.contains(event.target) || togglePanier.contains(event.target);
+      if (!isClickInside && contenuPanier.classList.contains('ouvert')) {
+        contenuPanier.classList.remove('ouvert');
+      }
+    });
+    
+    // Initialiser l'affichage du panier
+    afficherPanier();
+  });
+  </script>
+</body>
 </html>
-
-
-
-
-
