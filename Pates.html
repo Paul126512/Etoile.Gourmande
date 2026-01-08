@@ -9,6 +9,7 @@
   
   <!-- Meta description optimisée pour le SEO -->
   <meta name="description" content="Pâtes fraîches maison | L'Étoile Gourmande." />
+  <meta name="keywords" content="pâtes fraîches, carbonara, bolognaise, saumon, 4 fromages, restaurant italien, pâtes maison">
   
   <!-- Auteur et droits -->
   <meta name="author" content="L'Étoile Gourmande">
@@ -821,8 +822,33 @@ h1:after {
     afficherPanier();
   });
   </script>
+
+  <script>
+// Script de diagnostic
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('Page chargée :', window.location.href);
+  
+  // Vérifier les images
+  const images = document.querySelectorAll('img');
+  images.forEach(img => {
+    img.onerror = function() {
+      console.error('Image non chargée :', this.src);
+    };
+  });
+  
+  // Vérifier les liens canoniques
+  const canonical = document.querySelector('link[rel="canonical"]');
+  if (canonical) {
+    console.log('Canonical URL :', canonical.href);
+    console.log('Correspond à l\'URL actuelle ?', canonical.href === window.location.href);
+  }
+});
+</script>
+
+  
 </body>
 </html>
+
 
 
 
