@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   
   <!-- Titre conservé comme demandé -->
   <title>Nos Pâtes</title>
   
   <!-- Meta description optimisée pour le SEO -->
-  <meta name="description" content="Pâtes fraîches maison | L'Étoile Gourmande." />
+  <meta name="description" content="Pâtes fraîches maison | L'Étoile Gourmande.">
   <meta name="keywords" content="pâtes fraîches, carbonara, bolognaise, saumon, 4 fromages, restaurant italien, pâtes maison">
   
   <!-- Auteur et droits -->
@@ -19,13 +19,14 @@
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
   
   <!-- Canonical URL -->
-  <link rel="canonical" href="https://etoile-gourmande-one.vercel.app/Pates.html" />
+  <link rel="canonical" href="https://etoile-gourmande-one.vercel.app/Pates.html">
   
   <!-- Open Graph pour les réseaux sociaux -->
   <meta property="og:title" content="Nos Pâtes - L'Étoile Gourmande">
   <meta property="og:description" content="Pâtes fraîches maison | L'Étoile Gourmande.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://etoile-gourmande-one.vercel.app/Pates.html">
+  <meta property="og:image" content="https://etoile-gourmande-one.vercel.app/images/Pates/Carbonara.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:site_name" content="L'Étoile Gourmande">
@@ -36,822 +37,914 @@
   <meta name="twitter:title" content="Nos Pâtes - L'Étoile Gourmande">
   <meta name="twitter:description" content="Pâtes fraîches maison | L'Étoile Gourmande">
   <meta name="twitter:site" content="@etoilegourmande">
-  <meta property="og:image" content="https://etoile-gourmande-one.vercel.app/images/Pates/Carbonara.png">
   <meta name="twitter:image" content="https://etoile-gourmande-one.vercel.app/images/Pates/Carbonara.png">
 
   <!-- Favicon -->
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
-
-
-<style>
-/* === Reset et base === */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
-  background-color: #f9f9f9;
-  color: #222;
-  margin: 0;
-  padding: 0;
-  line-height: 1.6;
-  position: relative;
-  min-height: 100vh;
-}
-
-.toast {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%) translateY(20px);
-  background-color: #000000;
-  color: #fff;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-size: 16px;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease, transform 0.3s ease;
-  z-index: 10000;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-}
-
-.toast.show {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
-}
-
-/* === Structure globale === */
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 40px 20px;
-  background-color: white;
-  box-shadow: 0 0 30px rgba(0,0,0,0.05);
-  position: relative;
-}
-
-/* === Typographie élégante === */
-h1, h2, h3 {
-  font-weight: 300;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-
-h1 {
-  font-size: 2.5rem;
-  text-align: center;
-  margin-bottom: 20px;
-  color: #111;
-  position: relative;
-  padding-bottom: 20px;
-}
-
-h1:after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100px;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, #000, transparent);
-}
-
-.sous-titre {
-  text-align: center;
-  font-size: 1rem;
-  color: #666;
-  margin-bottom: 40px;
-  font-weight: 300;
-  letter-spacing: 2px;
-}
-
-/* === Section produits === */
-.section-title {
-  font-size: 1.2rem;
-  text-align: center;
-  margin: 60px 0 40px;
-  position: relative;
-}
-
-.section-title:before,
-.section-title:after {
-  content: "•";
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #999;
-  font-size: 1.5rem;
-}
-
-.section-title:before {
-  left: calc(50% - 100px);
-}
-
-.section-title:after {
-  right: calc(50% - 100px);
-}
-
-/* === Grille de produits uniformisée === */
-.liste-produits {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 40px;
-  padding: 0 20px;
-  align-items: stretch;
-}
-
-/* === Carte produit uniforme === */
-.produit {
-  background: white;
-  border-radius: 2px;
-  overflow: hidden;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-  transition: all 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  position: relative;
-}
-
-.produit:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 15px 30px rgba(0,0,0,0.12);
-}
-
-/* === Image produit === */
-.image-produit {
-  width: 100%;
-  height: 220px;
-  object-fit: cover;
-  filter: grayscale(0%);
-  transition: filter 0.5s ease;
-}
-
-.produit:hover .image-produit {
-  filter: grayscale(30%);
-}
-
-/* === Contenu texte uniforme === */
-.produit-contenu {
-  padding: 25px;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.produit h3 {
-  font-size: 1.3rem;
-  margin-bottom: 15px;
-  text-align: center;
-  color: #111;
-  font-weight: 400;
-}
-
-.description-produit {
-  font-size: 0.9rem;
-  color: #666;
-  text-align: center;
-  margin-bottom: 20px;
-  flex: 1;
-  font-weight: 300;
-  line-height: 1.7;
-  display: -webkit-box;
-  -webkit-line-clamp: 4;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.prix-produit {
-  font-size: 1.4rem;
-  color: #111;
-  text-align: center;
-  margin-bottom: 20px;
-  font-weight: 300;
-  letter-spacing: 1px;
-}
-
-/* === Bouton ajout panier === */
-.produit button {
-  background-color: white;
-  color: #000000;
-  border: 2px solid #000000;
-  padding: 14px 28px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-  position: relative;
-  overflow: hidden;
-  z-index: 1;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  font-family: 'Montserrat', sans-serif;
-  text-transform: uppercase;
-  text-decoration: none;
-  display: inline-block;
-  width: 100%;
-  margin-top: auto;
-}
-
-.produit button::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: #000000;
-  z-index: -1;
-  transition: all 0.6s cubic-bezier(0.77, 0, 0.175, 1);
-}
-
-.produit button:hover {
-  color: white;
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-}
-
-.produit button:hover::before {
-  left: 0;
-}
-
-/* === Panier flottant === */
-#panier-flottant {
-  position: fixed;
-  top: 30px;
-  right: 30px;
-  z-index: 1000;
-}
-
-#panier-flottant button.toggle {
-  background: white;
-  color: #111;
-  border: 1px solid #111;
-  padding: 12px 20px;
-  border-radius: 0;
-  cursor: pointer;
-  font-size: 0.9rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  transition: all 0.3s ease;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-#panier-flottant button.toggle:hover {
-  background: #111;
-  color: white;
-}
-
-/* === Contenu panier === */
-#contenu-panier {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  width: 350px;
-  background: white;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-  padding: 20px;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-20px);
-  transition: all 0.3s ease;
-  max-height: 400px;
-  display: flex;
-  flex-direction: column;
-  z-index: 1001;
-}
-
-#contenu-panier.ouvert {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-
-#contenu-panier h3 {
-  font-size: 1.1rem;
-  margin-bottom: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: #111;
-}
-
-#fermer-panier {
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  color: #999;
-  cursor: pointer;
-  transition: color 0.3s ease;
-  padding: 0;
-  width: 30px;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 1;
-}
-
-#fermer-panier:hover {
-  color: #111;
-}
-
-#liste-panier {
-  flex: 1;
-  overflow-y: auto;
-  margin: 0;
-  padding: 10px 0;
-  list-style: none;
-  border-top: 1px solid #eee;
-  border-bottom: 1px solid #eee;
-  max-height: 250px;
-}
-
-.article-panier {
-  display: flex;
-  align-items: flex-start;
-  padding: 10px 0;
-  border-bottom: 1px solid #f0f0f0;
-  position: relative;
-}
-
-.article-panier:last-child {
-  border-bottom: none;
-}
-
-.article-panier img {
-  width: 60px;
-  height: 60px;
-  object-fit: cover;
-  border-radius: 4px;
-  margin-right: 10px;
-}
-
-.article-panier .details-panier {
-  flex: 1;
-  min-width: 0;
-}
-
-.article-panier h4 {
-  font-size: 0.9rem;
-  margin-bottom: 5px;
-  color: #111;
-  font-weight: 500;
-}
-
-.article-panier p {
-  font-size: 0.8rem;
-  color: #666;
-  margin-bottom: 3px;
-}
-
-.supprimer {
-  background: none;
-  border: none;
-  color: #e74c3c;
-  cursor: pointer;
-  font-weight: bold;
-  font-size: 1.2rem;
-  transition: color 0.3s ease;
-  position: absolute;
-  right: 0;
-  top: 10px;
-  width: 30px;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-}
-
-.supprimer:hover {
-  color: #c0392b;
-}
-
-/* === Total panier === */
-.total-fixe {
-  margin-top: 20px;
-  padding-top: 15px;
-  border-top: 2px solid #eee;
-  text-align: center;
-}
-
-.total-fixe p {
-  font-size: 1.2rem;
-  margin-bottom: 15px;
-  color: #111;
-  font-weight: 500;
-}
-
-#valider-commande {
-  width: 100%;
-  background-color: #000;
-  color: #fff;
-  border: none;
-  padding: 15px;
-  font-size: 1rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border: 2px solid #000;
-  font-weight: 500;
-}
-
-#valider-commande:hover {
-  background-color: #fff;
-  color: #000;
-}
-
-/* === Bouton retour === */
-.bouton-retour {
-  display: inline-block;
-  margin-bottom: 30px;
-  padding: 10px 20px;
-  background-color: transparent;
-  color: #333;
-  text-decoration: none;
-  border: 1px solid #333;
-  font-size: 0.9rem;
-  transition: all 0.3s ease;
-  font-weight: 500;
-}
-
-.bouton-retour:hover {
-  background-color: #333;
-  color: white;
-  transform: translateX(-5px);
-}
-
-/* === Responsive === */
-@media (max-width: 768px) {
-  .container {
-    padding: 30px 15px;
-  }
-  
-  .liste-produits {
-    grid-template-columns: 1fr;
-    gap: 30px;
-    padding: 0 10px;
-  }
-  
-  .produit {
-    max-width: 100%;
-  }
-  
-  #panier-flottant {
-    top: 20px;
-    right: 20px;
-    left: auto;
-  }
-  
-  #contenu-panier {
-    width: calc(100vw - 40px);
-    max-width: 350px;
-    right: 0;
-    left: auto;
-  }
-  
-  h1 {
-    font-size: 2rem;
-  }
-  
-  .section-title {
-    font-size: 1.1rem;
-    margin: 40px 0 30px;
-  }
-}
-
-@media (max-width: 480px) {
-  #panier-flottant {
-    top: 15px;
-    right: 15px;
-  }
-  
-  #panier-flottant button.toggle {
-    padding: 10px 15px;
-    font-size: 0.8rem;
-  }
-  
-  #contenu-panier {
-    width: calc(100vw - 30px);
-  }
-  
-  .produit-contenu {
-    padding: 20px;
-  }
-  
-  .produit button {
-    padding: 12px 20px;
-    font-size: 14px;
-  }
-}
-
-/* Animation pour le panier */
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.article-panier {
-  animation: slideIn 0.3s ease;
-}
-</style>
-
+  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <style>
+    /* === Reset et base === */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
+      background-color: #f9f9f9;
+      color: #222;
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+      position: relative;
+      min-height: 100vh;
+    }
+
+    /* === Toast notification === */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background-color: #000000;
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 16px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      z-index: 10000;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* === Skip to main content (Accessibilité) === */
+    .skip-to-content {
+      position: absolute;
+      top: -40px;
+      left: 0;
+      background: #000;
+      color: white;
+      padding: 8px;
+      z-index: 100;
+      text-decoration: none;
+    }
+
+    .skip-to-content:focus {
+      top: 0;
+    }
+
+    /* === Header === */
+    header {
+      position: relative;
+      padding: 20px 0;
+    }
+
+    /* === Bouton retour === */
+    .bouton-retour {
+      display: inline-block;
+      margin-left: 20px;
+      padding: 10px 20px;
+      background-color: transparent;
+      color: #333;
+      text-decoration: none;
+      border: 1px solid #333;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+
+    .bouton-retour:hover {
+      background-color: #333;
+      color: white;
+      transform: translateX(-5px);
+    }
+
+    /* === Main content === */
+    main {
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px;
+      background-color: white;
+      box-shadow: 0 0 30px rgba(0,0,0,0.05);
+      position: relative;
+    }
+
+    /* === Typographie élégante === */
+    h1, h2, h3 {
+      font-weight: 300;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      text-align: center;
+      margin-bottom: 20px;
+      color: #111;
+      position: relative;
+      padding-bottom: 20px;
+    }
+
+    h1:after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #000, transparent);
+    }
+
+    .sous-titre {
+      text-align: center;
+      font-size: 1rem;
+      color: #666;
+      margin-bottom: 40px;
+      font-weight: 300;
+      letter-spacing: 2px;
+    }
+
+    /* === Section produits === */
+    .section-title {
+      font-size: 1.2rem;
+      text-align: center;
+      margin: 60px 0 40px;
+      position: relative;
+    }
+
+    .section-title:before,
+    .section-title:after {
+      content: "•";
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #999;
+      font-size: 1.5rem;
+    }
+
+    .section-title:before {
+      left: calc(50% - 100px);
+    }
+
+    .section-title:after {
+      right: calc(50% - 100px);
+    }
+
+    /* === Grille de produits uniformisée === */
+    .liste-produits {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 40px;
+      padding: 0 20px;
+      align-items: stretch;
+    }
+
+    /* === Carte produit uniforme === */
+    .produit {
+      background: white;
+      border-radius: 2px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      position: relative;
+    }
+
+    .produit:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.12);
+    }
+
+    /* === Image produit === */
+    .image-produit {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      filter: grayscale(0%);
+      transition: filter 0.5s ease;
+    }
+
+    .produit:hover .image-produit {
+      filter: grayscale(30%);
+    }
+
+    /* === Contenu texte uniforme === */
+    .produit-contenu {
+      padding: 25px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .produit h3 {
+      font-size: 1.3rem;
+      margin-bottom: 15px;
+      text-align: center;
+      color: #111;
+      font-weight: 400;
+    }
+
+    .description-produit {
+      font-size: 0.9rem;
+      color: #666;
+      text-align: center;
+      margin-bottom: 20px;
+      flex: 1;
+      font-weight: 300;
+      line-height: 1.7;
+      display: -webkit-box;
+      -webkit-line-clamp: 4;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .prix-produit {
+      font-size: 1.4rem;
+      color: #111;
+      text-align: center;
+      margin-bottom: 20px;
+      font-weight: 300;
+      letter-spacing: 1px;
+    }
+
+    /* === Bouton ajout panier === */
+    .produit button {
+      background-color: white;
+      color: #000000;
+      border: 2px solid #000000;
+      padding: 14px 28px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      font-family: 'Montserrat', sans-serif;
+      text-transform: uppercase;
+      text-decoration: none;
+      display: inline-block;
+      width: 100%;
+      margin-top: auto;
+    }
+
+    .produit button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: #000000;
+      z-index: -1;
+      transition: all 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+    }
+
+    .produit button:hover {
+      color: white;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    }
+
+    .produit button:hover::before {
+      left: 0;
+    }
+
+    /* === Panier flottant === */
+    #panier-flottant {
+      position: fixed;
+      top: 30px;
+      right: 30px;
+      z-index: 1000;
+    }
+
+    #panier-flottant button.toggle {
+      background: white;
+      color: #111;
+      border: 1px solid #111;
+      padding: 12px 20px;
+      border-radius: 0;
+      cursor: pointer;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    #panier-flottant button.toggle:hover {
+      background: #111;
+      color: white;
+    }
+
+    /* === Contenu panier === */
+    #contenu-panier {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      width: 350px;
+      background: white;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      padding: 20px;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-20px);
+      transition: all 0.3s ease;
+      max-height: 400px;
+      display: flex;
+      flex-direction: column;
+      z-index: 1001;
+    }
+
+    #contenu-panier.ouvert {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    #contenu-panier h3 {
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #111;
+    }
+
+    #fermer-panier {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: #999;
+      cursor: pointer;
+      transition: color 0.3s ease;
+      padding: 0;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+    }
+
+    #fermer-panier:hover {
+      color: #111;
+    }
+
+    #liste-panier {
+      flex: 1;
+      overflow-y: auto;
+      margin: 0;
+      padding: 10px 0;
+      list-style: none;
+      border-top: 1px solid #eee;
+      border-bottom: 1px solid #eee;
+      max-height: 250px;
+    }
+
+    .article-panier {
+      display: flex;
+      align-items: flex-start;
+      padding: 10px 0;
+      border-bottom: 1px solid #f0f0f0;
+      position: relative;
+    }
+
+    .article-panier:last-child {
+      border-bottom: none;
+    }
+
+    .article-panier img {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 4px;
+      margin-right: 10px;
+    }
+
+    .article-panier .details-panier {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .article-panier h4 {
+      font-size: 0.9rem;
+      margin-bottom: 5px;
+      color: #111;
+      font-weight: 500;
+    }
+
+    .article-panier p {
+      font-size: 0.8rem;
+      color: #666;
+      margin-bottom: 3px;
+    }
+
+    .supprimer {
+      background: none;
+      border: none;
+      color: #e74c3c;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 1.2rem;
+      transition: color 0.3s ease;
+      position: absolute;
+      right: 0;
+      top: 10px;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+    }
+
+    .supprimer:hover {
+      color: #c0392b;
+    }
+
+    /* === Total panier === */
+    .total-fixe {
+      margin-top: 20px;
+      padding-top: 15px;
+      border-top: 2px solid #eee;
+      text-align: center;
+    }
+
+    .total-fixe p {
+      font-size: 1.2rem;
+      margin-bottom: 15px;
+      color: #111;
+      font-weight: 500;
+    }
+
+    #valider-commande {
+      width: 100%;
+      background-color: #000;
+      color: #fff;
+      border: none;
+      padding: 15px;
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 2px solid #000;
+      font-weight: 500;
+    }
+
+    #valider-commande:hover {
+      background-color: #fff;
+      color: #000;
+    }
+
+    /* === Footer === */
+    footer {
+      margin-top: 60px;
+      padding: 20px;
+      text-align: center;
+      color: #666;
+      font-size: 0.9rem;
+      border-top: 1px solid #eee;
+    }
+
+    /* === Responsive === */
+    @media (max-width: 768px) {
+      .container {
+        padding: 20px 15px;
+      }
+      
+      .liste-produits {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        padding: 0 10px;
+      }
+      
+      #panier-flottant {
+        top: 20px;
+        right: 20px;
+      }
+      
+      #contenu-panier {
+        width: calc(100vw - 40px);
+        max-width: 350px;
+        right: 0;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .section-title {
+        font-size: 1.1rem;
+        margin: 40px 0 30px;
+      }
+      
+      main {
+        padding: 20px 10px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      #panier-flottant {
+        top: 15px;
+        right: 15px;
+      }
+      
+      #panier-flottant button.toggle {
+        padding: 10px 15px;
+        font-size: 0.8rem;
+      }
+      
+      #contenu-panier {
+        width: calc(100vw - 30px);
+      }
+      
+      .produit-contenu {
+        padding: 15px;
+      }
+      
+      .produit button {
+        padding: 12px 20px;
+        font-size: 14px;
+      }
+      
+      .bouton-retour {
+        margin-left: 10px;
+        padding: 8px 15px;
+        font-size: 0.8rem;
+      }
+    }
+
+    /* Animation pour le panier */
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .article-panier {
+      animation: slideIn 0.3s ease;
+    }
+
+    /* Amélioration de l'accessibilité */
+    :focus {
+      outline: 2px solid #000;
+      outline-offset: 2px;
+    }
+
+    /* Meilleure sémantique pour les liens dans le panier */
+    .total-fixe a {
+      text-decoration: none;
+      display: block;
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-      <a href="index.html" class="bouton-retour">← Retour</a>
-    </div>
+  <!-- Lien d'évitement pour l'accessibilité -->
+  <a href="#main-content" class="skip-to-content">Aller au contenu principal</a>
 
-    <h1>NOS PÂTES</h1>
-    <p class="sous-titre"></p>
+  <!-- Header -->
+  <header>
+    <a href="index.html" class="bouton-retour" aria-label="Retour à la page d'accueil">← Retour</a>
+  </header>
 
-    <h2 class="section-title">Nos créations</h2>
-    
-    <div class="liste-produits">
-      <!-- Pâtes Carbonara -->
-      <div class="produit" id="Carbonara" data-type="pates">
-        <img src="images/Pates/Carbonara.png" alt="Pâtes Carbonara" class="image-produit" />
-        <div class="produit-contenu">
-          <h3>Pâtes Carbonara</h3>
-          <p class="description-produit">Penne, crème fraîche, jambon, fromage</p>
-          <p class="prix-produit" data-price="5.00">5,00 €</p>
-          <button class="btn-ajouter" aria-label="Ajouter Pâtes Carbonara au panier">Ajouter au panier</button>
-        </div>
-      </div>
+  <!-- Main content -->
+  <main id="main-content">
+    <div class="container">
+      <h1>NOS PÂTES</h1>
+      <p class="sous-titre">Pâtes fraîches maison</p>
 
-      <!-- Pâtes Chef -->
-      <div class="produit" id="Chef" data-type="pates">
-        <img src="images/Pates/Chef.png" alt="Pâtes Chef" class="image-produit" />
-        <div class="produit-contenu">
-          <h3>Pâtes Chef</h3>
-          <p class="description-produit">Penne au poulet, crème fraîche, fromage</p>
-          <p class="prix-produit" data-price="5.00">5,00 €</p>
-          <button class="btn-ajouter" aria-label="Ajouter Pâtes Chef au panier">Ajouter au panier</button>
-        </div>
-      </div>
+      <h2 class="section-title">Nos créations</h2>
+      
+      <div class="liste-produits">
+        <!-- Pâtes Carbonara -->
+        <article class="produit" id="Carbonara" data-type="pates">
+          <img src="images/Pates/Carbonara.png" alt="Pâtes Carbonara dans une assiette" class="image-produit">
+          <div class="produit-contenu">
+            <h3>Pâtes Carbonara</h3>
+            <p class="description-produit">Penne, crème fraîche, jambon, fromage</p>
+            <p class="prix-produit" data-price="5.00">5,00 €</p>
+            <button class="btn-ajouter" aria-label="Ajouter Pâtes Carbonara au panier">Ajouter au panier</button>
+          </div>
+        </article>
 
-      <!-- Pâtes 4 fromages -->
-      <div class="produit" id="4_fromages" data-type="pates">
-        <img src="images/Pates/4_fromages_p.png" alt="Pâtes 4 fromages" class="image-produit" />
-        <div class="produit-contenu">
-          <h3>Pâtes 4 fromages</h3>
-          <p class="description-produit">Penne 4 fromages</p>
-          <p class="prix-produit" data-price="5.00">5,00 €</p>
-          <button class="btn-ajouter" aria-label="Ajouter Pâtes 4 fromages au panier">Ajouter au panier</button>
-        </div>
-      </div>
+        <!-- Pâtes Chef -->
+        <article class="produit" id="Chef" data-type="pates">
+          <img src="images/Pates/Chef.png" alt="Pâtes Chef dans une assiette" class="image-produit">
+          <div class="produit-contenu">
+            <h3>Pâtes Chef</h3>
+            <p class="description-produit">Penne au poulet, crème fraîche, fromage</p>
+            <p class="prix-produit" data-price="5.00">5,00 €</p>
+            <button class="btn-ajouter" aria-label="Ajouter Pâtes Chef au panier">Ajouter au panier</button>
+          </div>
+        </article>
 
-      <!-- Pâtes Saumon -->
-      <div class="produit" id="Saumon" data-type="pates">
-        <img src="images/Pates/Saumon.png" alt="Pâtes Saumon" class="image-produit" />
-        <div class="produit-contenu">
-          <h3>Pâtes Saumon</h3>
-          <p class="description-produit">Penne au saumon, crème fraîche, fromage</p>
-          <p class="prix-produit" data-price="5.00">5,00 €</p>
-          <button class="btn-ajouter" aria-label="Ajouter Pâtes Saumon au panier">Ajouter au panier</button>
-        </div>
-      </div>
+        <!-- Pâtes 4 fromages -->
+        <article class="produit" id="4_fromages" data-type="pates">
+          <img src="images/Pates/4_fromages_p.png" alt="Pâtes 4 fromages dans une assiette" class="image-produit">
+          <div class="produit-contenu">
+            <h3>Pâtes 4 fromages</h3>
+            <p class="description-produit">Penne 4 fromages</p>
+            <p class="prix-produit" data-price="5.00">5,00 €</p>
+            <button class="btn-ajouter" aria-label="Ajouter Pâtes 4 fromages au panier">Ajouter au panier</button>
+          </div>
+        </article>
 
-      <!-- Pâtes Bolognaise -->
-      <div class="produit" id="Bolognaise" data-type="pates">
-        <img src="images/Pates/Bolognaise.png" alt="Pâtes Bolognaise" class="image-produit" />
-        <div class="produit-contenu">
-          <h3>Pâtes Bolognaise</h3>
-          <p class="description-produit">Penne, sauce tomate, viande hachée, fromage</p>
-          <p class="prix-produit" data-price="5.00">5,00 €</p>
-          <button class="btn-ajouter" aria-label="Ajouter Pâtes Bolognaise au panier">Ajouter au panier</button>
-        </div>
-      </div>
-    </div>
+        <!-- Pâtes Saumon -->
+        <article class="produit" id="Saumon" data-type="pates">
+          <img src="images/Pates/Saumon.png" alt="Pâtes au saumon dans une assiette" class="image-produit">
+          <div class="produit-contenu">
+            <h3>Pâtes Saumon</h3>
+            <p class="description-produit">Penne au saumon, crème fraîche, fromage</p>
+            <p class="prix-produit" data-price="5.00">5,00 €</p>
+            <button class="btn-ajouter" aria-label="Ajouter Pâtes Saumon au panier">Ajouter au panier</button>
+          </div>
+        </article>
 
-    <!-- Panier Flottant -->
-    <div id="panier-flottant">
-      <button class="toggle">
-        <span>Panier</span>
-        <span id="compteur-panier">0</span>
-      </button>
-
-      <div id="contenu-panier">
-        <h3>
-          Votre sélection
-          <button id="fermer-panier" aria-label="Fermer le panier">×</button>
-        </h3>
-
-        <ul id="liste-panier"></ul>
-
-        <div class="total-fixe">
-          <p>Total : <span id="total">0</span> €</p>
-          <a href="Card.html">
-            <button id="valider-commande">Voir le panier</button>
-          </a>
-        </div>
+        <!-- Pâtes Bolognaise -->
+        <article class="produit" id="Bolognaise" data-type="pates">
+          <img src="images/Pates/Bolognaise.png" alt="Pâtes Bolognaise dans une assiette" class="image-produit">
+          <div class="produit-contenu">
+            <h3>Pâtes Bolognaise</h3>
+            <p class="description-produit">Penne, sauce tomate, viande hachée, fromage</p>
+            <p class="prix-produit" data-price="5.00">5,00 €</p>
+            <button class="btn-ajouter" aria-label="Ajouter Pâtes Bolognaise au panier">Ajouter au panier</button>
+          </div>
+        </article>
       </div>
     </div>
+  </main>
 
-    <!-- Toast notification -->
-    <div id="toast-notification" class="toast"></div>
-  </div>
+  <!-- Panier Flottant -->
+  <aside id="panier-flottant" aria-label="Panier d'achat">
+    <button class="toggle" aria-expanded="false" aria-controls="contenu-panier">
+      <span>Panier</span>
+      <span id="compteur-panier">0</span>
+    </button>
+
+    <div id="contenu-panier" role="dialog" aria-label="Contenu du panier" aria-hidden="true">
+      <h3>
+        Votre sélection
+        <button id="fermer-panier" aria-label="Fermer le panier">×</button>
+      </h3>
+
+      <ul id="liste-panier" role="list"></ul>
+
+      <div class="total-fixe">
+        <p>Total : <span id="total">0</span> €</p>
+        <a href="Card.html">
+          <button id="valider-commande">Voir le panier</button>
+        </a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Toast notification -->
+  <div id="toast-notification" class="toast" role="alert" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2024 L'Étoile Gourmande. Tous droits réservés.</p>
+  </footer>
 
   <script>
-  // Gestion du panier
-  document.addEventListener('DOMContentLoaded', function() {
-    // Variables principales
-    const boutonsAjouter = document.querySelectorAll('.btn-ajouter');
-    const compteurPanier = document.getElementById('compteur-panier');
-    const listePanier = document.getElementById('liste-panier');
-    const totalElement = document.getElementById('total');
-    const togglePanier = document.querySelector('.toggle');
-    const fermerPanier = document.getElementById('fermer-panier');
-    const contenuPanier = document.getElementById('contenu-panier');
-    const toast = document.getElementById('toast-notification');
-    
-    // Charger le panier depuis localStorage
-    let panier = JSON.parse(localStorage.getItem('panier')) || [];
-    
-    // Initialiser les quantités
-    panier = panier.map(item => ({
-      ...item,
-      quantite: item.quantite || 1
-    }));
-    
-    // Fonction pour trouver un produit identique
-    function trouverProduitIdentique(nom, prix, type) {
-      return panier.find(item => 
-        item.nom === nom && 
-        item.prix === prix && 
-        item.type === type
-      );
-    }
-    
-    // Fonction pour afficher le toast
-    function showToast(message, type = 'ajout') {
-      toast.textContent = message;
-      toast.className = 'toast show';
-      setTimeout(() => {
-        toast.classList.remove('show');
-      }, 2000);
-    }
-    
-    // Fonction pour mettre à jour le panier
-    function afficherPanier() {
-      if (!listePanier) return;
+    // Gestion du panier
+    document.addEventListener('DOMContentLoaded', function() {
+      // Variables principales
+      const boutonsAjouter = document.querySelectorAll('.btn-ajouter');
+      const compteurPanier = document.getElementById('compteur-panier');
+      const listePanier = document.getElementById('liste-panier');
+      const totalElement = document.getElementById('total');
+      const togglePanier = document.querySelector('.toggle');
+      const fermerPanier = document.getElementById('fermer-panier');
+      const contenuPanier = document.getElementById('contenu-panier');
+      const toast = document.getElementById('toast-notification');
       
-      listePanier.innerHTML = '';
-      let total = 0;
+      // Charger le panier depuis localStorage
+      let panier = JSON.parse(localStorage.getItem('panier')) || [];
       
-      panier.forEach(item => {
-        // Calcul du sous-total
-        const sousTotal = item.prix * item.quantite;
-        total += sousTotal;
-        
-        // Création de l'élément
-        const li = document.createElement('li');
-        li.className = 'article-panier';
-        
-        li.innerHTML = `
-          <img src="${item.image}" alt="${item.nom}" />
-          <div class="details-panier">
-            <h4>${item.nom}</h4>
-            <p>Quantité: ${item.quantite}</p>
-            <p>${(item.prix).toFixed(2)} € × ${item.quantite} = ${sousTotal.toFixed(2)} €</p>
-          </div>
-        `;
-        
-        // Bouton supprimer
-        const btnSupprimer = document.createElement('button');
-        btnSupprimer.className = 'supprimer';
-        btnSupprimer.innerHTML = '×';
-        btnSupprimer.onclick = function() {
-          panier = panier.filter(p => p.id !== item.id);
-          localStorage.setItem('panier', JSON.stringify(panier));
-          afficherPanier();
-          showToast(`${item.nom} retiré du panier`, 'suppression');
-        };
-        
-        li.appendChild(btnSupprimer);
-        listePanier.appendChild(li);
-      });
+      // Initialiser les quantités
+      panier = panier.map(item => ({
+        ...item,
+        quantite: item.quantite || 1
+      }));
       
-      // Mettre à jour le compteur et le total
-      if (compteurPanier) {
-        const totalItems = panier.reduce((sum, item) => sum + item.quantite, 0);
-        compteurPanier.textContent = totalItems;
+      // Fonction pour trouver un produit identique
+      function trouverProduitIdentique(nom, prix, type) {
+        return panier.find(item => 
+          item.nom === nom && 
+          item.prix === prix && 
+          item.type === type
+        );
       }
       
-      if (totalElement) {
-        totalElement.textContent = total.toFixed(2);
+      // Fonction pour afficher le toast
+      function showToast(message, type = 'ajout') {
+        toast.textContent = message;
+        toast.className = 'toast show';
+        toast.setAttribute('aria-label', message);
+        setTimeout(() => {
+          toast.classList.remove('show');
+        }, 2000);
       }
-    }
-    
-    // Ajouter des événements aux boutons
-    boutonsAjouter.forEach(btn => {
-      btn.addEventListener('click', function() {
-        const produit = this.closest('.produit');
-        const nom = produit.querySelector('h3').textContent.trim();
-        const prix = parseFloat(produit.querySelector('.prix-produit').getAttribute('data-price'));
-        const image = produit.querySelector('img').src;
-        const type = produit.getAttribute('data-type');
+      
+      // Fonction pour mettre à jour le panier
+      function afficherPanier() {
+        if (!listePanier) return;
         
-        // Vérifier si le produit existe déjà
-        const produitExistant = trouverProduitIdentique(nom, prix, type);
+        listePanier.innerHTML = '';
+        let total = 0;
         
-        if (produitExistant) {
-          produitExistant.quantite++;
-          showToast(`${nom} - quantité augmentée`);
-        } else {
-          const nouveauProduit = {
-            id: Date.now(),
-            nom,
-            prix,
-            image,
-            type,
-            quantite: 1
+        panier.forEach(item => {
+          // Calcul du sous-total
+          const sousTotal = item.prix * item.quantite;
+          total += sousTotal;
+          
+          // Création de l'élément
+          const li = document.createElement('li');
+          li.className = 'article-panier';
+          li.setAttribute('role', 'listitem');
+          
+          li.innerHTML = `
+            <img src="${item.image}" alt="${item.nom}" loading="lazy">
+            <div class="details-panier">
+              <h4>${item.nom}</h4>
+              <p>Quantité: ${item.quantite}</p>
+              <p>${(item.prix).toFixed(2)} € × ${item.quantite} = ${sousTotal.toFixed(2)} €</p>
+            </div>
+          `;
+          
+          // Bouton supprimer
+          const btnSupprimer = document.createElement('button');
+          btnSupprimer.className = 'supprimer';
+          btnSupprimer.innerHTML = '×';
+          btnSupprimer.setAttribute('aria-label', `Supprimer ${item.nom} du panier`);
+          btnSupprimer.onclick = function() {
+            panier = panier.filter(p => p.id !== item.id);
+            localStorage.setItem('panier', JSON.stringify(panier));
+            afficherPanier();
+            showToast(`${item.nom} retiré du panier`, 'suppression');
           };
-          panier.push(nouveauProduit);
-          showToast(`${nom} ajouté au panier`);
+          
+          li.appendChild(btnSupprimer);
+          listePanier.appendChild(li);
+        });
+        
+        // Mettre à jour le compteur et le total
+        if (compteurPanier) {
+          const totalItems = panier.reduce((sum, item) => sum + item.quantite, 0);
+          compteurPanier.textContent = totalItems;
+          compteurPanier.setAttribute('aria-label', `${totalItems} articles dans le panier`);
         }
         
-        // Sauvegarder et mettre à jour
-        localStorage.setItem('panier', JSON.stringify(panier));
-        afficherPanier();
-      });
-    });
-    
-    // Gérer l'ouverture/fermeture du panier
-    if (togglePanier) {
-      togglePanier.addEventListener('click', function() {
-        contenuPanier.classList.toggle('ouvert');
-      });
-    }
-    
-    if (fermerPanier) {
-      fermerPanier.addEventListener('click', function() {
-        contenuPanier.classList.remove('ouvert');
-      });
-    }
-    
-    // Fermer le panier en cliquant à l'extérieur
-    document.addEventListener('click', function(event) {
-      const isClickInside = contenuPanier.contains(event.target) || togglePanier.contains(event.target);
-      if (!isClickInside && contenuPanier.classList.contains('ouvert')) {
-        contenuPanier.classList.remove('ouvert');
+        if (totalElement) {
+          totalElement.textContent = total.toFixed(2);
+        }
       }
+      
+      // Gestion de l'accessibilité du panier
+      function togglePanierAccessibility(isOpen) {
+        const toggleBtn = document.querySelector('.toggle');
+        const contenu = document.getElementById('contenu-panier');
+        
+        if (toggleBtn) {
+          toggleBtn.setAttribute('aria-expanded', isOpen);
+        }
+        
+        if (contenu) {
+          contenu.setAttribute('aria-hidden', !isOpen);
+        }
+      }
+      
+      // Ajouter des événements aux boutons
+      boutonsAjouter.forEach(btn => {
+        btn.addEventListener('click', function() {
+          const produit = this.closest('.produit');
+          const nom = produit.querySelector('h3').textContent.trim();
+          const prix = parseFloat(produit.querySelector('.prix-produit').getAttribute('data-price'));
+          const image = produit.querySelector('img').src;
+          const type = produit.getAttribute('data-type');
+          
+          // Vérifier si le produit existe déjà
+          const produitExistant = trouverProduitIdentique(nom, prix, type);
+          
+          if (produitExistant) {
+            produitExistant.quantite++;
+            showToast(`${nom} - quantité augmentée`);
+          } else {
+            const nouveauProduit = {
+              id: Date.now(),
+              nom,
+              prix,
+              image,
+              type,
+              quantite: 1
+            };
+            panier.push(nouveauProduit);
+            showToast(`${nom} ajouté au panier`);
+          }
+          
+          // Sauvegarder et mettre à jour
+          localStorage.setItem('panier', JSON.stringify(panier));
+          afficherPanier();
+        });
+      });
+      
+      // Gérer l'ouverture/fermeture du panier
+      if (togglePanier) {
+        togglePanier.addEventListener('click', function() {
+          const isOpen = contenuPanier.classList.contains('ouvert');
+          contenuPanier.classList.toggle('ouvert');
+          togglePanierAccessibility(!isOpen);
+        });
+      }
+      
+      if (fermerPanier) {
+        fermerPanier.addEventListener('click', function() {
+          contenuPanier.classList.remove('ouvert');
+          togglePanierAccessibility(false);
+        });
+      }
+      
+      // Fermer le panier en cliquant à l'extérieur
+      document.addEventListener('click', function(event) {
+        const isClickInside = contenuPanier.contains(event.target) || togglePanier.contains(event.target);
+        if (!isClickInside && contenuPanier.classList.contains('ouvert')) {
+          contenuPanier.classList.remove('ouvert');
+          togglePanierAccessibility(false);
+        }
+      });
+      
+      // Fermer le panier avec la touche Échap
+      document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape' && contenuPanier.classList.contains('ouvert')) {
+          contenuPanier.classList.remove('ouvert');
+          togglePanierAccessibility(false);
+        }
+      });
+      
+      // Initialiser l'affichage du panier
+      afficherPanier();
+      togglePanierAccessibility(false);
     });
-    
-    // Initialiser l'affichage du panier
-    afficherPanier();
-  });
   </script>
 
   <script>
-// Script de diagnostic
-document.addEventListener('DOMContentLoaded', function() {
-  console.log('Page chargée :', window.location.href);
-  
-  // Vérifier les images
-  const images = document.querySelectorAll('img');
-  images.forEach(img => {
-    img.onerror = function() {
-      console.error('Image non chargée :', this.src);
-    };
-  });
-  
-  // Vérifier les liens canoniques
-  const canonical = document.querySelector('link[rel="canonical"]');
-  if (canonical) {
-    console.log('Canonical URL :', canonical.href);
-    console.log('Correspond à l\'URL actuelle ?', canonical.href === window.location.href);
-  }
-});
-</script>
-
-  
-</body>
+    // Script de diagnostic
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Page chargée :', window.location.href);
+      
+      // Vérifier les images
+      const images = document.querySelectorAll('img');
+      images.forEach(img => {
+        img.onerror = function() {
+          console.error('Image non chargée :', this.src);
+          this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZmFmYWZhIi8+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTUwLDExMCkiPjxjaXJjbGUgcj0iNDAiIGZpbGw9IiNlZWUiLz48cGF0aCBkPSJNLTMwLTIwaDYwdjQwaC02MHoiIGZpbGw9IiNlZWUiLz48L2c+PC9zdmc+';
+        };
+      });
+      
+      // Vérifier les liens canoniques
+      const canonical = document.querySelector('link[rel="canonical"]');
+      if (canonical) {
+        console.log('Canonical URL :', canonical.href);
+        console.log('Correspond à l\'URL actuelle ?', canonical.href === window.location.href);
+      }
+    });
+  </script>
+ </body>
 </html>
-
-
-
-
-
-
-
