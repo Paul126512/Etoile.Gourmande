@@ -2,6 +2,7 @@
 
 (function() {
   const GA_MEASUREMENT_ID = 'G-HX3DHVEPGT';
+  
 
   // Crée la balise <script> pour charger gtag.js
   const scriptTag = document.createElement('script');
